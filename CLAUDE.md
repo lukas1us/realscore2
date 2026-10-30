@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`realscore` is a Spring Boot (4.0.9) service for scoring real estate properties, backed by PostgreSQL. It's an early-stage scaffold — currently one entity (`Property`), one scoring heuristic, and basic CRUD endpoints.
+`realscore` is a personal project that periodically collects real estate listings from Czech portals (Sreality first) into PostgreSQL, keeps their full history, and later analyses and scores them. It is a rewrite of an older Python app; that app is used only as a source of domain knowledge, captured in the Backlog document "Sreality API".
 
 ## Commands
 
@@ -22,18 +22,29 @@ Running the app for real (`spring-boot:run`) needs a reachable Postgres instance
 
 ## Architecture
 
-Standard layered Spring Boot structure under `com.realscore`:
+### Target architecture
 
-- `model/` — JPA entities (`Property`). Uses Lombok (`@Getter`/`@Setter`/`@NoArgsConstructor`) to cut boilerplate — the protected no-arg constructor is Lombok-generated (required by Hibernate), the explicit field constructor is hand-written since Lombok's `@AllArgsConstructor` would wrongly include the generated `id`.
-- `repository/` — Spring Data `JpaRepository` interfaces.
-- `service/` — business logic. `PropertyScoringService` computes a 0–100 score from price-per-square-foot, building age, and bed/bath count, weighted 50/30/20. It takes a `Clock` in its constructor (defaulting to the system clock) specifically so age-based scoring is deterministic in tests — pass a fixed `Clock` rather than hardcoding "now" when testing anything age-related.
-- `controller/` — REST endpoints under `/api/properties` (list, create, get by id, get score by id).
+- A modular monolith in a single Maven project, packaged by feature under `com.realscore`: `scraping`, `listing`, `parsing`, `analysis`.
+- Dependencies go one way only: scraping → listing ← parsing ← analysis. Internals live in an `internal/` subpackage and are never used from another module. A Spring Modulith `ApplicationModules.verify()` test enforces this.
+- Store raw first and parse later. Every API response is stored as JSONB in `listing_snapshot`. Normalisation is a separate step that is idempotent and can be re-run. Scraping never computes scores.
+- A listing's identity is `UNIQUE(source, external_id)`. Every job execution is recorded in `scrape_run`.
+- Schema changes go only through new Flyway migrations. Never edit an existing migration. `ddl-auto` is `validate`.
+- DB tests use Testcontainers with Postgres. HTTP tests use JSON fixtures in `src/test/resources/fixtures` and WireMock, never the live API.
 
-`spring.jpa.hibernate.ddl-auto=update` is used for local/dev convenience (schema auto-created/updated from entities) — there are no migration tools (Flyway/Liquibase) set up yet.
+### Current state
+
+The current layered scaffold (`model/`, `repository/`, `service/`, `controller/`, `Property`, `PropertyScoringService`, H2, `ddl-auto=update`) is a placeholder. It will be replaced in milestone M1. Do not build on it.
 
 Java version is pinned to 25 in `pom.xml` (`<java.version>`) to match the JDK configured in `.idea/misc.xml`. This requires Spring Boot 4.x — Spring Boot 3.x's bundled ASM version cannot parse Java 25 class files and will fail test discovery with `Unsupported class file major version 69`. Keep these in sync if either changes.
 
 Lombok's annotation processor must be declared explicitly in the `maven-compiler-plugin`'s `annotationProcessorPaths` (see `pom.xml`) — just adding the `lombok` dependency isn't picked up automatically under this compiler plugin/Java version combination, and the failure mode is confusing (`cannot find symbol` on generated getters/setters, not a Lombok-specific error).
+
+## Working rules
+
+- Work only on the Backlog task you were given. No extras or "while I'm at it" changes. Record new ideas as new Backlog tasks instead.
+- Before writing code, present a plan (files, classes, steps) and wait for approval.
+- Ask before adding any dependency.
+- A task is done when `mvn verify` passes, new code has tests, and you've given a short summary of what changed, why, and what I should review.
 
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.55.3 -->

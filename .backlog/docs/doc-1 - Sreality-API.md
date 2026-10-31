@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-10-31T13:14:00Z'
+updated_date: '2026-10-31T17:23:00Z'
 ---
 # Sreality API
 
@@ -112,7 +112,7 @@ Code `5` was not observed in the sample — **[UNVERIFIED]** whether it's unused
 
 `pagination.total` replaces the old `result_size`; `limit`/`offset` replace `per_page`/`page`.
 
-**[UNVERIFIED]** The shape of an individual item inside `results` has not been captured yet — the one live request made used `limit=0` specifically to get just the count. Capture a real search response with `limit` > 0 before building a client against it.
+CONFIRMED 2026-10-31 (TASK-20) — captured a real search with `limit=50`. Each item in `results` has: `advert_images`, `advert_images_all`, `advert_name`, `category_main_cb`, `category_sub_cb`, `category_type_cb`, `discount_show`, `has_matterport_url`, `has_video`, `hash_id`, `locality`, several `poi_*_distance` fields, `premise`, `premise_id`, `premise_logo`, `price`, `price_currency_cb`, `price_czk`, `price_czk_m2`, `price_summary`, `price_summary_czk`, `price_summary_unit_cb`, `price_unit_cb`, `user_id` — a smaller, list-view-oriented subset of the detail response's fields, not a different shape. `price_czk` was a plain number in every item checked (both apartment and commercial samples) — the old doc's "bare number vs. object" gotcha was not observed on v1.
 
 ## Detail response shape (v1)
 
@@ -124,7 +124,8 @@ Confirmed live — see the scrubbed fixture at `src/test/resources/fixtures/srea
 - `category_main_cb`, `category_sub_cb`, `category_type_cb`, `building_type`, `ownership`, `elevator`, `building_condition`, `energy_efficiency_rating_cb`, `flat_class`, `furnished`, `easy_access` — each a self-describing `{"name": "<human Czech label>", "value": <code>}` object. Only `value` matters for comparison/storage; `name` is a ready-made display label.
 - `heating_set`, `heating_source_set`, `heating_element_set`, `gas_set`, `gully_set`, `electricity_set` — each a **list** of `{"name", "value"}` objects (a field can carry more than one value).
 - `locality` — a structured object (`city`, `city_seo_name`, `citypart`, `district`, `district_id`, `region`, `region_id`, `street`, `street_id`, `housenumber`, `streetnumber`, `gps_lat`, `gps_lon`, `ward`, `quarter`, `zip`, plus `*_seo_name` variants and a `geometry` block). This completely replaces the old doc's whole "disambiguate a comma-separated string by part count" logic — city/district/region are already separate fields.
-- `price_czk`, `price_summary_czk` (and old/unit/currency variants) — plain numbers. **[UNVERIFIED]** which field is authoritative when they'd differ — the old doc's "prefer the 'Celková cena' items entry" rule doesn't directly carry over since there's no `items` list to have that entry in the first place. Re-check against a "price on request"-style listing before trusting any single field blindly.
+- `price_summary_czk` (or `price_summary`) is the **authoritative total price** — CONFIRMED 2026-10-31 (TASK-20). `price_czk`/`price` can instead be a *per-unit* rate: on a commercial rental, a listing had `price_czk=450` with `price_unit_cb={"name": "za m²/měsíc", ...}` (per m²/month) while `price_summary_czk=433800` with `price_summary_unit_cb={"name": "za měsíc", ...}` (per month) — `450 × usable_area(964) = 433800`, confirming `price_summary_czk` is the one to use regardless of unit, never `price_czk` directly. This supersedes the old doc's "prefer the 'Celková cena' items entry" rule, which doesn't carry over since there's no `items` list at all on v1.
+- **"Price on request" (old doc's "Cena na vyžádání")** — CONFIRMED 2026-10-31 (TASK-20): on such listings (found in the commercial category), `price_czk` **and** `price_summary_czk` are both `0`, together. There's no dedicated flag — `price_flag_negotiation_cb` was `false` on every such listing checked, and `price_note` was empty/null. Treat `price_summary_czk == 0` (or missing) as "no price," not an error.
 - `advert_description` — free text, same role as the old doc's `text`/`description`. The one sample captured had no embedded contact details (just "contact us"), but **[UNVERIFIED]** whether that generalizes.
 - `user` — the seller/broker contact block (`user_name`, `user_email`, `user_phones`, `image`, `user_id`, `broker_rating`, `broker_review_count`). **Contains PII.** Must be scrubbed from any committed fixture (done in the current one). Whether it should be persisted raw in the DB at all is a privacy/retention question this document doesn't settle.
 - `premise` — the listing agency's info (`name`, `company`, `locality`, `web_url`/`web_visible_url`, `logo`, review data). `web_url`/`web_visible_url` can itself leak the broker's name (observed: a personal-name domain) — treat as PII-adjacent too.

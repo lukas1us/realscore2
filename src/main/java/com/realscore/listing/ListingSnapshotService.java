@@ -9,19 +9,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.HexFormat;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ListingSnapshotService {
 
     private final ListingRepository listingRepository;
     private final ListingSnapshotRepository snapshotRepository;
-
-    ListingSnapshotService(ListingRepository listingRepository, ListingSnapshotRepository snapshotRepository) {
-        this.listingRepository = listingRepository;
-        this.snapshotRepository = snapshotRepository;
-    }
 
     @Transactional
     public void recordFetch(String source, String externalId, String payload) {
@@ -42,6 +40,13 @@ public class ListingSnapshotService {
             return;
         }
         snapshotRepository.save(new ListingSnapshot(listing, payload, payloadHash, now));
+    }
+
+    public Optional<ListingSnapshotView> findLatestSnapshot(String source, String externalId) {
+        return listingRepository.findBySourceAndExternalId(source, externalId)
+                .flatMap(snapshotRepository::findTopByListingOrderByFetchedAtDesc)
+                .map(snapshot -> new ListingSnapshotView(
+                        snapshot.getListing().getId(), source, externalId, snapshot.getPayload(), snapshot.getFetchedAt()));
     }
 
     private static String sha256Hex(String payload) {

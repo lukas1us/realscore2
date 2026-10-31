@@ -84,6 +84,40 @@ class ListingSnapshotServiceTest {
         assertThat(removedAt(source, "b")).isNull();
     }
 
+    @Test
+    void recordFetchReportsWhetherTheListingWasCreatedChangedOrUnchanged() {
+        String source = "recorded-fetch-test";
+
+        assertThat(listingSnapshotService.recordFetch(source, "1", "{\"price\":100}")).isEqualTo(RecordedFetch.CREATED);
+        assertThat(listingSnapshotService.recordFetch(source, "1", "{\"price\":100}")).isEqualTo(RecordedFetch.UNCHANGED);
+        assertThat(listingSnapshotService.recordFetch(source, "1", "{\"price\":200}")).isEqualTo(RecordedFetch.CHANGED);
+    }
+
+    @Test
+    void unchangedFetchStillMovesLastFetchedAt() throws InterruptedException {
+        String source = "last-fetched-test";
+        listingSnapshotService.recordFetch(source, "1", "{}");
+        Instant firstFetch = listingRepository.findBySourceAndExternalId(source, "1").orElseThrow().getLastFetchedAt();
+        Thread.sleep(5);
+
+        listingSnapshotService.recordFetch(source, "1", "{}");
+
+        assertThat(listingRepository.findBySourceAndExternalId(source, "1").orElseThrow().getLastFetchedAt())
+                .isAfter(firstFetch);
+    }
+
+    @Test
+    void findExternalIdsFetchedBeforeReturnsOnlyListingsLastFetchedBeforeTheCutoff() {
+        String source = "fetched-before-test";
+        listingSnapshotService.recordFetch(source, "1", "{}");
+        Instant afterFetch = Instant.now().plusSeconds(1);
+
+        assertThat(listingSnapshotService.findExternalIdsFetchedBefore(source, List.of("1", "2"), afterFetch))
+                .containsExactly("1");
+        assertThat(listingSnapshotService.findExternalIdsFetchedBefore(source, List.of("1", "2"), Instant.EPOCH))
+                .isEmpty();
+    }
+
     private Instant removedAt(String source, String externalId) {
         return listingRepository.findBySourceAndExternalId(source, externalId).orElseThrow().getRemovedAt();
     }

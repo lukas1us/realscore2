@@ -15,6 +15,11 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     @Query("select l.externalId from Listing l where l.source = :source and l.externalId in :externalIds")
     List<String> findExternalIdsBySourceAndExternalIdIn(String source, Collection<String> externalIds);
 
+    @Query("""
+            select l.externalId from Listing l
+            where l.source = :source and l.externalId in :externalIds and l.lastFetchedAt < :cutoff""")
+    List<String> findExternalIdsFetchedBefore(String source, Collection<String> externalIds, Instant cutoff);
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""
             update Listing l set l.removedAt = null

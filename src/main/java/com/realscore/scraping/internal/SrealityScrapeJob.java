@@ -36,9 +36,10 @@ public class SrealityScrapeJob {
         Long runId = scrapeRunService.openRun();
         log.info("Scrape run {} started, price cap {}", runId, properties.priceCap());
         try {
-            BulkCollectionResult result = bulkCollector.collect(properties.priceCap());
+            BulkCollectionResult result = bulkCollector.collect(properties.priceCap(), properties.refetchAfter());
             int removed = recordPresence(runId, result, startedAt);
-            scrapeRunService.updateCounts(runId, result.found(), result.fetched(), 0, removed, result.failed());
+            scrapeRunService.updateCounts(runId, result.found(), result.fetched(), result.changed(), removed,
+                    result.failed());
             scrapeRunService.closeRun(runId, ScrapeRunStatus.SUCCEEDED, null);
             log.info("Scrape run {} succeeded: {}, {} removed", runId, result, removed);
         } catch (RuntimeException e) {

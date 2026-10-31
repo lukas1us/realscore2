@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -39,6 +40,8 @@ class SrealityBulkCollectorTest {
 
     private static final long PRICE_CAP = 5_000_000;
     private static final String SMALL_REGION = "1";
+    /** 4004 is recorded just before the run, so it is never due. */
+    private static final Duration REFETCH_AFTER = Duration.ofDays(7);
 
     @RegisterExtension
     static WireMockExtension sreality = WireMockExtension.newInstance()
@@ -74,9 +77,9 @@ class SrealityBulkCollectorTest {
         sreality.stubFor(get(urlEqualTo(detailPath(4003))).inScenario("throttled")
                 .whenScenarioStateIs("ok").willReturn(okJson(detail)));
 
-        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP);
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, REFETCH_AFTER);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4001L, 4002L, 4003L, 4004L), 1, 2, 1, 0));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4001L, 4002L, 4003L, 4004L), 1, 2, 0, 0, 1, 0));
         assertThat(snapshotCount(4001)).isEqualTo(1);
         assertThat(snapshotCount(4003)).isEqualTo(1);
         assertThat(listingCount(4002)).isZero();
@@ -91,9 +94,9 @@ class SrealityBulkCollectorTest {
         stubDetail(4101, aResponse().withStatus(500));
         stubDetail(4102, okJson(fixture("detail_success.json")));
 
-        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP);
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, REFETCH_AFTER);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4101L, 4102L), 0, 1, 0, 1));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4101L, 4102L), 0, 1, 0, 0, 0, 1));
         assertThat(listingCount(4101)).isZero();
         assertThat(snapshotCount(4102)).isEqualTo(1);
     }

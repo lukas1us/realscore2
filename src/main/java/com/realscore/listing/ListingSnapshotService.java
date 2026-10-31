@@ -29,13 +29,19 @@ public class ListingSnapshotService {
     private final ListingRepository listingRepository;
     private final ListingSnapshotRepository snapshotRepository;
 
+    /**
+     * Records one fetch of a listing's detail: creates the listing if needed, moves {@code last_seen_at} and
+     * {@code last_fetched_at}, and writes a snapshot unless the payload equals the latest one.
+     */
     @Transactional
-    public void recordFetch(String source, String externalId, String payload) {
+    public RecordedFetch recordFetch(String source, String externalId, String payload) {
         Instant now = Instant.now();
-        Listing listing = listingRepository.findBySourceAndExternalId(source, externalId)
-                .map(existing -> {
-                    existing.setLastSeenAt(now);
-                    return existing;
+        Optional<Listing> existing = listingRepository.findBySourceAndExternalId(source, externalId);
+        Listing listing = existing
+                .map(known -> {
+                    known.setLastSeenAt(now);
+                    known.setLastFetchedAt(now);
+                    return known;
                 })
                 .orElseGet(() -> new Listing(source, externalId, now));
         listing = listingRepository.save(listing);
@@ -45,9 +51,10 @@ public class ListingSnapshotService {
                 .map(latest -> latest.getPayloadHash().equals(payloadHash))
                 .orElse(false);
         if (unchanged) {
-            return;
+            return RecordedFetch.UNCHANGED;
         }
         snapshotRepository.save(new ListingSnapshot(listing, payload, payloadHash, now));
+        return existing.isPresent() ? RecordedFetch.CHANGED : RecordedFetch.CREATED;
     }
 
     public Optional<ListingSnapshotView> findLatestSnapshot(String source, String externalId) {
@@ -66,6 +73,18 @@ public class ListingSnapshotService {
         forEachBatch(externalIds, batch -> known.addAll(
                 listingRepository.findExternalIdsBySourceAndExternalIdIn(source, batch)));
         return known;
+    }
+
+    /**
+     * Returns those of the given external IDs from {@code source} whose detail was last fetched before
+     * {@code cutoff}.
+     */
+    @Transactional(readOnly = true)
+    public Set<String> findExternalIdsFetchedBefore(String source, Collection<String> externalIds, Instant cutoff) {
+        Set<String> due = new HashSet<>();
+        forEachBatch(externalIds, batch -> due.addAll(
+                listingRepository.findExternalIdsFetchedBefore(source, batch, cutoff)));
+        return due;
     }
 
     /**

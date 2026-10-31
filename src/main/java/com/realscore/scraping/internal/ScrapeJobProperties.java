@@ -1,7 +1,9 @@
 package com.realscore.scraping.internal;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,8 +12,11 @@ import org.springframework.validation.annotation.Validated;
  *
  * @param cron Spring cron expression for {@link SrealityScrapeJob}, in Europe/Prague time; {@code -} disables it
  * @param priceCap maximum price in CZK of the sale apartments collected
+ * @param refetchAfter refetch strategy for known listings: one that a run collects is fetched again once its last
+ *                     fetch is older than this, so a change is captured within roughly this long; {@code 0} refetches
+ *                     every known listing on every run, at the cost of one detail request each
  */
 @Validated
 @ConfigurationProperties("realscore.scrape")
-public record ScrapeJobProperties(@NotBlank String cron, @Positive long priceCap) {
+public record ScrapeJobProperties(@NotBlank String cron, @Positive long priceCap, @NotNull Duration refetchAfter) {
 }

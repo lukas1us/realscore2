@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -152,6 +154,33 @@ class SrealityScrapeJobTest {
         assertThat(latestRun().get("removed_count")).isEqualTo(0);
     }
 
+    @Test
+    void knownListingsLastFetchedBeforeTheRefetchIntervalAreFetchedAgain() {
+        String detail = fixture("detail_success.json");
+        String repriced = detail.replace("\"price_czk\": 3590000.0", "\"price_czk\": 3490000.0");
+        assertThat(repriced).isNotEqualTo(detail);
+        for (String id : List.of("4501", "4502", "4503")) {
+            listingSnapshotService.recordFetch("sreality", id, detail);
+        }
+        jdbc.update("UPDATE listing SET last_fetched_at = now() - interval '8 days'"
+                + " WHERE source = 'sreality' AND external_id IN ('4501', '4502')");
+        Instant beforeRun = Instant.now();
+        stubSearch(okJson(fixture("search_page_refetch.json")));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4501")).willReturn(okJson(repriced)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4502")).willReturn(okJson(detail)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4503")).willReturn(okJson(detail)));
+
+        job.run();
+
+        assertThat(snapshotCount(4501)).isEqualTo(2);
+        assertThat(snapshotCount(4502)).isEqualTo(1);
+        assertThat(lastFetchedAt(4502)).isAfter(beforeRun);
+        sreality.verify(0, getRequestedFor(urlEqualTo("/api/v1/estates/4503")));
+        Map<String, Object> run = latestRun();
+        assertThat(run.get("new_count")).isEqualTo(0);
+        assertThat(run.get("updated_count")).isEqualTo(1);
+    }
+
     /** Region 1 answers with {@code region1}; every other region is empty. */
     private static void stubSearch(ResponseDefinitionBuilder region1) {
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH)).atPriority(10)
@@ -159,6 +188,18 @@ class SrealityScrapeJobTest {
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
                 .withQueryParam("locality_region_id", equalTo("1"))
                 .willReturn(region1));
+    }
+
+    private int snapshotCount(long estateId) {
+        return jdbc.queryForObject("""
+                SELECT count(*) FROM listing_snapshot s JOIN listing l ON l.id = s.listing_id
+                WHERE l.source = 'sreality' AND l.external_id = ?
+                """, Integer.class, String.valueOf(estateId));
+    }
+
+    private Instant lastFetchedAt(long estateId) {
+        return jdbc.queryForObject("SELECT last_fetched_at FROM listing WHERE source = 'sreality' AND external_id = ?",
+                Timestamp.class, String.valueOf(estateId)).toInstant();
     }
 
     private Object removedAt(long estateId) {

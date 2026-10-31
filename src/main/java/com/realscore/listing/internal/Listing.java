@@ -35,6 +35,9 @@ public class Listing {
     @Column(name = "last_seen_at", nullable = false)
     private Instant lastSeenAt;
 
+    @Column(name = "last_fetched_at", nullable = false)
+    private Instant lastFetchedAt;
+
     @Column(name = "removed_at")
     private Instant removedAt;
 
@@ -43,5 +46,6 @@ public class Listing {
         this.externalId = externalId;
         this.firstSeenAt = seenAt;
         this.lastSeenAt = seenAt;
+        this.lastFetchedAt = seenAt;
     }
 }

@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.realscore.PostgresContainerConfig;
+import com.realscore.listing.RecordedFetch;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -62,7 +63,7 @@ class SrealityEstateFetcherTest {
         long estateId = 1001;
         stubDetail(estateId, fixture);
 
-        assertThat(fetcher.fetch(estateId)).isTrue();
+        assertThat(fetcher.fetch(estateId)).contains(RecordedFetch.CREATED);
 
         assertThat(listingCount(estateId)).isEqualTo(1);
         assertThat(snapshotCount(estateId)).isEqualTo(1);
@@ -107,7 +108,7 @@ class SrealityEstateFetcherTest {
         long estateId = 1004;
         sreality.stubFor(get(urlEqualTo("/api/v1/estates/" + estateId)).willReturn(aResponse().withStatus(404)));
 
-        assertThat(fetcher.fetch(estateId)).isFalse();
+        assertThat(fetcher.fetch(estateId)).isEmpty();
 
         assertThat(listingCount(estateId)).isZero();
     }

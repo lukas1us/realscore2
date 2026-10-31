@@ -1,10 +1,12 @@
 package com.realscore.scraping.internal;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.realscore.PostgresContainerConfig;
@@ -36,6 +38,8 @@ class SrealityEstateFetcherTest {
     @DynamicPropertySource
     static void srealityBaseUrl(DynamicPropertyRegistry registry) {
         registry.add("realscore.sreality.base-url", sreality::baseUrl);
+        registry.add("realscore.sreality.request-delay", () -> "0ms");
+        registry.add("realscore.sreality.initial-backoff", () -> "1ms");
     }
 
     @Autowired
@@ -58,7 +62,7 @@ class SrealityEstateFetcherTest {
         long estateId = 1001;
         stubDetail(estateId, fixture);
 
-        fetcher.fetch(estateId);
+        assertThat(fetcher.fetch(estateId)).isTrue();
 
         assertThat(listingCount(estateId)).isEqualTo(1);
         assertThat(snapshotCount(estateId)).isEqualTo(1);
@@ -96,6 +100,26 @@ class SrealityEstateFetcherTest {
 
         assertThat(snapshotCount(estateId)).isEqualTo(2);
         assertThat(lastSeenAt(estateId)).isAfter(firstSeen);
+    }
+
+    @Test
+    void goneEstateIsSkippedWithoutRecordingAnything() {
+        long estateId = 1004;
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/" + estateId)).willReturn(aResponse().withStatus(404)));
+
+        assertThat(fetcher.fetch(estateId)).isFalse();
+
+        assertThat(listingCount(estateId)).isZero();
+    }
+
+    @Test
+    void emptyBodyRecordsNothing() {
+        long estateId = 1005;
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/" + estateId)).willReturn(aResponse().withStatus(200)));
+
+        assertThatThrownBy(() -> fetcher.fetch(estateId)).isInstanceOf(IllegalStateException.class);
+
+        assertThat(listingCount(estateId)).isZero();
     }
 
     private static void stubDetail(long estateId, String body) {

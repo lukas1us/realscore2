@@ -1,6 +1,7 @@
 package com.realscore.scraping.internal;
 
 import com.realscore.listing.ListingSnapshotService;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,10 +21,12 @@ public class SrealityEstateFetcher {
     }
 
     /**
-     * @throws SrealityApiException if Sreality does not return the estate; nothing is recorded then
+     * @return {@code true} if the estate was recorded, {@code false} if Sreality answered 403/404 and it was skipped
+     * @throws SrealityApiException if Sreality fails in any other way; nothing is recorded then
      */
-    public void fetch(long estateId) {
-        String payload = client.fetchEstateDetail(estateId);
-        listingSnapshotService.recordFetch(SOURCE, String.valueOf(estateId), payload);
+    public boolean fetch(long estateId) {
+        Optional<String> payload = client.fetchEstateDetail(estateId);
+        payload.ifPresent(body -> listingSnapshotService.recordFetch(SOURCE, String.valueOf(estateId), body));
+        return payload.isPresent();
     }
 }

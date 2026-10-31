@@ -28,7 +28,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
  */
 class SrealityIdCollectorTest {
 
-    private static final String SEARCH_PATH = "/api/v1/estates/search";
+    private static final String SEARCH_PATH = SrealityTestSupport.SEARCH_PATH;
     private static final long PRICE_CAP = 5_000_000;
     private static final int BUCKET_THRESHOLD = 5;
     private static final int PAGE_SIZE = 2;
@@ -46,9 +46,9 @@ class SrealityIdCollectorTest {
 
     @BeforeEach
     void setUp() {
-        SrealityProperties properties = new SrealityProperties(sreality.baseUrl(), "test-agent",
-                "https://www.sreality.cz/", "/api/v1/estates/{id}", SEARCH_PATH, BUCKET_THRESHOLD, PAGE_SIZE);
-        collector = new SrealityIdCollector(new SrealityClient(properties), properties);
+        SrealityProperties properties =
+                SrealityTestSupport.properties(sreality.baseUrl(), BUCKET_THRESHOLD, PAGE_SIZE);
+        collector = new SrealityIdCollector(SrealityTestSupport.client(properties, new FakeTime()), properties);
 
         sreality.stubFor(search().atPriority(10).willReturn(fixture("search_count_empty.json")));
 

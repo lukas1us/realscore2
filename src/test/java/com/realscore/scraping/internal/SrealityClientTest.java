@@ -16,15 +16,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class SrealityClientTest {
 
     private static final long ESTATE_ID = 2494705740L;
     private static final String DETAIL_PATH = "/api/v1/estates/" + ESTATE_ID;
-    private static final String SEARCH_PATH = "/api/v1/estates/search";
+    private static final String SEARCH_PATH = SrealityTestSupport.SEARCH_PATH;
     private static final Map<String, String> PRAHA_FLATS = Map.of("category_main_cb", "1", "locality_region_id", "10");
 
     @RegisterExtension
@@ -36,8 +39,7 @@ class SrealityClientTest {
 
     @BeforeEach
     void setUp() {
-        client = new SrealityClient(new SrealityProperties(
-                sreality.baseUrl(), "test-agent", "https://www.sreality.cz/", "/api/v1/estates/{id}", SEARCH_PATH, 950, 100));
+        client = SrealityTestSupport.client(SrealityTestSupport.properties(sreality.baseUrl(), 950, 100), new FakeTime());
     }
 
     @Test
@@ -45,34 +47,54 @@ class SrealityClientTest {
         String fixture = readFixture("fixtures/sreality/detail_success.json");
         sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(okJson(fixture)));
 
-        String body = client.fetchEstateDetail(ESTATE_ID);
+        Optional<String> body = client.fetchEstateDetail(ESTATE_ID);
 
-        assertThat(body).isEqualTo(fixture);
+        assertThat(body).contains(fixture);
         sreality.verify(getRequestedFor(urlEqualTo(DETAIL_PATH))
                 .withHeader("User-Agent", equalTo("test-agent"))
                 .withHeader("Accept", equalTo("application/json"))
                 .withHeader("Referer", equalTo("https://www.sreality.cz/")));
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {403, 404})
+    void forbiddenOrNotFoundDetailIsSkipped(int status) {
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(status)));
+
+        assertThat(client.fetchEstateDetail(ESTATE_ID)).isEmpty();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   \n"})
+    void emptyOrBlankDetailBodyFailsInsteadOfReturningNothing(String body) {
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(200).withBody(body)));
+
+        assertThatThrownBy(() -> client.fetchEstateDetail(ESTATE_ID))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("empty body")
+                .hasMessageContaining(String.valueOf(ESTATE_ID));
+    }
+
     @Test
-    void notFoundRaisesSrealityApiException() {
-        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(404)));
+    void otherClientErrorRaisesSrealityApiException() {
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(410)));
 
         assertThatThrownBy(() -> client.fetchEstateDetail(ESTATE_ID))
                 .isInstanceOfSatisfying(SrealityApiException.class, e -> {
-                    assertThat(e.statusCode()).isEqualTo(404);
+                    assertThat(e.statusCode()).isEqualTo(410);
                     assertThat(e.estateId()).isEqualTo(ESTATE_ID);
                     assertThat(e.requestPath()).isEqualTo(DETAIL_PATH);
                 });
     }
 
     @Test
-    void serverErrorRaisesSrealityApiException() {
+    void persistentServerErrorRaisesSrealityApiExceptionAfterRetries() {
         sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(500)));
 
         assertThatThrownBy(() -> client.fetchEstateDetail(ESTATE_ID))
                 .isInstanceOfSatisfying(SrealityApiException.class,
                         e -> assertThat(e.statusCode()).isEqualTo(500));
+        sreality.verify(SrealityTestSupport.MAX_ATTEMPTS, getRequestedFor(urlEqualTo(DETAIL_PATH)));
     }
 
     @Test

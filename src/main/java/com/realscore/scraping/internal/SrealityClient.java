@@ -3,6 +3,8 @@ package com.realscore.scraping.internal;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,7 @@ import org.springframework.web.client.RestClient;
 /**
  * Fetches raw estate JSON from the Sreality v1 API (see Backlog doc "Sreality API").
  */
+@Slf4j
 @Component
 public class SrealityClient {
 
@@ -18,7 +21,7 @@ public class SrealityClient {
     private final String detailPath;
     private final String searchPath;
 
-    public SrealityClient(SrealityProperties properties) {
+    SrealityClient(SrealityProperties properties, SrealityRequestPolicy requestPolicy) {
         this.detailPath = properties.detailPath();
         this.searchPath = properties.searchPath();
         this.restClient = RestClient.builder()
@@ -26,22 +29,35 @@ public class SrealityClient {
                 .defaultHeader(HttpHeaders.USER_AGENT, properties.userAgent())
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.REFERER, properties.referer())
+                .requestInterceptor(requestPolicy)
                 .build();
     }
 
     /**
-     * Returns the detail response body exactly as received, including the {@code {"result": ...}} wrapper.
+     * Returns the detail response body exactly as received, including the {@code {"result": ...}} wrapper, or empty if
+     * Sreality answers 403 or 404 (the estate is gone or hidden: a skip, not an error).
      *
-     * @throws SrealityApiException if the response status is not 200
+     * @throws SrealityApiException if the final response status is anything else but 200
+     * @throws IllegalStateException if a 200 response has an empty or blank body
      */
-    public String fetchEstateDetail(long estateId) {
+    public Optional<String> fetchEstateDetail(long estateId) {
         return restClient.get()
                 .uri(detailPath, estateId)
-                .retrieve()
-                .onStatus(status -> status.value() != 200, (request, response) -> {
-                    throw new SrealityApiException(estateId, request.getURI().getPath(), response.getStatusCode().value());
-                })
-                .body(String.class);
+                .exchange((request, response) -> {
+                    int status = response.getStatusCode().value();
+                    if (status == 403 || status == 404) {
+                        log.info("Skipping Sreality estate {}: HTTP {}", estateId, status);
+                        return Optional.empty();
+                    }
+                    if (status != 200) {
+                        throw new SrealityApiException(estateId, request.getURI().getPath(), status);
+                    }
+                    String body = response.bodyTo(String.class);
+                    if (body == null || body.isBlank()) {
+                        throw new IllegalStateException("Sreality returned an empty body for estate " + estateId);
+                    }
+                    return Optional.of(body);
+                });
     }
 
     /**

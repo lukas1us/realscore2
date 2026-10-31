@@ -1,11 +1,11 @@
 ---
 id: TASK-9
 title: Add CI pipeline
-status: In Progress
+status: Done
 assignee:
   - '@lkrasa'
 created_date: '2026-10-30T23:42:00Z'
-updated_date: '2026-10-31T11:45:00Z'
+updated_date: '2026-10-31T11:57:00Z'
 labels:
   - infra
 milestone: m-1
@@ -24,7 +24,7 @@ There is currently no CI for this repo (unlike the old Python app, which had a G
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 A GitHub Actions workflow runs mvn verify (including the Modulith and Testcontainers-backed tests) on push and pull_request
-- [ ] #2 The workflow is demonstrated passing on a real commit/PR
+- [x] #2 The workflow is demonstrated passing on a real commit/PR
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -39,4 +39,12 @@ There is currently no CI for this repo (unlike the old Python app, which had a G
 
 <!-- SECTION:NOTES:BEGIN -->
 Pinned actions/checkout@v7 and actions/setup-java@v6 (confirmed current via GitHub tags API) with distribution=temurin, java-version=25 (confirmed supported). Verified locally with the exact CI command: 'mvn --batch-mode --no-transfer-progress verify' passes. AC2 (demonstrated passing on a real commit/PR) is pending: push is reserved for the user per CLAUDE.md git rules — waiting for them to push this commit, then I'll check the Actions run.
+
+Demonstrated on commit 1a34eb0: both push (https://github.com/lukas1us/realscore2/actions/runs/41198596691) and pull_request (https://github.com/lukas1us/realscore2/actions/runs/41198734937) runs completed successfully; mvn verify step passed on ubuntu-latest, confirming Modulith + Testcontainers-backed tests run in CI.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added .github/workflows/ci.yml running 'mvn verify' on push and pull_request (actions/checkout@v7, actions/setup-java@v6 with Temurin Java 25 and maven cache). Verified locally first with the exact CI command. User pushed commit 1a34eb0; both triggered GitHub Actions runs (push and pull_request) completed successfully, with the mvn verify step green — confirming the Modulith boundary and Testcontainers-backed tests now run automatically in CI.
+<!-- SECTION:FINAL_SUMMARY:END -->

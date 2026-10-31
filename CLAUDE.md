@@ -45,6 +45,7 @@ Lombok's annotation processor must be declared explicitly in the `maven-compiler
 - Work only on the Backlog task you were given. No extras or "while I'm at it" changes. Record new ideas as new Backlog tasks instead.
 - Before writing code, present a plan (files, classes, steps) and wait for approval.
 - Ask before adding any dependency.
+- Always use Lombok for boilerplate (getters/setters, constructors, builders) instead of hand-writing it.
 - A task is done when `mvn verify` passes, new code has tests, and you've given a short summary of what changed, why, and what I should review.
 
 <!-- BACKLOG.MD GUIDELINES START -->

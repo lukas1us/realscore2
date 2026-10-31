@@ -1,0 +1,2778 @@
+{
+  "result": {
+    "acceptance_year": 1975,
+    "advert_code": "A047",
+    "advert_description": "Ve výhradním zastoupení majitele nabízíme k prodeji byt o dispozici 1+1 s užitnou plochou 37 m², který se nachází ve zvýšeném přízemí cihlového domu na ulici Barákova v městském obvodu Plzeň 2-Slovany. Byt prošel částečnou modernizací – kuchyně je vybavena novou kuchyňskou linkou, podlahové krytiny jsou ve velmi dobrém stavu a koupelna disponuje vanou. Byt je orientován na jihovýchod, to zajišťuje dostatek denního světla po většinu dne. Okna jsou plastová a dům je zateplený, což přispívá k úspornému provozu. Vytápění je řešeno ústředním dálkovým topením, ohřev vody zajišťuje vlastní plynový kotel.\r\n\r\nSoučástí bytu je sklep o ploše 1,8 m², který nabízí praktický úložný prostor. V bytě jsou vestavěné skříně a samozřejmostí jsou žaluzie. V domě je k dispozici výtah a kolárna. Okolí je klidné, vhodné pro rezidenční bydlení. Parkování je možné v okolí domu na veřejných komunikacích.\r\n\r\nLokalita nabízí kompletní občanskou vybavenost. V docházkové vzdálenosti naleznete mateřské a základní školy, zdravotnická zařízení, poštu, banky, menší obchody i větší nákupní centrum Galerie Slovany. Výhodou je také velmi dobrá dopravní dostupnost – poblíž jsou zastávky tramvajových i trolejbusových linek s přímým spojením do centra města, vlaková zastávka je vzdálena cca 800 m. V dosahu jsou také hlavní silniční tahy s napojením na dálnici D5. Městská část je plně urbanizovaná, s dostupností parků a veřejné zeleně.\r\n\r\nByt je v osobním vlastnictví a připraven k nastěhování od listopadu 2026.\r\n\r\nPro více informací o této nemovitosti nebo sjednání prohlídky nás prosím kontaktujte nebo vyplňte formulář.",
+    "advert_images": [
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109164,
+        "kind": 2,
+        "order": 1,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/k0OqwCKRZSJdFFsHuWhAx/1b93.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109167,
+        "kind": 2,
+        "order": 4,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/nOdL4BtPEyvOo9BwbHuWhBv/f6c6.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109170,
+        "kind": 2,
+        "order": 5,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/k0OqwCKRDbeZQBaRHuWhCT/d63c.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109173,
+        "kind": 2,
+        "order": 6,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/nOdL4BtPEyCly89D5mHuWhCt/e022.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109176,
+        "kind": 2,
+        "order": 7,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/nOdL4BtPEyCly89DzDHuWhDM/7f90.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109179,
+        "kind": 2,
+        "order": 8,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/nOdL4BtPEyvOo9BwPHuWhDx/7a08.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109182,
+        "kind": 2,
+        "order": 9,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/k0OqwCKREBG8FJUYHuWhEN/f382.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1231,
+        "id": 1010109185,
+        "kind": 2,
+        "order": 10,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/k0OqwCKRD1EvuEX5HuWhEj/9693.jpeg",
+        "width": 1600
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109188,
+        "kind": 2,
+        "order": 11,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/nOdL4BtPEyBuWMSuYHuWhFC/e568.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109191,
+        "kind": 2,
+        "order": 12,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/k0OqwCKREB0Tc7PHuWhFg/5e99.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109194,
+        "kind": 2,
+        "order": 13,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/nOdL4BtPEyD4lWf02HuWhGF/b419.jpeg",
+        "width": 1900
+      },
+      {
+        "ai_edited": false,
+        "alt": "",
+        "height": 1267,
+        "id": 1010109197,
+        "kind": 2,
+        "order": 14,
+        "url": "//d18-a.sdn.cz/d_18/c_img_qF_B/k0OqwCKRDgcHsBalHuWhGt/fb71.jpeg",
+        "width": 1900
+      }
+    ],
+    "advert_name": "Prodej bytu 1+1 37 m²",
+    "annuity": null,
+    "balcony": false,
+    "balcony_area": null,
+    "basin": false,
+    "basin_area": null,
+    "beginning_date": null,
+    "building_area": null,
+    "building_condition": {
+      "name": "Velmi dobrý",
+      "value": 1
+    },
+    "building_type": {
+      "name": "Cihlová",
+      "value": 2
+    },
+    "category_main_cb": {
+      "name": "Byty",
+      "value": 1
+    },
+    "category_sub_cb": {
+      "name": "1+1",
+      "value": 3
+    },
+    "category_type_cb": {
+      "name": "Prodej",
+      "value": 1
+    },
+    "cellar": true,
+    "cellar_area": 2,
+    "circuit_breaker_cb": null,
+    "cost_of_living": "",
+    "discount_show": false,
+    "easy_access": {
+      "name": "- vyber možnost",
+      "value": 0
+    },
+    "edited": "2026-10-29",
+    "electricity_set": [
+      {
+        "name": "230V",
+        "value": 2
+      }
+    ],
+    "elevator": {
+      "name": "Ano",
+      "value": 1
+    },
+    "energy_efficiency_rating_cb": {
+      "name": "C - Úsporná",
+      "value": 3
+    },
+    "energy_performance_certificate": {
+      "name": "č. 78/2013 Sb.",
+      "value": 2
+    },
+    "energy_performance_summary": null,
+    "exclusively_at_rk": true,
+    "finish_date": null,
+    "first_tour_date": null,
+    "first_tour_date_to": null,
+    "flat_class": {
+      "name": "- vyber typ",
+      "value": 0
+    },
+    "floor_area": 39,
+    "floor_number": 1,
+    "floors": 5,
+    "furnished": {
+      "name": "Částečně",
+      "value": 3
+    },
+    "garage": false,
+    "garage_count": null,
+    "garden_area": null,
+    "garret": null,
+    "gas_set": [
+      {
+        "name": "Plynovod",
+        "value": 2
+      }
+    ],
+    "gully_set": [
+      {
+        "name": "Veřejná kanalizace",
+        "value": 1
+      }
+    ],
+    "hash_id": 2494705740,
+    "heating_element_set": [
+      {
+        "name": "Radiátory",
+        "value": 3
+      }
+    ],
+    "heating_set": [
+      {
+        "name": "Ústřední dálkové",
+        "value": 7
+      }
+    ],
+    "heating_source_set": [
+      {
+        "name": "Ústřední dálkové",
+        "value": 12
+      }
+    ],
+    "internet_connection_provider": "PILSFREE",
+    "internet_connection_speed": null,
+    "internet_connection_type_set": [],
+    "keywords": null,
+    "labels": [
+      {
+        "description": "U Tří voříšků - MVDr. Dagmar Caltová",
+        "distance": 21.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+        "lat": 49.73095703125,
+        "lines": [],
+        "lon": 13.413944244384766,
+        "name": "vet",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_F_B/K12KV.jpeg",
+        "rating": 4,
+        "review_count": 31,
+        "source": "firm",
+        "source_id": 313354,
+        "url": "https://www.firmy.cz/detail/313354-u-tri-vorisku-mvdr-dagmar-caltova-plzen-bozkov.html"
+      },
+      {
+        "description": "Minimarket Zapomněnka",
+        "distance": 49.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+        "lat": 49.73096466064453,
+        "lines": [],
+        "lon": 13.41434383392334,
+        "name": "small_shop",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QK_5/QdCJO3.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "firm",
+        "source_id": 13578996,
+        "url": "https://www.firmy.cz/detail/13578996-minimarket-zapomnenka-plzen-bozkov.html"
+      },
+      {
+        "description": "Pivnice Sladovnická",
+        "distance": 519.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+        "lat": 49.73190689086914,
+        "lines": [],
+        "lon": 13.406606674194336,
+        "name": "tavern",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_E_C/z2wKj.jpeg",
+        "rating": 4,
+        "review_count": 86,
+        "source": "firm",
+        "source_id": 2603445,
+        "url": "https://www.firmy.cz/detail/2603445-pivnice-sladovnicka-plzen-lobzy.html"
+      },
+      {
+        "description": "Divadlo Jezírko",
+        "distance": 956.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/39",
+        "lat": 49.72383499145508,
+        "lines": [],
+        "lon": 13.406108856201172,
+        "name": "theater",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/VAb4VY.jpeg",
+        "rating": 5,
+        "review_count": 2,
+        "source": "firm",
+        "source_id": 740611,
+        "url": "https://www.firmy.cz/detail/740611-divadlo-jezirko-plzen-vychodni-predmesti.html"
+      },
+      {
+        "description": "Dětské hřiště Barákova",
+        "distance": 228.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+        "lat": 49.72985,
+        "lines": [],
+        "lon": 13.41637,
+        "name": "playground",
+        "photo_url": "https://d34-a.sdn.cz/d_34/c_img_gU_w/lS7JaT.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "base",
+        "source_id": 2422857,
+        "url": "https://mapy.cz/zakladni?x=13.41637&y=49.72985&z=17&source=base&id=2422857"
+      },
+      {
+        "description": "Cukrárna a kavárna Frikulínek",
+        "distance": 585.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+        "lat": 49.73069381713867,
+        "lines": [],
+        "lon": 13.405537605285645,
+        "name": "candy_shop",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QO_7/nbl8Zd.jpeg",
+        "rating": 3,
+        "review_count": 12,
+        "source": "firm",
+        "source_id": 13500229,
+        "url": "https://www.firmy.cz/detail/13500229-cukrarna-a-kavarna-frikulinek-plzen-vychodni-predmesti.html"
+      },
+      {
+        "description": "Kino Beseda",
+        "distance": 3057.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+        "lat": 49.74446105957031,
+        "lines": [],
+        "lon": 13.376643180847168,
+        "name": "movies",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qB_A/nCTUX1iX5CGpNZBWwNGrbw6E/1401.jpeg",
+        "rating": 4,
+        "review_count": 3,
+        "source": "firm",
+        "source_id": 12773769,
+        "url": "https://www.firmy.cz/detail/12773769-kino-beseda-plzen-jizni-predmesti.html"
+      },
+      {
+        "description": "Katedrála sv. Bartoloměje",
+        "distance": 3177.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/66",
+        "lat": 49.7474471280474,
+        "lines": [],
+        "lon": 13.3776119050402,
+        "name": "sightseeing",
+        "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oV_A/kO7h3dRn21QqW1X6CGTD4d/cc9f.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "base",
+        "source_id": 1890658,
+        "url": "https://mapy.cz/zakladni?x=13.3776119050402&y=49.7474471280474&z=17&source=base&id=1890658"
+      },
+      {
+        "description": "Galerie Slovany, s.r.o.",
+        "distance": 912.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/419",
+        "lat": 49.73213577270508,
+        "lines": [],
+        "lon": 13.40112018585205,
+        "name": "shop",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/BFwvpx.jpeg",
+        "rating": 4,
+        "review_count": 36,
+        "source": "firm",
+        "source_id": 2301407,
+        "time": 1104,
+        "url": "https://www.firmy.cz/detail/2301407-galerie-slovany-plzen-vychodni-predmesti.html",
+        "walkDistance": 1149
+      },
+      {
+        "description": "Řídící depo Plzeň 72",
+        "distance": 614.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/122",
+        "lat": 49.72628402709961,
+        "lines": [],
+        "lon": 13.409010887145996,
+        "name": "post_office",
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86Tw5RPEnpKIOcOq1/0109.jpeg",
+        "rating": 2,
+        "review_count": 47,
+        "source": "firm",
+        "source_id": 13345355,
+        "time": 710,
+        "url": "https://www.firmy.cz/detail/13345355-ridici-depo-plzen-72-plzen-vychodni-predmesti.html",
+        "walkDistance": 736
+      },
+      {
+        "description": "Zastávka u Michala",
+        "distance": 363.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+        "lat": 49.73341751098633,
+        "lines": [],
+        "lon": 13.410415649414062,
+        "name": "restaurant",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oa_A/kFWXc8OzJkFuBFPDfvo3u/2950.jpeg",
+        "rating": 5,
+        "review_count": 3,
+        "source": "firm",
+        "source_id": 13722516,
+        "time": 439,
+        "url": "https://www.firmy.cz/detail/13722516-zastavka-u-michala-plzen-bozkov.html",
+        "walkDistance": 466
+      },
+      {
+        "description": "Světovar",
+        "distance": 375.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/155",
+        "lat": 49.72761154,
+        "lines": [
+          {
+            "departure_direction": 1,
+            "line_id": "3508",
+            "line_label": "2",
+            "poi_id": 15697682,
+            "terminus": "Skvrňany",
+            "type": "tram"
+          },
+          {
+            "departure_direction": 1,
+            "line_id": "3571",
+            "line_label": "2",
+            "poi_id": 15697682,
+            "terminus": "Jízdecká",
+            "type": "tram"
+          }
+        ],
+        "lon": 13.41263962,
+        "name": "tram",
+        "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oa_A/kPxAuWMbDHCL8cmurDiVUO0/4b8d.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "pubt",
+        "source_id": 15697682,
+        "time": 482,
+        "url": "https://mapy.cz/zakladni?x=13.41263962&y=49.72761154&z=17&source=pubt&id=15697682",
+        "walkDistance": 508
+      },
+      {
+        "description": "Na Spojce",
+        "distance": 241.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/336",
+        "lat": 49.7330648768,
+        "lines": [
+          {
+            "departure_direction": -1,
+            "line_id": "3561",
+            "line_label": "12",
+            "poi_id": 15697779,
+            "terminus": "Božkov",
+            "type": "trolejbus"
+          }
+        ],
+        "lon": 13.4141379238,
+        "name": "bus_public_transport",
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCaRYmBUCOIMEz6T/ced9.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "pubt",
+        "source_id": 15697779,
+        "time": 647,
+        "url": "https://mapy.cz/zakladni?x=13.4141379238&y=49.7330648768&z=17&source=pubt&id=15697779",
+        "walkDistance": 714
+      },
+      {
+        "description": "MUDr. Helena Filipovská",
+        "distance": 781.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+        "lat": 49.72991943359375,
+        "lines": [],
+        "lon": 13.402914047241211,
+        "name": "medic",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/0Qf5B3.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "firm",
+        "source_id": 2111037,
+        "time": 951,
+        "url": "https://www.firmy.cz/detail/2111037-mudr-helena-filipovska-plzen-vychodni-predmesti.html",
+        "walkDistance": 1014
+      },
+      {
+        "description": "ZŠ a MŠ Plzeň-Božkov, Vřesinská",
+        "distance": 364.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+        "lat": 49.731204986572266,
+        "lines": [],
+        "lon": 13.418709754943848,
+        "name": "school",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_B/oxDMgX.jpeg",
+        "rating": 3,
+        "review_count": 3,
+        "source": "firm",
+        "source_id": 358876,
+        "time": 600,
+        "url": "https://www.firmy.cz/detail/358876-zs-a-ms-plzen-bozkov-vresinska-plzen-bozkov.html",
+        "walkDistance": 649
+      },
+      {
+        "description": "Bankomat Komerční banky",
+        "distance": 727.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/28",
+        "lat": 49.73188018798828,
+        "lines": [],
+        "lon": 13.403660774230957,
+        "name": "atm",
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkCfcGaBxOoIOgn7j/21ab.jpeg",
+        "rating": 4,
+        "review_count": 3,
+        "source": "firm",
+        "source_id": 13307822,
+        "time": 845,
+        "url": "https://www.firmy.cz/detail/13307822-bankomat-komercni-banky-plzen-lobzy.html",
+        "walkDistance": 890
+      },
+      {
+        "description": "Plzeň-Slovany",
+        "distance": 606.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+        "lat": 49.73485112386289,
+        "lines": [
+          {
+            "departure_direction": 1,
+            "line_id": "PL-P1J",
+            "line_label": "P1J",
+            "poi_id": 21973611,
+            "terminus": "Plzeň-Jižní Předměstí",
+            "type": "vlak"
+          },
+          {
+            "departure_direction": -1,
+            "line_id": "PL-P1J",
+            "line_label": "P1J",
+            "poi_id": 21973611,
+            "terminus": "Nepomuk",
+            "type": "vlak"
+          }
+        ],
+        "lon": 13.40783048490482,
+        "name": "train",
+        "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QN_2/dIlLK7.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "pubt",
+        "source_id": 21973611,
+        "time": 737,
+        "url": "https://mapy.cz/zakladni?x=13.40783048490482&y=49.73485112386289&z=17&source=pubt&id=21973611",
+        "walkDistance": 811
+      },
+      {
+        "description": "Tělocvičná jednota Sokol Plzeň Petřín 1919",
+        "distance": 267.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+        "lat": 49.729820251464844,
+        "lines": [],
+        "lon": 13.410361289978027,
+        "name": "sports",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QM_N/GUSB3U.jpeg",
+        "rating": 4,
+        "review_count": 3,
+        "source": "firm",
+        "source_id": 2131819,
+        "time": 369,
+        "url": "https://www.firmy.cz/detail/2131819-telocvicna-jednota-sokol-plzen-petrin-1919-plzen-lobzy.html",
+        "walkDistance": 400
+      },
+      {
+        "description": "Dr.Max Lékárna",
+        "distance": 874.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/72",
+        "lat": 49.73097610473633,
+        "lines": [],
+        "lon": 13.401501655578613,
+        "name": "drugstore",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qE_A/nPYADvcUkmBzBfmBnZHdYfnV/8ab7.jpeg",
+        "rating": 3,
+        "review_count": 16,
+        "source": "firm",
+        "source_id": 13001301,
+        "time": 1029,
+        "url": "https://www.firmy.cz/detail/13001301-dr-max-lekarna-plzen-vychodni-predmesti.html",
+        "walkDistance": 1099
+      },
+      {
+        "description": "Farmářská DS Skřítek Adámek",
+        "distance": 27.0,
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+        "lat": 49.73112487792969,
+        "lines": [],
+        "lon": 13.413856506347656,
+        "name": "kindergarten",
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qA_A/nCTUX1iX5DwDWzvRpGTaRu6/ada7.jpeg",
+        "rating": -1,
+        "review_count": 0,
+        "source": "firm",
+        "source_id": 13761119,
+        "time": 35,
+        "url": "https://www.firmy.cz/detail/13761119-farmarska-ds-skritek-adamek-plzen-bozkov.html",
+        "walkDistance": 39
+      }
+    ],
+    "labels_extended": {
+      "doctors": {
+        "data": [
+          {
+            "description": "U Tří voříšků - MVDr. Dagmar Caltová",
+            "distance": 21.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "lat": 49.73095703125,
+            "lines": [],
+            "lon": 13.413944244384766,
+            "name": "vet",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_F_B/K12KV.jpeg",
+            "rating": 4,
+            "review_count": 31,
+            "source": "firm",
+            "source_id": 313354,
+            "url": "https://www.firmy.cz/detail/313354-u-tri-vorisku-mvdr-dagmar-caltova-plzen-bozkov.html"
+          },
+          {
+            "description": "MUDr. Helena Filipovská",
+            "distance": 781.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "lat": 49.72991943359375,
+            "lines": [],
+            "lon": 13.402914047241211,
+            "name": "medic",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/0Qf5B3.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 2111037,
+            "time": 951,
+            "url": "https://www.firmy.cz/detail/2111037-mudr-helena-filipovska-plzen-vychodni-predmesti.html",
+            "walkDistance": 1014
+          },
+          {
+            "description": "MUDr. Sabina Šauerová - praktický lékař pro dospělé",
+            "distance": 781.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "lat": 49.72991943359375,
+            "lines": [],
+            "lon": 13.402914047241211,
+            "name": "medic_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QN_u/hc8Fvp.jpeg",
+            "rating": 5,
+            "review_count": 20,
+            "source": "firm",
+            "source_id": 13429325,
+            "url": "https://www.firmy.cz/detail/13429325-mudr-sabina-sauerova-prakticky-lekar-pro-dospele-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "MUDr. Eva Jirásková",
+            "distance": 925.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "lat": 49.73078155517578,
+            "lines": [],
+            "lon": 13.400794982910156,
+            "name": "medic_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/gxKixo.jpeg",
+            "rating": 5,
+            "review_count": 8,
+            "source": "firm",
+            "source_id": 386486,
+            "url": "https://www.firmy.cz/detail/386486-mudr-eva-jiraskova-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Poliklinika Plzeň Slovany, s.r.o.",
+            "distance": 925.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/418",
+            "lat": 49.73078155517578,
+            "lines": [],
+            "lon": 13.400794982910156,
+            "name": "medic_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_gX_6/De1CLr.jpeg",
+            "rating": 4,
+            "review_count": 10,
+            "source": "firm",
+            "source_id": 659963,
+            "url": "https://www.firmy.cz/detail/659963-poliklinika-plzen-slovany-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Všeobecný praktický lékař Plzeň, s.r.o.",
+            "distance": 925.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "lat": 49.73078155517578,
+            "lines": [],
+            "lon": 13.400794982910156,
+            "name": "medic_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/BldjCr.jpeg",
+            "rating": 5,
+            "review_count": 2,
+            "source": "firm",
+            "source_id": 12772595,
+            "url": "https://www.firmy.cz/detail/12772595-vseobecny-prakticky-lekar-plzen-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Veterinární ordinace Na Slovanech",
+            "distance": 1075.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "lat": 49.72749328613281,
+            "lines": [],
+            "lon": 13.399679183959961,
+            "name": "vet_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/qa15Ap.jpeg",
+            "rating": 4,
+            "review_count": 22,
+            "source": "firm",
+            "source_id": 2137489,
+            "url": "https://www.firmy.cz/detail/2137489-veterinarni-ordinace-na-slovanech-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Veterinář Plzeň - MVDr. Vítězslav Honsa",
+            "distance": 1346.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "lat": 49.730167388916016,
+            "lines": [],
+            "lon": 13.394969940185547,
+            "name": "vet_3",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86Tw5RPEodDIOd09a/a554.jpeg",
+            "rating": 4,
+            "review_count": 28,
+            "source": "firm",
+            "source_id": 13257750,
+            "url": "https://www.firmy.cz/detail/13257750-veterinar-plzen-mvdr-vitezslav-honsa-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "VEDILAB, spol. s r.o.",
+            "distance": 1350.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "lat": 49.7430534362793,
+            "lines": [],
+            "lon": 13.41368293762207,
+            "name": "vet_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QQ_L/bT6DS.jpeg",
+            "rating": 4,
+            "review_count": 108,
+            "source": "firm",
+            "source_id": 199609,
+            "url": "https://www.firmy.cz/detail/199609-vedilab-plzen-lobzy.html"
+          },
+          {
+            "description": "Veterinární ordinace Slovany",
+            "distance": 1364.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "lat": 49.734195709228516,
+            "lines": [],
+            "lon": 13.39538288116455,
+            "name": "vet_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_F_B/1MQEhQ.jpeg",
+            "rating": 5,
+            "review_count": 17,
+            "source": "firm",
+            "source_id": 470912,
+            "url": "https://www.firmy.cz/detail/470912-veterinarni-ordinace-slovany-plzen-vychodni-predmesti.html"
+          }
+        ],
+        "url": "https://www.firmy.cz/Prvni-pomoc-a-zdravotnictvi/Zdravotnicke-sluzby/Zdravotnicka-zarizeni?x=13.4136635378135&y=49.7309148042866&rt=adresa"
+      },
+      "grocery": {
+        "data": [
+          {
+            "description": "Minimarket Zapomněnka",
+            "distance": 49.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "lat": 49.73096466064453,
+            "lines": [],
+            "lon": 13.41434383392334,
+            "name": "small_shop",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QK_5/QdCJO3.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 13578996,
+            "url": "https://www.firmy.cz/detail/13578996-minimarket-zapomnenka-plzen-bozkov.html"
+          },
+          {
+            "description": "Potraviny Večerka Koterovská",
+            "distance": 354.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "lat": 49.73004150390625,
+            "lines": [],
+            "lon": 13.408930778503418,
+            "name": "small_shop_2",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86Tw5RPEpYiIOkABC/310c.jpeg",
+            "rating": 2,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 13470230,
+            "url": "https://www.firmy.cz/detail/13470230-potraviny-vecerka-koterovska-plzen-lobzy.html"
+          },
+          {
+            "description": "Potraviny - Thi Duyen Bui",
+            "distance": 380.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "lat": 49.73347473144531,
+            "lines": [],
+            "lon": 13.410161018371582,
+            "name": "small_shop_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_gX_6/HQnIwd.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 13697696,
+            "url": "https://www.firmy.cz/detail/13697696-potraviny-thi-duyen-bui-plzen-bozkov.html"
+          },
+          {
+            "description": "BILLA stop & shop",
+            "distance": 438.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "lat": 49.726985931396484,
+            "lines": [],
+            "lon": 13.413176536560059,
+            "name": "small_shop_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_gY_l/e6gMF4.jpeg",
+            "rating": 5,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 12978180,
+            "url": "https://www.firmy.cz/detail/12978180-billa-stop-shop-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "COOP Plzeň, družstvo",
+            "distance": 480.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "lat": 49.73159408569336,
+            "lines": [],
+            "lon": 13.420265197753906,
+            "name": "small_shop_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_B/VpbMgO.jpeg",
+            "rating": 4,
+            "review_count": 10,
+            "source": "firm",
+            "source_id": 465120,
+            "url": "https://www.firmy.cz/detail/465120-coop-plzen-plzen-bozkov.html"
+          },
+          {
+            "description": "Galerie Slovany, s.r.o.",
+            "distance": 912.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/419",
+            "lat": 49.73213577270508,
+            "lines": [],
+            "lon": 13.40112018585205,
+            "name": "shop",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/BFwvpx.jpeg",
+            "rating": 4,
+            "review_count": 36,
+            "source": "firm",
+            "source_id": 2301407,
+            "time": 1104,
+            "url": "https://www.firmy.cz/detail/2301407-galerie-slovany-plzen-vychodni-predmesti.html",
+            "walkDistance": 1149
+          },
+          {
+            "description": "Albert Hypermarket",
+            "distance": 2041.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/101",
+            "lat": 49.74738693237305,
+            "lines": [],
+            "lon": 13.401130676269531,
+            "name": "shop_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/ErDBHjh.jpeg",
+            "rating": 4,
+            "review_count": 26,
+            "source": "firm",
+            "source_id": 12903691,
+            "url": "https://www.firmy.cz/detail/12903691-albert-hypermarket-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Tesco Extra",
+            "distance": 2377.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/101",
+            "lat": 49.7454833984375,
+            "lines": [],
+            "lon": 13.437873840332031,
+            "name": "shop_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/UlfvRH.jpeg",
+            "rating": 4,
+            "review_count": 74,
+            "source": "firm",
+            "source_id": 218200,
+            "url": "https://www.firmy.cz/detail/218200-tesco-extra-plzen-doubravka.html"
+          },
+          {
+            "description": "OC Rokycanská",
+            "distance": 2387.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/419",
+            "lat": 49.746238708496094,
+            "lines": [],
+            "lon": 13.436929702758789,
+            "name": "shop_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_gU_m/g3LGLh.jpeg",
+            "rating": 4,
+            "review_count": 54,
+            "source": "firm",
+            "source_id": 13353510,
+            "url": "https://www.firmy.cz/detail/13353510-oc-rokycanska-plzen-doubravka.html"
+          },
+          {
+            "description": "OC Luna",
+            "distance": 3047.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/419",
+            "lat": 49.72320556640625,
+            "lines": [],
+            "lon": 13.372991561889648,
+            "name": "shop_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oY_A/kBkJRwehYDi8gR6uDCZuhI/1ed4.jpeg",
+            "rating": 4,
+            "review_count": 18,
+            "source": "firm",
+            "source_id": 13704446,
+            "url": "https://www.firmy.cz/detail/13704446-oc-luna-plzen-doudlevce.html"
+          }
+        ],
+        "url": "https://www.firmy.cz/Obchody-a-obchudky/Prodejci-potravin?x=13.4136635378135&y=49.7309148042866&rt=adresa"
+      },
+      "leisure": {
+        "data": [
+          {
+            "description": "Dětské hřiště Barákova",
+            "distance": 228.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "lat": 49.72985,
+            "lines": [],
+            "lon": 13.41637,
+            "name": "playground",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_gU_w/lS7JaT.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 2422857,
+            "url": "https://mapy.cz/zakladni?x=13.41637&y=49.72985&z=17&source=base&id=2422857"
+          },
+          {
+            "description": "Tělocvičná jednota Sokol Plzeň Petřín 1919",
+            "distance": 267.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "lat": 49.729820251464844,
+            "lines": [],
+            "lon": 13.410361289978027,
+            "name": "sports",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QM_N/GUSB3U.jpeg",
+            "rating": 4,
+            "review_count": 3,
+            "source": "firm",
+            "source_id": 2131819,
+            "time": 369,
+            "url": "https://www.firmy.cz/detail/2131819-telocvicna-jednota-sokol-plzen-petrin-1919-plzen-lobzy.html",
+            "walkDistance": 400
+          },
+          {
+            "description": "Dětské hřiště Vřesínská",
+            "distance": 268.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "lat": 49.7314272,
+            "lines": [],
+            "lon": 13.4173139,
+            "name": "playground_2",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qC_A/kQMlcCt5zmBDp4mJWuG9DrUL/bece.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 2083281,
+            "url": "https://mapy.cz/zakladni?x=13.4173139&y=49.7314272&z=17&source=base&id=2083281"
+          },
+          {
+            "description": "Dětské hřiště Na vyhlídce",
+            "distance": 426.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "lat": 49.7344467,
+            "lines": [],
+            "lon": 13.4159589,
+            "name": "playground_3",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdk3whEFEVHIOkAnq/b885.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 2068136,
+            "url": "https://mapy.cz/zakladni?x=13.4159589&y=49.7344467&z=17&source=base&id=2068136"
+          },
+          {
+            "description": "Dětské hřiště Blatenská",
+            "distance": 501.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "lat": 49.7331219,
+            "lines": [],
+            "lon": 13.4075878,
+            "name": "playground_4",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QR_o/uFyDYt.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 2502739,
+            "url": "https://mapy.cz/zakladni?x=13.4075878&y=49.7331219&z=17&source=base&id=2502739"
+          },
+          {
+            "description": "In Motion Academy - parkourová hala",
+            "distance": 505.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "lat": 49.72639083862305,
+            "lines": [],
+            "lon": 13.413094520568848,
+            "name": "sports_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_F_J/xonV4.jpeg",
+            "rating": 5,
+            "review_count": 7,
+            "source": "firm",
+            "source_id": 13077140,
+            "url": "https://www.firmy.cz/detail/13077140-in-motion-academy-parkourova-hala-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Dětské hřiště sady Fr. Brožíka",
+            "distance": 508.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "lat": 49.7304558,
+            "lines": [],
+            "lon": 13.4206889,
+            "name": "playground_5",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qC_A/nO2CysqjGrB9kIMTZVG9Du5i/8f9f.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 2083559,
+            "url": "https://mapy.cz/zakladni?x=13.4206889&y=49.7304558&z=17&source=base&id=2083559"
+          },
+          {
+            "description": "Driving Plzeň, s.r.o.",
+            "distance": 603.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/45",
+            "lat": 49.736045837402344,
+            "lines": [],
+            "lon": 13.416380882263184,
+            "name": "sports_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_p9_A/nPVpfd5QLLDqzReJWuF7TFw8/8612.jpeg",
+            "rating": 5,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 13892068,
+            "url": "https://www.firmy.cz/detail/13892068-driving-plzen-plzen-lobzy.html"
+          },
+          {
+            "description": "Sportovní hřiště TJ Božkov",
+            "distance": 712.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "lat": 49.73127826629164,
+            "lines": [],
+            "lon": 13.423555247850416,
+            "name": "sports_4",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_of_A/nOztZkD4ZlBWHnvBcHE2EwTu/cb14.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 2615704,
+            "url": "https://mapy.cz/zakladni?x=13.423555247850416&y=49.73127826629164&z=17&source=base&id=2615704"
+          },
+          {
+            "description": "TJ Božkov, o.s.",
+            "distance": 723.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "lat": 49.7308235168457,
+            "lines": [],
+            "lon": 13.423718452453613,
+            "name": "sports_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QJ_o/SFBDTa.jpeg",
+            "rating": 5,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 2648963,
+            "url": "https://www.firmy.cz/detail/2648963-tj-bozkov-o-s-plzen-bozkov.html"
+          },
+          {
+            "description": "Divadlo Jezírko",
+            "distance": 956.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/39",
+            "lat": 49.72383499145508,
+            "lines": [],
+            "lon": 13.406108856201172,
+            "name": "theater",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/VAb4VY.jpeg",
+            "rating": 5,
+            "review_count": 2,
+            "source": "firm",
+            "source_id": 740611,
+            "url": "https://www.firmy.cz/detail/740611-divadlo-jezirko-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Klasika bez fraku",
+            "distance": 1858.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/39",
+            "lat": 49.732177734375,
+            "lines": [],
+            "lon": 13.387890815734863,
+            "name": "theater_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/zNoBB9B.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 2264134,
+            "url": "https://www.firmy.cz/detail/2264134-klasika-bez-fraku-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Divadlo Alfa",
+            "distance": 2009.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/39",
+            "lat": 49.748435974121094,
+            "lines": [],
+            "lon": 13.40682601928711,
+            "name": "theater_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/rRe9Ma.jpeg",
+            "rating": 4,
+            "review_count": 16,
+            "source": "firm",
+            "source_id": 231293,
+            "url": "https://www.firmy.cz/detail/231293-divadlo-alfa-plzen-lobzy.html"
+          },
+          {
+            "description": "Divadlo Pluto",
+            "distance": 2386.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/39",
+            "lat": 49.75234603881836,
+            "lines": [],
+            "lon": 13.415412902832031,
+            "name": "theater_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/WUfgKa.jpeg",
+            "rating": 5,
+            "review_count": 25,
+            "source": "firm",
+            "source_id": 397008,
+            "url": "https://www.firmy.cz/detail/397008-divadlo-pluto-plzen-doubravka.html"
+          },
+          {
+            "description": "Divadélko JoNáš",
+            "distance": 3051.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/39",
+            "lat": 49.74452590942383,
+            "lines": [],
+            "lon": 13.376797676086426,
+            "name": "theater_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qB_A/nO2CysqjGrCP7qOBrmGvdUh2/1aa8.jpeg",
+            "rating": 4,
+            "review_count": 2,
+            "source": "firm",
+            "source_id": 13921557,
+            "url": "https://www.firmy.cz/detail/13921557-divadelko-jonas-plzen-jizni-predmesti.html"
+          },
+          {
+            "description": "Kino Beseda",
+            "distance": 3057.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+            "lat": 49.74446105957031,
+            "lines": [],
+            "lon": 13.376643180847168,
+            "name": "movies",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qB_A/nCTUX1iX5CGpNZBWwNGrbw6E/1401.jpeg",
+            "rating": 4,
+            "review_count": 3,
+            "source": "firm",
+            "source_id": 12773769,
+            "url": "https://www.firmy.cz/detail/12773769-kino-beseda-plzen-jizni-predmesti.html"
+          },
+          {
+            "description": "Katedrála sv. Bartoloměje",
+            "distance": 3177.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/66",
+            "lat": 49.7474471280474,
+            "lines": [],
+            "lon": 13.3776119050402,
+            "name": "sightseeing",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oV_A/kO7h3dRn21QqW1X6CGTD4d/cc9f.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "base",
+            "source_id": 1890658,
+            "url": "https://mapy.cz/zakladni?x=13.3776119050402&y=49.7474471280474&z=17&source=base&id=1890658"
+          },
+          {
+            "description": "CineStar Plzeň",
+            "distance": 3427.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+            "lat": 49.70152282714844,
+            "lines": [],
+            "lon": 13.427990913391113,
+            "name": "movies_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/8ym7Sd.jpeg",
+            "rating": 4,
+            "review_count": 52,
+            "source": "firm",
+            "source_id": 662177,
+            "url": "https://www.firmy.cz/detail/662177-cinestar-plzen-plzen-cernice.html"
+          },
+          {
+            "description": "Cinema City Plzeň",
+            "distance": 3816.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+            "lat": 49.749366760253906,
+            "lines": [],
+            "lon": 13.368882179260254,
+            "name": "movies_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/Bv0ham.jpeg",
+            "rating": 3,
+            "review_count": 49,
+            "source": "firm",
+            "source_id": 2246853,
+            "url": "https://www.firmy.cz/detail/2246853-cinema-city-plzen-plzen-jizni-predmesti.html"
+          }
+        ],
+        "url": "https://mapy.cz/zakladni?x=13.4136635378135&y=49.7309148042866&z=16&q=volny%20%C4%8Das"
+      },
+      "restaurants": {
+        "data": [
+          {
+            "description": "Zastávka u Michala",
+            "distance": 363.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "lat": 49.73341751098633,
+            "lines": [],
+            "lon": 13.410415649414062,
+            "name": "restaurant",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oa_A/kFWXc8OzJkFuBFPDfvo3u/2950.jpeg",
+            "rating": 5,
+            "review_count": 3,
+            "source": "firm",
+            "source_id": 13722516,
+            "time": 439,
+            "url": "https://www.firmy.cz/detail/13722516-zastavka-u-michala-plzen-bozkov.html",
+            "walkDistance": 466
+          },
+          {
+            "description": "Restaurace TechTower",
+            "distance": 376.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "lat": 49.72867202758789,
+            "lines": [],
+            "lon": 13.409749984741211,
+            "name": "restaurant_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oV_B/kObgaqJNMnD1IUpUaCKqCFh/37bf.jpeg",
+            "rating": 3,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 13767029,
+            "url": "https://www.firmy.cz/detail/13767029-restaurace-techtower-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Pivnice Sladovnická",
+            "distance": 519.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "lat": 49.73190689086914,
+            "lines": [],
+            "lon": 13.406606674194336,
+            "name": "tavern",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_E_C/z2wKj.jpeg",
+            "rating": 4,
+            "review_count": 86,
+            "source": "firm",
+            "source_id": 2603445,
+            "url": "https://www.firmy.cz/detail/2603445-pivnice-sladovnicka-plzen-lobzy.html"
+          },
+          {
+            "description": "Cukrárna a kavárna Frikulínek",
+            "distance": 585.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+            "lat": 49.73069381713867,
+            "lines": [],
+            "lon": 13.405537605285645,
+            "name": "candy_shop",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QO_7/nbl8Zd.jpeg",
+            "rating": 3,
+            "review_count": 12,
+            "source": "firm",
+            "source_id": 13500229,
+            "url": "https://www.firmy.cz/detail/13500229-cukrarna-a-kavarna-frikulinek-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Plzeňské stravování",
+            "distance": 634.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "lat": 49.728179931640625,
+            "lines": [],
+            "lon": 13.421408653259277,
+            "name": "restaurant_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_H/TsQBdSp.jpeg",
+            "rating": 4,
+            "review_count": 21,
+            "source": "firm",
+            "source_id": 12955815,
+            "url": "https://www.firmy.cz/detail/12955815-plzenske-stravovani-plzen-bozkov.html"
+          },
+          {
+            "description": "Hostinec Pod Kopcem",
+            "distance": 744.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "lat": 49.73249435424805,
+            "lines": [],
+            "lon": 13.423725128173828,
+            "name": "tavern_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_ob_A/kBj94XhVwxTWxB7aD5kkOw/eb59.jpeg",
+            "rating": 3,
+            "review_count": 2,
+            "source": "firm",
+            "source_id": 13973067,
+            "url": "https://www.firmy.cz/detail/13973067-hostinec-pod-kopcem-plzen-bozkov.html"
+          },
+          {
+            "description": "Cukrárna Romance",
+            "distance": 835.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+            "lat": 49.73596954345703,
+            "lines": [],
+            "lon": 13.40507698059082,
+            "name": "candy_shop_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qF_A/nOdL4BtPEyvOo9B4qHxs88b/8afd.jpeg",
+            "rating": 5,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 14069093,
+            "url": "https://www.firmy.cz/detail/14069093-cukrarna-romance-plzen-lobzy.html"
+          },
+          {
+            "description": "Garage Osteria",
+            "distance": 845.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "lat": 49.73285675048828,
+            "lines": [],
+            "lon": 13.402299880981445,
+            "name": "restaurant_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QO_BA/a0xZbG.jpeg",
+            "rating": 4,
+            "review_count": 64,
+            "source": "firm",
+            "source_id": 13423817,
+            "url": "https://www.firmy.cz/detail/13423817-garage-osteria-plzen-lobzy.html"
+          },
+          {
+            "description": "Čínská restaurace Jian Guo",
+            "distance": 848.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "lat": 49.73606872558594,
+            "lines": [],
+            "lon": 13.404970169067383,
+            "name": "restaurant_5",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_m3_A/nb4N2OmYQB5voJdGBkBrbH/7331.mpo",
+            "rating": 4,
+            "review_count": 12,
+            "source": "firm",
+            "source_id": 13455350,
+            "url": "https://www.firmy.cz/detail/13455350-cinska-restaurace-jian-guo-plzen-lobzy.html"
+          },
+          {
+            "description": "CrossCafe Galerie Slovany",
+            "distance": 934.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+            "lat": 49.73213195800781,
+            "lines": [],
+            "lon": 13.400799751281738,
+            "name": "candy_shop_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QK_N/lKeCgO.jpeg",
+            "rating": 3,
+            "review_count": 16,
+            "source": "firm",
+            "source_id": 12858831,
+            "url": "https://www.firmy.cz/detail/12858831-crosscafe-galerie-slovany-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Hospoda Šeříková 35",
+            "distance": 1046.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "lat": 49.722434997558594,
+            "lines": [],
+            "lon": 13.407373428344727,
+            "name": "tavern_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qB_A/kcHp2YdDtEDuRmDNpGf27pG/77a5.jpeg",
+            "rating": 5,
+            "review_count": 6,
+            "source": "firm",
+            "source_id": 13121280,
+            "url": "https://www.firmy.cz/detail/13121280-hospoda-serikova-35-plzen-koterov.html"
+          },
+          {
+            "description": "Lahůdky a cukrárna Beruška",
+            "distance": 1190.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+            "lat": 49.7343635559082,
+            "lines": [],
+            "lon": 13.39798355102539,
+            "name": "candy_shop_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/GD6i2n.jpeg",
+            "rating": 5,
+            "review_count": 58,
+            "source": "firm",
+            "source_id": 13757530,
+            "url": "https://www.firmy.cz/detail/13757530-lahudky-a-cukrarna-beruska-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Pivnice U Kostečků",
+            "distance": 1465.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "lat": 49.73031997680664,
+            "lines": [],
+            "lon": 13.393295288085938,
+            "name": "tavern_4",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdk3RI9BfvNIOgodo/8512.jpeg",
+            "rating": 5,
+            "review_count": 4,
+            "source": "firm",
+            "source_id": 13554252,
+            "url": "https://www.firmy.cz/detail/13554252-pivnice-u-kostecku-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Cukrárna Kavárna na Slovanské",
+            "distance": 1526.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+            "lat": 49.732784271240234,
+            "lines": [],
+            "lon": 13.392633438110352,
+            "name": "candy_shop_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oe_A/nPSV1TXV2nCJGajFAtEhjpTM/ff52.jpeg",
+            "rating": 4,
+            "review_count": 6,
+            "source": "firm",
+            "source_id": 13883120,
+            "url": "https://www.firmy.cz/detail/13883120-cukrarna-kavarna-na-slovanske-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Penzion Jaroslav Krásný",
+            "distance": 1894.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "lat": 49.72734451293945,
+            "lines": [],
+            "lon": 13.387899398803711,
+            "name": "tavern_5",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TkUyxBjBJIOjs7S/e1ca.jpeg",
+            "rating": 5,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 12721966,
+            "url": "https://www.firmy.cz/detail/12721966-penzion-jaroslav-krasny-plzen-doudlevce.html"
+          }
+        ],
+        "url": "https://www.firmy.cz/Restauracni-a-pohostinske-sluzby?x=13.4136635378135&y=49.7309148042866&rt=adresa"
+      },
+      "schools": {
+        "data": [
+          {
+            "description": "Farmářská DS Skřítek Adámek",
+            "distance": 27.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "lat": 49.73112487792969,
+            "lines": [],
+            "lon": 13.413856506347656,
+            "name": "kindergarten",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qA_A/nCTUX1iX5DwDWzvRpGTaRu6/ada7.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 13761119,
+            "time": 35,
+            "url": "https://www.firmy.cz/detail/13761119-farmarska-ds-skritek-adamek-plzen-bozkov.html",
+            "walkDistance": 39
+          },
+          {
+            "description": "Včelí akademie",
+            "distance": 88.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "lat": 49.73159408569336,
+            "lines": [],
+            "lon": 13.414290428161621,
+            "name": "kindergarten_2",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkC4TclBcu5IN0kon/a5c2.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 13623488,
+            "url": "https://www.firmy.cz/detail/13623488-vceli-akademie-plzen-bozkov.html"
+          },
+          {
+            "description": "ZŠ a MŠ Plzeň-Božkov, Vřesinská",
+            "distance": 364.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "lat": 49.731204986572266,
+            "lines": [],
+            "lon": 13.418709754943848,
+            "name": "school",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_B/oxDMgX.jpeg",
+            "rating": 3,
+            "review_count": 3,
+            "source": "firm",
+            "source_id": 358876,
+            "time": 600,
+            "url": "https://www.firmy.cz/detail/358876-zs-a-ms-plzen-bozkov-vresinska-plzen-bozkov.html",
+            "walkDistance": 649
+          },
+          {
+            "description": "ZŠ a MŠ Plzeň-Božkov, Vřesinská",
+            "distance": 364.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "lat": 49.731204986572266,
+            "lines": [],
+            "lon": 13.418709754943848,
+            "name": "kindergarten_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_B/bVbMgV.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 434738,
+            "url": "https://www.firmy.cz/detail/434738-zs-a-ms-plzen-bozkov-vresinska-plzen-bozkov.html"
+          },
+          {
+            "description": "38. MŠ Plzeň",
+            "distance": 379.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "lat": 49.7296142578125,
+            "lines": [],
+            "lon": 13.408785820007324,
+            "name": "kindergarten_4",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUD9QxwBTqrIMFbUg/adcc.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "firm",
+            "source_id": 13764095,
+            "url": "https://www.firmy.cz/detail/13764095-38-ms-plzen-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "21. MŠ Plzeň",
+            "distance": 490.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "lat": 49.73150634765625,
+            "lines": [],
+            "lon": 13.406906127929688,
+            "name": "kindergarten_5",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_E_C/IaRLA.jpeg",
+            "rating": 5,
+            "review_count": 3,
+            "source": "firm",
+            "source_id": 1278400,
+            "url": "https://www.firmy.cz/detail/1278400-21-ms-plzen-plzen-lobzy.html"
+          },
+          {
+            "description": "Škola Basic Plzeň",
+            "distance": 525.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "lat": 49.726192474365234,
+            "lines": [],
+            "lon": 13.413676261901855,
+            "name": "school_2",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oW_A/nO1SBfAluis55qraCUDXUY/b633.jpeg",
+            "rating": 5,
+            "review_count": 4,
+            "source": "firm",
+            "source_id": 13709426,
+            "url": "https://www.firmy.cz/detail/13709426-skola-basic-plzen-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "Základní škola Easy Start, s.r.o.",
+            "distance": 655.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "lat": 49.73412322998047,
+            "lines": [],
+            "lon": 13.406020164489746,
+            "name": "school_3",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/9TRBvkR.jpeg",
+            "rating": 5,
+            "review_count": 1,
+            "source": "firm",
+            "source_id": 2588754,
+            "url": "https://www.firmy.cz/detail/2588754-zakladni-skola-easy-start-plzen-lobzy.html"
+          },
+          {
+            "description": "20. ZŠ Plzeň",
+            "distance": 664.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "lat": 49.728946685791016,
+            "lines": [],
+            "lon": 13.404948234558105,
+            "name": "school_4",
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/Yau4hO.jpeg",
+            "rating": 4,
+            "review_count": 6,
+            "source": "firm",
+            "source_id": 358854,
+            "url": "https://www.firmy.cz/detail/358854-20-zs-plzen-plzen-vychodni-predmesti.html"
+          },
+          {
+            "description": "ZŠ a MŠ při Fakultní nemocnici Plzeň, Skupova",
+            "distance": 708.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "lat": 49.72802734375,
+            "lines": [],
+            "lon": 13.404884338378906,
+            "name": "school_5",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDi9WNBqcpIOgn9f/453b.jpeg",
+            "rating": 4,
+            "review_count": 2,
+            "source": "firm",
+            "source_id": 12971904,
+            "url": "https://www.firmy.cz/detail/12971904-zs-a-ms-pri-fakultni-nemocnici-plzen-skupova-plzen-vychodni-predmesti.html"
+          }
+        ],
+        "url": "https://www.firmy.cz/Instituce-a-urady/Vzdelavaci-instituce?x=13.4136635378135&y=49.7309148042866&rt=adresa"
+      },
+      "transport": {
+        "data": [
+          {
+            "description": "Na Spojce",
+            "distance": 241.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/336",
+            "lat": 49.7330648768,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "3561",
+                "line_label": "12",
+                "poi_id": 15697779,
+                "terminus": "Božkov",
+                "type": "trolejbus"
+              }
+            ],
+            "lon": 13.4141379238,
+            "name": "bus_public_transport",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCaRYmBUCOIMEz6T/ced9.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697779,
+            "time": 647,
+            "url": "https://mapy.cz/zakladni?x=13.4141379238&y=49.7330648768&z=17&source=pubt&id=15697779",
+            "walkDistance": 714
+          },
+          {
+            "description": "Na Spojce",
+            "distance": 250.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/336",
+            "lat": 49.7330399234,
+            "lines": [
+              {
+                "departure_direction": 1,
+                "line_id": "3561",
+                "line_label": "12",
+                "poi_id": 15697588,
+                "terminus": "Nová Hospoda",
+                "type": "trolejbus"
+              }
+            ],
+            "lon": 13.4147996573,
+            "name": "bus_public_transport_2",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUB6IMDD1geIMEz5n/173b.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697588,
+            "url": "https://mapy.cz/zakladni?x=13.4147996573&y=49.7330399234&z=17&source=pubt&id=15697588"
+          },
+          {
+            "description": "Sladová",
+            "distance": 363.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+            "lat": 49.7297063789035,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "3538",
+                "line_label": "N2",
+                "poi_id": 15697679,
+                "terminus": "Černice",
+                "type": "bus"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "3541",
+                "line_label": "N5",
+                "poi_id": 15697679,
+                "terminus": "Černice",
+                "type": "bus"
+              }
+            ],
+            "lon": 13.4089684472595,
+            "name": "bus_public_transport_3",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_gY_s/zExfVE.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697679,
+            "url": "https://mapy.cz/zakladni?x=13.4089684472595&y=49.7297063789035&z=17&source=pubt&id=15697679"
+          },
+          {
+            "description": "Petřínská",
+            "distance": 374.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/336",
+            "lat": 49.733371839,
+            "lines": [
+              {
+                "departure_direction": 1,
+                "line_id": "3561",
+                "line_label": "12",
+                "poi_id": 15697405,
+                "terminus": "Nová Hospoda",
+                "type": "trolejbus"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "440336",
+                "line_label": "336",
+                "poi_id": 15697405,
+                "terminus": "Plzeň, Terminál Hlavní nádraží",
+                "type": "bus"
+              }
+            ],
+            "lon": 13.4101198698,
+            "name": "bus_public_transport_4",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUB854tuKAIK3FaT/7316.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697405,
+            "url": "https://mapy.cz/zakladni?x=13.4101198698&y=49.733371839&z=17&source=pubt&id=15697405"
+          },
+          {
+            "description": "Světovar",
+            "distance": 375.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/155",
+            "lat": 49.72761154,
+            "lines": [
+              {
+                "departure_direction": 1,
+                "line_id": "3508",
+                "line_label": "2",
+                "poi_id": 15697682,
+                "terminus": "Skvrňany",
+                "type": "tram"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "3571",
+                "line_label": "2",
+                "poi_id": 15697682,
+                "terminus": "Jízdecká",
+                "type": "tram"
+              }
+            ],
+            "lon": 13.41263962,
+            "name": "tram",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oa_A/kPxAuWMbDHCL8cmurDiVUO0/4b8d.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697682,
+            "time": 482,
+            "url": "https://mapy.cz/zakladni?x=13.41263962&y=49.72761154&z=17&source=pubt&id=15697682",
+            "walkDistance": 508
+          },
+          {
+            "description": "Světovar",
+            "distance": 387.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/336",
+            "lat": 49.7278843218,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "3553",
+                "line_label": "22",
+                "poi_id": 15697575,
+                "terminus": "Koterov",
+                "type": "trolejbus"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "3538",
+                "line_label": "N2",
+                "poi_id": 15697575,
+                "terminus": "Zadní Skvrňany",
+                "type": "bus"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "3541",
+                "line_label": "N5",
+                "poi_id": 15697575,
+                "terminus": "Malesice",
+                "type": "bus"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "3557",
+                "line_label": "51",
+                "poi_id": 15697575,
+                "terminus": "Koterov",
+                "type": "bus"
+              }
+            ],
+            "lon": 13.4110061885,
+            "name": "bus_public_transport_5",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QK_f/ax5vo.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697575,
+            "url": "https://mapy.cz/zakladni?x=13.4110061885&y=49.7278843218&z=17&source=pubt&id=15697575"
+          },
+          {
+            "description": "Světovar",
+            "distance": 395.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/155",
+            "lat": 49.72750889778528,
+            "lines": [],
+            "lon": 13.412082675344237,
+            "name": "tram_2",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qG_A/nCR9NVflLCNT9ccddIALNKU/a5f9.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697783,
+            "url": "https://mapy.cz/zakladni?x=13.412082675344237&y=49.72750889778528&z=17&source=pubt&id=15697783"
+          },
+          {
+            "description": "Brojova",
+            "distance": 487.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/155",
+            "lat": 49.73040009,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "3508",
+                "line_label": "2",
+                "poi_id": 15712351,
+                "terminus": "Světovar",
+                "type": "tram"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "3571",
+                "line_label": "2",
+                "poi_id": 15712351,
+                "terminus": "Světovar",
+                "type": "tram"
+              }
+            ],
+            "lon": 13.40692997,
+            "name": "tram_3",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QO_z/Dx5SCp.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15712351,
+            "url": "https://mapy.cz/zakladni?x=13.40692997&y=49.73040009&z=17&source=pubt&id=15712351"
+          },
+          {
+            "description": "Brojova",
+            "distance": 510.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/155",
+            "lat": 49.7305909447,
+            "lines": [
+              {
+                "departure_direction": 1,
+                "line_id": "3508",
+                "line_label": "2",
+                "poi_id": 15697798,
+                "terminus": "Skvrňany",
+                "type": "tram"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "3571",
+                "line_label": "2",
+                "poi_id": 15697798,
+                "terminus": "Jízdecká",
+                "type": "tram"
+              }
+            ],
+            "lon": 13.406579752,
+            "name": "tram_4",
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDzG4UBoMIIOdxPY/2668.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15697798,
+            "url": "https://mapy.cz/zakladni?x=13.406579752&y=49.7305909447&z=17&source=pubt&id=15697798"
+          },
+          {
+            "description": "Plzeň-Slovany",
+            "distance": 606.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "lat": 49.73485112386289,
+            "lines": [
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P1J",
+                "line_label": "P1J",
+                "poi_id": 21973611,
+                "terminus": "Plzeň-Jižní Předměstí",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P1J",
+                "line_label": "P1J",
+                "poi_id": 21973611,
+                "terminus": "Nepomuk",
+                "type": "vlak"
+              }
+            ],
+            "lon": 13.40783048490482,
+            "name": "train",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QN_2/dIlLK7.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 21973611,
+            "time": 737,
+            "url": "https://mapy.cz/zakladni?x=13.40783048490482&y=49.73485112386289&z=17&source=pubt&id=21973611",
+            "walkDistance": 811
+          },
+          {
+            "description": "Radnice Slovany",
+            "distance": 784.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/155",
+            "lat": 49.73194885,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "3508",
+                "line_label": "2",
+                "poi_id": 19770985,
+                "terminus": "Světovar",
+                "type": "tram"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "3571",
+                "line_label": "2",
+                "poi_id": 19770985,
+                "terminus": "Světovar",
+                "type": "tram"
+              }
+            ],
+            "lon": 13.40287018,
+            "name": "tram_5",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QL_5/drJH4A.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 19770985,
+            "url": "https://mapy.cz/zakladni?x=13.40287018&y=49.73194885&z=17&source=pubt&id=19770985"
+          },
+          {
+            "description": "Plzeň hlavní nádraží",
+            "distance": 2315.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "lat": 49.743543864,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "341",
+                "line_label": "LE",
+                "poi_id": 15698529,
+                "terminus": "Karlsplatz (Stachus)",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "EC_350",
+                "line_label": "EC 350",
+                "poi_id": 15698529,
+                "terminus": "Furth im Wald",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "EC_352",
+                "line_label": "EC 352",
+                "poi_id": 15698529,
+                "terminus": "Furth im Wald",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "EC_354",
+                "line_label": "EC 354",
+                "poi_id": 15698529,
+                "terminus": "Furth im Wald",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "EC_356",
+                "line_label": "EC 356",
+                "poi_id": 15698529,
+                "terminus": "Furth im Wald",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "EC_358",
+                "line_label": "EC 358",
+                "poi_id": 15698529,
+                "terminus": "Furth im Wald",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "EC_361",
+                "line_label": "EC 361",
+                "poi_id": 15698529,
+                "terminus": "Praha hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Ex6",
+                "line_label": "Ex6",
+                "poi_id": 15698529,
+                "terminus": "Praha-Radotín",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Ex6",
+                "line_label": "Ex6",
+                "poi_id": 15698529,
+                "terminus": "Praha-Vysočany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Ex6",
+                "line_label": "Ex6",
+                "poi_id": 15698529,
+                "terminus": "Cheb",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "IC_503",
+                "line_label": "IC 503",
+                "poi_id": 15698529,
+                "terminus": "Ostrava hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P13",
+                "line_label": "P13",
+                "poi_id": 15698529,
+                "terminus": "Radnice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P13",
+                "line_label": "P13",
+                "poi_id": 15698529,
+                "terminus": "Bezdružice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P1J",
+                "line_label": "P1J",
+                "poi_id": 15698529,
+                "terminus": "Plzeň-Jižní Předměstí",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P1J",
+                "line_label": "P1J",
+                "poi_id": 15698529,
+                "terminus": "Nepomuk",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P1Z",
+                "line_label": "P1Z",
+                "poi_id": 15698529,
+                "terminus": "Karlovy Vary",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15698529,
+                "terminus": "Beroun",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15698529,
+                "terminus": "Přeštice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P21",
+                "line_label": "P21",
+                "poi_id": 15698529,
+                "terminus": "Příkosice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P22",
+                "line_label": "P22",
+                "poi_id": 15698529,
+                "terminus": "Bezdružice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P22",
+                "line_label": "P22",
+                "poi_id": 15698529,
+                "terminus": "Radnice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P24",
+                "line_label": "P24",
+                "poi_id": 15698529,
+                "terminus": "Nýrsko",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P3",
+                "line_label": "P3",
+                "poi_id": 15698529,
+                "terminus": "Domažlice město",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P4",
+                "line_label": "P4",
+                "poi_id": 15698529,
+                "terminus": "Plasy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "R16",
+                "line_label": "R16",
+                "poi_id": 15698529,
+                "terminus": "Praha hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "R16",
+                "line_label": "R16",
+                "poi_id": 15698529,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "R25",
+                "line_label": "R25",
+                "poi_id": 15698529,
+                "terminus": "Most",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "R31",
+                "line_label": "R31",
+                "poi_id": 15698529,
+                "terminus": "České Budějovice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "SC_504",
+                "line_label": "SC 504",
+                "poi_id": 15698529,
+                "terminus": "Karlovy Vary",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1700",
+                "line_label": "Sp 1700",
+                "poi_id": 15698529,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1701",
+                "line_label": "Sp 1701",
+                "poi_id": 15698529,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1702",
+                "line_label": "Sp 1702",
+                "poi_id": 15698529,
+                "terminus": "Železná Ruda-Alžbětín",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1703",
+                "line_label": "Sp 1703",
+                "poi_id": 15698529,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1706",
+                "line_label": "Sp 1706",
+                "poi_id": 15698529,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1708",
+                "line_label": "Sp 1708",
+                "poi_id": 15698529,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "SČ-S70",
+                "line_label": "S70",
+                "poi_id": 15698529,
+                "terminus": "Přeštice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "rj_512",
+                "line_label": "rj 512",
+                "poi_id": 15698529,
+                "terminus": "Františkovy Lázně",
+                "type": "vlak"
+              }
+            ],
+            "lon": 13.3880581834,
+            "name": "train_2",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_ob_A/kBj94XhVwDhmNhBKyDwVgJ6/8a8d.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15698529,
+            "url": "https://mapy.cz/zakladni?x=13.3880581834&y=49.743543864&z=17&source=pubt&id=15698529"
+          },
+          {
+            "description": "Plzeň-Doudlevce",
+            "distance": 2431.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "lat": 49.721627112,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15212477,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15212477,
+                "terminus": "Přeštice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P24",
+                "line_label": "P24",
+                "poi_id": 15212477,
+                "terminus": "Nýrsko",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P24",
+                "line_label": "P24",
+                "poi_id": 15212477,
+                "terminus": "Plzeň hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "SČ-S70",
+                "line_label": "S70",
+                "poi_id": 15212477,
+                "terminus": "Přeštice",
+                "type": "vlak"
+              }
+            ],
+            "lon": 13.3830440466,
+            "name": "train_3",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_p8_A/kY1K2LlXQB7HUzD42F2nVyO/0bf4.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15212477,
+            "url": "https://mapy.cz/zakladni?x=13.3830440466&y=49.721627112&z=17&source=pubt&id=15212477"
+          },
+          {
+            "description": "Plzeň zastávka",
+            "distance": 2861.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "lat": 49.7367210329,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15212473,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15212473,
+                "terminus": "Přeštice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P24",
+                "line_label": "P24",
+                "poi_id": 15212473,
+                "terminus": "Nýrsko",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P24",
+                "line_label": "P24",
+                "poi_id": 15212473,
+                "terminus": "Plzeň hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "R16",
+                "line_label": "R16",
+                "poi_id": 15212473,
+                "terminus": "Praha hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "R16",
+                "line_label": "R16",
+                "poi_id": 15212473,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1700",
+                "line_label": "Sp 1700",
+                "poi_id": 15212473,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1701",
+                "line_label": "Sp 1701",
+                "poi_id": 15212473,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1702",
+                "line_label": "Sp 1702",
+                "poi_id": 15212473,
+                "terminus": "Železná Ruda-Alžbětín",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1703",
+                "line_label": "Sp 1703",
+                "poi_id": 15212473,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1705",
+                "line_label": "Sp 1705",
+                "poi_id": 15212473,
+                "terminus": "Plzeň hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1706",
+                "line_label": "Sp 1706",
+                "poi_id": 15212473,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1708",
+                "line_label": "Sp 1708",
+                "poi_id": 15212473,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "SČ-S70",
+                "line_label": "S70",
+                "poi_id": 15212473,
+                "terminus": "Přeštice",
+                "type": "vlak"
+              }
+            ],
+            "lon": 13.3748885558,
+            "name": "train_4",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QL_y/Tme4lD.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15212473,
+            "url": "https://mapy.cz/zakladni?x=13.3748885558&y=49.7367210329&z=17&source=pubt&id=15212473"
+          },
+          {
+            "description": "Plzeň-Doubravka",
+            "distance": 3075.0,
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "lat": 49.7585214172,
+            "lines": [
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P13",
+                "line_label": "P13",
+                "poi_id": 15212476,
+                "terminus": "Radnice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15212476,
+                "terminus": "Beroun",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P2",
+                "line_label": "P2",
+                "poi_id": 15212476,
+                "terminus": "Plzeň hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P21",
+                "line_label": "P21",
+                "poi_id": 15212476,
+                "terminus": "Příkosice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P21",
+                "line_label": "P21",
+                "poi_id": 15212476,
+                "terminus": "Plzeň hlavní nádraží",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "PL-P22",
+                "line_label": "P22",
+                "poi_id": 15212476,
+                "terminus": "Bezdružice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "PL-P22",
+                "line_label": "P22",
+                "poi_id": 15212476,
+                "terminus": "Radnice",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1701",
+                "line_label": "Sp 1701",
+                "poi_id": 15212476,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": -1,
+                "line_id": "Sp_1703",
+                "line_label": "Sp 1703",
+                "poi_id": 15212476,
+                "terminus": "Rokycany",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1706",
+                "line_label": "Sp 1706",
+                "poi_id": 15212476,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "Sp_1708",
+                "line_label": "Sp 1708",
+                "poi_id": 15212476,
+                "terminus": "Klatovy",
+                "type": "vlak"
+              },
+              {
+                "departure_direction": 1,
+                "line_id": "SČ-S70",
+                "line_label": "S70",
+                "poi_id": 15212476,
+                "terminus": "Plzeň hlavní nádraží",
+                "type": "vlak"
+              }
+            ],
+            "lon": 13.4160589326,
+            "name": "train_5",
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qF_A/nOdL4BtPEyBiPBFDfwHsKcqB/b93c.jpeg",
+            "rating": -1,
+            "review_count": 0,
+            "source": "pubt",
+            "source_id": 15212476,
+            "url": "https://mapy.cz/zakladni?x=13.4160589326&y=49.7585214172&z=17&source=pubt&id=15212476"
+          }
+        ],
+        "url": "https://mapy.cz/zakladni?x=13.4136635378135&y=49.7309148042866&z=16&q=zast%C3%A1vky"
+      }
+    },
+    "locality": {
+      "city": "Plzeň",
+      "city_seo_name": "plzen",
+      "citypart": "Plzeň 2-Slovany",
+      "citypart_seo_name": "plzen-2-slovany",
+      "country": "Česká republika",
+      "country_id": 112,
+      "country_seo_name": "ceska-republika",
+      "district": "Plzeň-město",
+      "district_id": 12,
+      "district_seo_name": "plzen-mesto",
+      "entity_type": "street",
+      "geometry": {
+        "bounding_box": {
+          "leftBottomLatitude": 49.729207311494875,
+          "leftBottomLongitude": 13.40789485607213,
+          "rightTopLatitude": 49.73264775668068,
+          "rightTopLongitude": 13.416238704258726
+        },
+        "geometry": [
+          "9e4EuxVvdGNHMsNHMtNHM9NHMtNHMuNGMsNHMuNHMsNGMtNHM9NHMtNHM9NGMtNGMtNHM9NGMtNHM9NGMtNNMmNGMtNHMtNNMmNMMmNGMtNGMtNNMmNNMmNJMnNKMnNLMnNJM7NKMnNKMnNIMnNKM7NJMnNJMnNJMnNJMnNIM7NJMmNJMnN4MnNJMmNIMnN4MnNIMmN4MnNIMmNIMmN4MnN4MmN4MmN4MmN4MnNHMmN4MlNHMmN4MmNHMlNHMkN4MlNHMkNHMkNHMkNHMkNHMlNGMkNHMjNFMlNHMkNGMjNGMjNGMlNFMjNGMkNFMjNGMjNGMjNEMjNFMjNFMkNFMjNEMjNFMjNEMjNEM5NEMkNEMjN2M5NFMjNCMoNDM7NCMpNDM7NDM7NCMpNCM7NDMoNCM7NCMpNDM7NCM7NBMoNDM7NCM7NCMpNCM7NBMoNCMoNCMoNBMoNBMoNDMoNBMoNBMoNBMpNCM7NBMpNBMoNCMoNAMoNBMpNBM7NCMpNAM7NBMpNCM7NAMoNBMoNAM7NCMoNAM7NAM7NCMoNAM7NAM7NAM7NCMoN0M7NAM7N0MoNBM7N0MnN0M7NBMnN0MnN0MnNAMlNAMnN0MmN0MlN0MnNAMmN0MlN0MlNAMlN0MmN0MkNAMmM.MkN0MlN0MlNAMlM.MkN0MlM.MlNAMkM.MmM.MkNAMm2PIsNDNVNCNWNCNWNDNYNCNXNCNZNBN-NCN-NCN1NAN-NBNbNANaNBNbN0NaNANcN0NcN0NcM.NdM.NdM.N3MzN3MzNdMyNeMyN3MxNeMxN3MwN3MwNfMvNeMvNeMuNeMuNeMoNoMoNnMoNlMpNkMoNjMoN5MoNhM7NgMnNeM7N3MnNdMnNdMmNaMlNbMlN1MkNaMiNZMiNZM5N-M5NZMgNYMeNYMeNXM3NYMcNYMbNYM1NXM-NYMZNXMWNYMWNZMUNZEcSfEJShAg8y0e8eCOTOBiTq"
+        ],
+        "geometry_type": "linestring"
+      },
+      "gps_lat": 49.7309148042866,
+      "gps_lon": 13.4136635378135,
+      "housenumber": null,
+      "inaccuracy_type": "street",
+      "municipality": null,
+      "municipality_id": 1243,
+      "municipality_seo_name": null,
+      "quarter": "Plzeň 2-Slovany",
+      "quarter_id": 5,
+      "quarter_seo_name": "plzen-2-slovany",
+      "region": "Plzeňský kraj",
+      "region_id": 2,
+      "region_seo_name": "plzensky-kraj",
+      "street": "Barákova",
+      "street_id": 114556,
+      "street_seo_name": "barakova",
+      "streetnumber": null,
+      "ward": null,
+      "ward_id": -1,
+      "ward_seo_name": null,
+      "zip": -1
+    },
+    "loggia": false,
+    "loggia_area": null,
+    "low_energy": false,
+    "matterport_url": "",
+    "object_age": 1972,
+    "object_location": {
+      "name": "Klidná část obce",
+      "value": 2
+    },
+    "ownership": {
+      "name": "Osobní",
+      "value": 1
+    },
+    "panorama": true,
+    "panorama_data": {
+      "distance": 2.764548627077272,
+      "has_panorama": true,
+      "pid": 100133524,
+      "yaw": 4.68267900054478
+    },
+    "parking": null,
+    "parking_lots": false,
+    "personal": {
+      "name": "- vyber možnost",
+      "value": 0
+    },
+    "phase_distributions_cb": null,
+    "premise": {
+      "ask_id": 13299851,
+      "company": {
+        "company_ic": 9794883,
+        "company_subject_id": 4118960,
+        "sos_custom_advert_card": false
+      },
+      "id": 34386,
+      "locality": {
+        "city": "Plzeň",
+        "city_seo_name": "plzen",
+        "citypart": null,
+        "citypart_seo_name": null,
+        "country": null,
+        "country_seo_name": null,
+        "district": "Plzeň-město",
+        "district_id": 12,
+        "district_seo_name": "plzen-mesto",
+        "entity_id": 9065755,
+        "entity_type": "address",
+        "gps_lat": 49.7342930124907,
+        "gps_lon": 13.4038541667,
+        "housenumber": "689",
+        "municipality": null,
+        "municipality_id": 1243,
+        "municipality_seo_name": null,
+        "quarter": "Plzeň 2-Slovany",
+        "quarter_id": 5,
+        "quarter_seo_name": "plzen-2-slovany",
+        "region": "Plzeňský kraj",
+        "region_id": 2,
+        "region_seo_name": "plzensky-kraj",
+        "street": "Částkova",
+        "street_id": 114603,
+        "street_seo_name": "castkova",
+        "streetnumber": "74",
+        "ward": "Lobzy",
+        "ward_id": 14975,
+        "ward_seo_name": "lobzy",
+        "zip": 32600
+      },
+      "logo": "https://d48-a.sdn.cz/d_48/c_img_p8_A/nPVpfd5QLLD53UiCJjFyUqpJ/7ad9.png",
+      "name": "TOP realitní centrum s.r.o.",
+      "premise_paid_firmy": 1,
+      "premise_retargeting_id": null,
+      "review_count": 0,
+      "review_score": null,
+      "seo_name": "top-realitni-centrum-s-r-o",
+      "web_url": "https://redacted.example.com",
+      "web_visible_url": "https://redacted.example.com"
+    },
+    "price": 3590000.0,
+    "price_currency_cb": {
+      "name": "Kč",
+      "value": 1
+    },
+    "price_czk": 3590000.0,
+    "price_czk_m2": 97027,
+    "price_flag_negotiation_cb": false,
+    "price_note": null,
+    "price_summary": 3590000.0,
+    "price_summary_czk": 3590000.0,
+    "price_summary_old": 0.0,
+    "price_summary_old_czk": null,
+    "price_summary_unit_cb": {
+      "name": "za nemovitost",
+      "value": 1
+    },
+    "price_unit_cb": {
+      "name": "za nemovitost",
+      "value": 1
+    },
+    "project": null,
+    "protection": {
+      "name": "- vyber ochranu",
+      "value": 0
+    },
+    "ready_date": "2026-11-01",
+    "reconstruction_year": null,
+    "road_type_set": [
+      {
+        "name": "Asfaltová",
+        "value": 3
+      }
+    ],
+    "rus": null,
+    "rus_reply": null,
+    "sale_date": null,
+    "sdn_energy_performance_attachment_url": null,
+    "since": "2026-09-09",
+    "state_cb": {
+      "name": "- vyber stav",
+      "value": 0
+    },
+    "stats": 5747,
+    "surroundings_type": {
+      "name": "Bydlení",
+      "value": 1
+    },
+    "telecommunication_set": [],
+    "terrace": false,
+    "terrace_area": null,
+    "transport_set": [
+      {
+        "name": "Vlak",
+        "value": 1
+      },
+      {
+        "name": "Silnice",
+        "value": 3
+      },
+      {
+        "name": "MHD",
+        "value": 4
+      }
+    ],
+    "underground_floors": 1,
+    "usable_area": 37,
+    "user": {
+      "broker_rating": null,
+      "broker_review_count": null,
+      "image": "",
+      "user_email": "redacted@example.com",
+      "user_id": 88710,
+      "user_name": "REDACTED",
+      "user_phones": []
+    },
+    "videos": [],
+    "water_heat_source_set": [
+      {
+        "name": "Plynový kotel",
+        "value": 2
+      }
+    ],
+    "water_set": [
+      {
+        "name": "Vodovod",
+        "value": 2
+      }
+    ],
+    "well_type_set": []
+  },
+  "status_code": 200,
+  "status_message": "OK"
+}

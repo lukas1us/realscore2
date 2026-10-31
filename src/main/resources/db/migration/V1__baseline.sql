@@ -1,0 +1,3 @@
+-- Baseline migration: establishes Flyway as the single source of truth for schema
+-- changes (decision "Schema changes only via new Flyway migrations"). No domain
+-- tables exist yet; those arrive in later M1/M2 tasks (listing, snapshot, scrape_run).

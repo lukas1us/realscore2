@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-10-31T12:36:00Z'
+updated_date: '2026-10-31T13:14:00Z'
 ---
 # Sreality API
 
@@ -133,6 +133,14 @@ Confirmed live — see the scrubbed fixture at `src/test/resources/fixtures/srea
 - `hash_id` — equals the requested estate ID.
 
 **The old doc's whole field-by-field priority-fallback extraction methodology (preferring "Celková cena" over "Cena", multi-name `items` fallbacks for size/year/energy class/elevator/ownership/service charge, regex-extracting disposition from the title) is obsolete for v1** — every one of those facts now has a direct field. It is intentionally not carried forward into this rewrite; re-add equivalent fallback logic only if a future capture shows a field is sometimes missing and needs a substitute source.
+
+### Per-request volatility — checked, none found
+
+`ListingSnapshotService` (TASK-11) decides whether a listing changed by hashing the entire raw detail response string. If the API returns any field that changes on every request regardless of real listing changes (view counters, request timestamps, token-bearing image URLs, the `labels`/`labels_extended` POI blocks being recomputed, etc.), that dedup would be defeated — every fetch would look "changed."
+
+Checked 2026-10-31 (TASK-28): fetched estate `2494705740` twice via `GET /api/v1/estates/{id}`, 5 minutes apart, same headers the client uses. The two raw response bodies were **byte-for-byte identical** (same SHA-256 digest). No volatile fields of any kind were observed — not in `labels`/`labels_extended`, not in image URLs, nothing.
+
+**[UNVERIFIED]** This was checked on one estate, over one 5-minute gap. It doesn't rule out volatility over a longer gap (hours/days), under different request conditions (e.g. a different session/cookie state), or on a different estate. If a future capture ever disagrees with this finding, revisit `ListingSnapshotService`'s whole-payload-hash approach then — no change was needed as of this check.
 
 ## The ~1000-result cap and bucketing workaround
 

@@ -1,10 +1,11 @@
 ---
 id: TASK-10
 title: Sreality client fetches one estate detail
-status: To Do
-assignee: []
+status: Done
+assignee:
+  - '@claude'
 created_date: '2026-10-30T23:42:00Z'
-updated_date: '2026-10-31T12:36:00Z'
+updated_date: '2026-10-31T12:46:00Z'
 labels:
   - scraping
 milestone: m-2
@@ -23,10 +24,27 @@ The first real feature slice: talk to Sreality's detail endpoint and get raw JSO
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A client in com.realscore.scraping calls GET https://www.sreality.cz/api/v1/estates/{id} and returns the raw response body/JSON
-- [ ] #2 A WireMock test using a fixture JSON under src/test/resources/fixtures verifies a successful fetch
-- [ ] #3 A non-200 response (e.g. 404) raises a typed exception rather than propagating a generic HTTP client error
+- [x] #1 A client in com.realscore.scraping calls GET https://www.sreality.cz/api/v1/estates/{id} and returns the raw response body/JSON
+- [x] #2 A WireMock test using a fixture JSON under src/test/resources/fixtures verifies a successful fetch
+- [x] #3 A non-200 response (e.g. 404) raises a typed exception rather than propagating a generic HTTP client error
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add org.wiremock:wiremock-standalone:3.13.2 (test scope, pinned; shaded to avoid Jetty 12.0 / Jackson 2 clashes with Boot 4)
+2. scraping.internal: SrealityProperties (@ConfigurationProperties realscore.sreality: baseUrl, userAgent), SrealityConfiguration (@EnableConfigurationProperties)
+3. scraping.internal: SrealityClient (RestClient, doc-1 headers) with String fetchEstateDetail(long) -> GET /api/v1/estates/{id}, raw body returned unchanged
+4. scraping.internal: SrealityApiException(estateId, statusCode) thrown for any non-200 status
+5. SrealityClientTest (WireMock extension, no Spring context): success vs fixture + request path/headers; 404 and 500 -> SrealityApiException
+6. Verify: dependency:tree, mvn verify (incl. ModularityTests)
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Added org.wiremock:wiremock-standalone 3.13.2 (test, version in <wiremock.version>); dependency:tree shows it alone with no transitive deps, so no Jetty 12.0 / Jackson 2 clash with Boot 4. Runs fine on Java 25. Implemented SrealityProperties/SrealityConfiguration/SrealityClient/SrealityApiException in scraping.internal; client returns the v1 detail body unchanged and maps any non-200 status to SrealityApiException(estateId, statusCode). SrealityClientTest (WireMock, no Spring context): fixture round-trip + request headers, 404 and 500 -> SrealityApiException. mvn verify: 6 tests, BUILD SUCCESS (context loads with the new bean, ModularityTests green). Not handled (out of scope): connection errors (TASK-15), body-level status_code != 200 with HTTP 200 (unknown whether v1 does this).
+<!-- SECTION:NOTES:END -->
 
 ## Comments
 
@@ -77,3 +95,9 @@ doc-1 rewritten to describe the real v1 API (GET /api/v1/estates/{id} detail, GE
 
 ---
 <!-- COMMENTS:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added the first scraping slice: SrealityClient (scraping.internal) fetches GET /api/v1/estates/{id} via RestClient with doc-1's headers and returns the raw body unchanged, ready to be stored as a snapshot in TASK-12. Any non-200 status becomes SrealityApiException(estateId, statusCode) so TASK-15 can branch on status for retry/skip. Base URL and User-Agent are configurable via realscore.sreality.* (defaults to live Sreality). Added wiremock-standalone 3.13.2 (test) - shaded, so no Jetty/Jackson clash with Boot 4; works on Java 25. SrealityClientTest covers fixture round-trip + headers, 404 and 500. mvn verify green (6 tests). Not handled on purpose: connection/timeout errors (TASK-15) and a possible HTTP-200-with-error-body status_code (unverified whether v1 does this).
+<!-- SECTION:FINAL_SUMMARY:END -->

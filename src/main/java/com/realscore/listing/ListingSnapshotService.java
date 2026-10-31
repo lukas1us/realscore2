@@ -8,8 +8,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ListingSnapshotService {
+
+    /** Keeps the {@code IN (...)} list well under Postgres' bind-parameter limit. */
+    private static final int KNOWN_IDS_BATCH_SIZE = 1000;
 
     private final ListingRepository listingRepository;
     private final ListingSnapshotRepository snapshotRepository;
@@ -47,6 +54,20 @@ public class ListingSnapshotService {
                 .flatMap(snapshotRepository::findTopByListingOrderByFetchedAtDesc)
                 .map(snapshot -> new ListingSnapshotView(
                         snapshot.getListing().getId(), source, externalId, snapshot.getPayload(), snapshot.getFetchedAt()));
+    }
+
+    /**
+     * Returns those of the given external IDs that already have a listing from {@code source}.
+     */
+    @Transactional(readOnly = true)
+    public Set<String> findKnownExternalIds(String source, Collection<String> externalIds) {
+        List<String> ids = List.copyOf(externalIds);
+        Set<String> known = new HashSet<>();
+        for (int from = 0; from < ids.size(); from += KNOWN_IDS_BATCH_SIZE) {
+            List<String> batch = ids.subList(from, Math.min(from + KNOWN_IDS_BATCH_SIZE, ids.size()));
+            known.addAll(listingRepository.findExternalIdsBySourceAndExternalIdIn(source, batch));
+        }
+        return known;
     }
 
     private static String sha256Hex(String payload) {

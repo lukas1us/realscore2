@@ -6,6 +6,9 @@ import com.realscore.PostgresContainerConfig;
 import com.realscore.listing.internal.Listing;
 import com.realscore.listing.internal.ListingRepository;
 import com.realscore.listing.internal.ListingSnapshotRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,5 +43,23 @@ class ListingSnapshotServiceTest {
 
         Listing listing = listingRepository.findBySourceAndExternalId("sreality", "2").orElseThrow();
         assertThat(listingSnapshotRepository.countByListing(listing)).isEqualTo(2);
+    }
+
+    @Test
+    void findKnownExternalIdsReturnsOnlyIdsWithAListingFromThatSource() {
+        listingSnapshotService.recordFetch("sreality", "3", "{\"price\":100}");
+        listingSnapshotService.recordFetch("other", "4", "{\"price\":100}");
+
+        assertThat(listingSnapshotService.findKnownExternalIds("sreality", List.of("3", "4", "5")))
+                .containsExactly("3");
+    }
+
+    @Test
+    void findKnownExternalIdsHandlesMoreIdsThanOneQueryBatch() {
+        listingSnapshotService.recordFetch("sreality", "6", "{\"price\":100}");
+        List<String> ids = new ArrayList<>(IntStream.range(10_000, 12_500).mapToObj(String::valueOf).toList());
+        ids.add("6");
+
+        assertThat(listingSnapshotService.findKnownExternalIds("sreality", ids)).containsExactly("6");
     }
 }

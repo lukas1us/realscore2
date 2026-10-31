@@ -1,0 +1,27 @@
+{
+  "pagination": {
+    "limit": 100,
+    "offset": 0,
+    "total": 4
+  },
+  "results": [
+    {
+      "advert_name": "Prodej bytu",
+      "hash_id": 4001
+    },
+    {
+      "advert_name": "Prodej bytu",
+      "hash_id": 4002
+    },
+    {
+      "advert_name": "Prodej bytu",
+      "hash_id": 4003
+    },
+    {
+      "advert_name": "Prodej bytu",
+      "hash_id": 4004
+    }
+  ],
+  "status_code": 200,
+  "status_message": "OK"
+}

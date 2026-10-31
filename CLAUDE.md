@@ -86,3 +86,7 @@ Do not edit Backlog task, draft, document, decision, or milestone markdown files
 
   Example: `feat(scraping): add Sreality detail client with retry on 429 [TASK-12]`
 - Never stage `.env`, IDE files, build output nor anything else stated in `.gitignore`. Check `git status` before committing.
+
+## Dependency management
+
+- Never add a dependency directly. Use the add-dependency skill and wait for my approval.

@@ -1,11 +1,20 @@
 package com.realscore.scraping.internal;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.validation.annotation.Validated;
 
+/**
+ * Sreality API settings; values live in {@code application.properties} under {@code realscore.sreality}.
+ *
+ * @param detailPath estate detail path, with an {@code {id}} placeholder for the estate ID
+ */
+@Validated
 @ConfigurationProperties("realscore.sreality")
 public record SrealityProperties(
-        @DefaultValue("https://www.sreality.cz") String baseUrl,
-        @DefaultValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
-        String userAgent) {
+        @NotBlank String baseUrl,
+        @NotBlank String userAgent,
+        @NotBlank String referer,
+        @NotBlank String detailPath,
+        @NotBlank String searchPath) {
 }

@@ -72,10 +72,9 @@ Do not edit Backlog task, draft, document, decision, or milestone markdown files
 
 ## Git
 
-- One Backlog task = one branch: `task-<id>-<short-desc>` (e.g. `task-12-sreality-client`). Branch off `main`.
-  Never commit directly to `main`. Never push, rebase or force anything. I do that.
-- Commit only after `/finish-task` has passed and I have approved the summary.
-  Then make ONE commit containing the code AND the Backlog task files changed by the CLI (status Done, notes, checked AC).
+- Work directly on `main`. Leave changes uncommitted until I approve them. Never push, rebase, amend, or force anything. I do that.
+- After `/finish-task` passes and I approve: make ONE commit containing the code AND the Backlog task files changed by the CLI.
+- Exception: if a task is experimental or will need several commits, ask me first whether to create a branch `task-<id>-<short-desc>`.
 - Commit message format (Conventional Commits):
 
   <type>(<module>): <imperative summary, max 72 chars> [TASK-<id>]

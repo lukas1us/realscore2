@@ -8,12 +8,23 @@ disable-model-invocation: true
 
 1. Run `backlog instructions task-finalization` if not read in this conversation.
 2. Run `mvn verify`. If it is red, fix it and re-run. Never continue while it is red.
-3. Check the diff (`git diff main...HEAD`) for:
-    - changes outside the task's scope → list them and ask whether to revert
+3. Collect the changes:
+    - `git status --porcelain`: modified AND untracked files
+    - `git diff` for modified files, and read untracked files in full
+      (`git diff` doesn't show them)
+    - if on a task branch (not `main`), also include `git diff main...HEAD`
+4. Check the changes for:
+    - files outside the task's scope → list them and ask whether to revert
     - new dependencies in pom.xml → flag them
     - an edited existing Flyway migration → this is a hard error, revert it
     - one module reaching into another module's `internal/` package
-4. Go through each acceptance criterion: name the test or file that proves it, then check it via the CLI.
-5. Write implementation notes into the task: what changed, why, and any follow-ups (create new tasks for those, don't do them).
-6. Give me a summary: what to review first, risky spots, and the proposed commit message.
-7. Wait for my approval. Then commit according to the "Git" section in CLAUDE.md and show me `git log -1 --stat`.
+    - `.env`, IDE files or build output among the changes → never commit these
+5. Go through each acceptance criterion: name the test or file that proves it, then check it via the CLI.
+6. Write implementation notes into the task: what changed, why, and any follow-ups
+   (create new Backlog tasks for those, don't do them). Set the status to Done via the CLI.
+7. Give me a summary:
+    - what to review first and the risky spots
+    - the list of files that will be committed
+    - the proposed commit message, following the "Git" section in CLAUDE.md
+8. Wait for my approval. Then stage exactly the listed files (code + Backlog task files),
+   commit, and show me `git log -1 --stat`. Never push.

@@ -69,3 +69,21 @@ Do not edit Backlog task, draft, document, decision, or milestone markdown files
 
 </CRITICAL_INSTRUCTION>
 <!-- BACKLOG.MD GUIDELINES END -->
+
+## Git
+
+- One Backlog task = one branch: `task-<id>-<short-desc>` (e.g. `task-12-sreality-client`). Branch off `main`.
+  Never commit directly to `main`. Never push, rebase or force anything. I do that.
+- Commit only after `/finish-task` has passed and I have approved the summary.
+  Then make ONE commit containing the code AND the Backlog task files changed by the CLI (status Done, notes, checked AC).
+- Commit message format (Conventional Commits):
+
+  <type>(<module>): <imperative summary, max 72 chars> [TASK-<id>]
+
+  <optional body: why, not what — 1–3 lines>
+
+  type: feat | fix | refactor | test | chore | docs
+  module: scraping | listing | parsing | analysis | infra | backlog
+
+  Example: `feat(scraping): add Sreality detail client with retry on 429 [TASK-12]`
+- Never stage `.env`, IDE files, build output nor anything else stated in `.gitignore`. Check `git status` before committing.

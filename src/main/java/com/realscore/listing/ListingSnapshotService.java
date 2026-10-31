@@ -14,6 +14,7 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ListingSnapshotService {
 
     /** Keeps the {@code IN (...)} list well under Postgres' bind-parameter limit. */
-    private static final int KNOWN_IDS_BATCH_SIZE = 1000;
+    private static final int ID_BATCH_SIZE = 1000;
 
     private final ListingRepository listingRepository;
     private final ListingSnapshotRepository snapshotRepository;
@@ -61,13 +62,36 @@ public class ListingSnapshotService {
      */
     @Transactional(readOnly = true)
     public Set<String> findKnownExternalIds(String source, Collection<String> externalIds) {
-        List<String> ids = List.copyOf(externalIds);
         Set<String> known = new HashSet<>();
-        for (int from = 0; from < ids.size(); from += KNOWN_IDS_BATCH_SIZE) {
-            List<String> batch = ids.subList(from, Math.min(from + KNOWN_IDS_BATCH_SIZE, ids.size()));
-            known.addAll(listingRepository.findExternalIdsBySourceAndExternalIdIn(source, batch));
-        }
+        forEachBatch(externalIds, batch -> known.addAll(
+                listingRepository.findExternalIdsBySourceAndExternalIdIn(source, batch)));
         return known;
+    }
+
+    /**
+     * Records which listings from {@code source} a run saw: each seen listing gets {@code last_seen_at = now} and, if
+     * it was marked removed, has {@code removed_at} cleared; every other active listing not seen since
+     * {@code runStartedAt} gets {@code removed_at = now}. Listings first recorded during the run count as seen.
+     *
+     * @param seenExternalIds every ID the run found, already known or not
+     */
+    @Transactional
+    public PresenceResult recordPresence(String source, Collection<String> seenExternalIds, Instant runStartedAt) {
+        Instant now = Instant.now();
+        int[] reappeared = {0};
+        forEachBatch(seenExternalIds, batch -> {
+            reappeared[0] += listingRepository.clearRemovedAt(source, batch);
+            listingRepository.markSeen(source, batch, now);
+        });
+        int removed = listingRepository.markRemovedIfNotSeenSince(source, runStartedAt, now);
+        return new PresenceResult(reappeared[0], removed);
+    }
+
+    private static void forEachBatch(Collection<String> externalIds, Consumer<List<String>> action) {
+        List<String> ids = List.copyOf(externalIds);
+        for (int from = 0; from < ids.size(); from += ID_BATCH_SIZE) {
+            action.accept(ids.subList(from, Math.min(from + ID_BATCH_SIZE, ids.size())));
+        }
     }
 
     private static String sha256Hex(String payload) {

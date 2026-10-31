@@ -50,7 +50,7 @@ public class SrealityBulkCollector {
                 log.warn("Fetching Sreality estate {} failed; continuing with the next one", estateId, e);
             }
         }
-        BulkCollectionResult result = new BulkCollectionResult(found.size(), known.size(), fetched, skipped, failed);
+        BulkCollectionResult result = new BulkCollectionResult(found, known.size(), fetched, skipped, failed);
         log.info("Sreality bulk collection finished: {}", result);
         return result;
     }

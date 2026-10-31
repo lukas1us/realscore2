@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ class SrealityBulkCollectorTest {
 
         BulkCollectionResult result = bulkCollector.collect(PRICE_CAP);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(4, 1, 2, 1, 0));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4001L, 4002L, 4003L, 4004L), 1, 2, 1, 0));
         assertThat(snapshotCount(4001)).isEqualTo(1);
         assertThat(snapshotCount(4003)).isEqualTo(1);
         assertThat(listingCount(4002)).isZero();
@@ -92,7 +93,7 @@ class SrealityBulkCollectorTest {
 
         BulkCollectionResult result = bulkCollector.collect(PRICE_CAP);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(2, 0, 1, 0, 1));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4101L, 4102L), 0, 1, 0, 1));
         assertThat(listingCount(4101)).isZero();
         assertThat(snapshotCount(4102)).isEqualTo(1);
     }

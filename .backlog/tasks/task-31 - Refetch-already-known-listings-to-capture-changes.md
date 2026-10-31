@@ -4,6 +4,7 @@ title: Refetch already-known listings to capture changes
 status: To Do
 assignee: []
 created_date: '2026-10-31T21:32:00Z'
+updated_date: '2026-10-31T23:11:00Z'
 labels:
   - scraping
   - listing
@@ -24,3 +25,9 @@ SrealityBulkCollector (TASK-16) fetches details only for collected IDs that have
 - [ ] #2 A refetched listing whose payload changed gets a new snapshot; an unchanged one only has last_seen_at updated
 - [ ] #3 A Testcontainers-backed test covers a known listing being refetched with a changed and with an unchanged payload
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Note from TASK-19: SrealityScrapeJob now sets last_seen_at (and clears removed_at) for every listing a run collects, known or not, via ListingSnapshotService.recordPresence. So the 'unchanged one only has last_seen_at updated' part of AC #2 is already true for seen listings; this task still needs the refetch itself and the scrape_run updated_count.
+<!-- SECTION:NOTES:END -->

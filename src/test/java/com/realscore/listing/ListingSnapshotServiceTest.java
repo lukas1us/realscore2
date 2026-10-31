@@ -6,6 +6,7 @@ import com.realscore.PostgresContainerConfig;
 import com.realscore.listing.internal.Listing;
 import com.realscore.listing.internal.ListingRepository;
 import com.realscore.listing.internal.ListingSnapshotRepository;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -61,5 +62,29 @@ class ListingSnapshotServiceTest {
         ids.add("6");
 
         assertThat(listingSnapshotService.findKnownExternalIds("sreality", ids)).containsExactly("6");
+    }
+
+    @Test
+    void recordPresenceMarksUnseenListingsRemovedAndClearsReappearedOnes() {
+        String source = "presence-test";
+        listingSnapshotService.recordFetch(source, "a", "{}");
+        listingSnapshotService.recordFetch(source, "b", "{}");
+        listingSnapshotService.recordFetch("other", "b", "{}");
+
+        PresenceResult firstRun = listingSnapshotService.recordPresence(source, List.of("a"), Instant.now());
+
+        assertThat(firstRun).isEqualTo(new PresenceResult(0, 1));
+        assertThat(removedAt(source, "a")).isNull();
+        assertThat(removedAt(source, "b")).isNotNull();
+        assertThat(removedAt("other", "b")).isNull();
+
+        PresenceResult secondRun = listingSnapshotService.recordPresence(source, List.of("a", "b"), Instant.now());
+
+        assertThat(secondRun).isEqualTo(new PresenceResult(1, 0));
+        assertThat(removedAt(source, "b")).isNull();
+    }
+
+    private Instant removedAt(String source, String externalId) {
+        return listingRepository.findBySourceAndExternalId(source, externalId).orElseThrow().getRemovedAt();
     }
 }

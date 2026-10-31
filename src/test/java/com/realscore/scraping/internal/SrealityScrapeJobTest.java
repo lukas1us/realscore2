@@ -3,6 +3,7 @@ package com.realscore.scraping.internal;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -12,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.realscore.PostgresContainerConfig;
+import com.realscore.listing.ListingSnapshotService;
 import com.realscore.scraping.ScrapeRunStatus;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +63,9 @@ class SrealityScrapeJobTest {
     private List<ScheduledTaskHolder> scheduledTaskHolders;
 
     @Autowired
+    private ListingSnapshotService listingSnapshotService;
+
+    @Autowired
     private JdbcTemplate jdbc;
 
     @Test
@@ -101,6 +106,52 @@ class SrealityScrapeJobTest {
         assertThat((String) run.get("error_details")).contains("SrealityApiException").contains("HTTP 500");
     }
 
+    @Test
+    void listingMissingFromARunIsMarkedRemovedAndClearedWhenItReappears() {
+        String detail = fixture("detail_success.json");
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4301")).willReturn(okJson(detail)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4302")).willReturn(okJson(detail)));
+
+        stubSearch(okJson(fixture("search_page_presence_both.json")));
+        job.run();
+        assertThat(removedAt(4301)).isNull();
+        assertThat(removedAt(4302)).isNull();
+
+        stubSearch(okJson(fixture("search_page_presence_one.json")));
+        job.run();
+        assertThat(removedAt(4301)).isNull();
+        assertThat(removedAt(4302)).isNotNull();
+        assertThat(latestRun().get("removed_count")).isEqualTo(1);
+
+        stubSearch(okJson(fixture("search_page_presence_both.json")));
+        job.run();
+        assertThat(removedAt(4302)).isNull();
+        assertThat(latestRun().get("removed_count")).isEqualTo(0);
+        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4302")));
+    }
+
+    @Test
+    void failedRunMarksNothingRemoved() {
+        listingSnapshotService.recordFetch("sreality", "4401", "{}");
+        stubSearch(aResponse().withStatus(500));
+
+        job.run();
+
+        assertThat(removedAt(4401)).isNull();
+    }
+
+    @Test
+    void runThatFindsNothingMarksNothingRemoved() {
+        listingSnapshotService.recordFetch("sreality", "4402", "{}");
+        stubSearch(okJson(fixture("search_count_empty.json")));
+
+        job.run();
+
+        assertThat(latestRun().get("status")).isEqualTo(ScrapeRunStatus.SUCCEEDED.name());
+        assertThat(removedAt(4402)).isNull();
+        assertThat(latestRun().get("removed_count")).isEqualTo(0);
+    }
+
     /** Region 1 answers with {@code region1}; every other region is empty. */
     private static void stubSearch(ResponseDefinitionBuilder region1) {
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH)).atPriority(10)
@@ -108,6 +159,11 @@ class SrealityScrapeJobTest {
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
                 .withQueryParam("locality_region_id", equalTo("1"))
                 .willReturn(region1));
+    }
+
+    private Object removedAt(long estateId) {
+        return jdbc.queryForObject("SELECT removed_at FROM listing WHERE source = 'sreality' AND external_id = ?",
+                Object.class, String.valueOf(estateId));
     }
 
     private Map<String, Object> latestRun() {

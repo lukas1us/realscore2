@@ -1,0 +1,10 @@
+{
+  "pagination": {
+    "limit": 0,
+    "offset": 0,
+    "total": 0
+  },
+  "results": [],
+  "status_code": 200,
+  "status_message": "OK"
+}

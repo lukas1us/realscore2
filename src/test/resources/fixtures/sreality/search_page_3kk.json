@@ -1,0 +1,19 @@
+{
+  "pagination": {
+    "limit": 2,
+    "offset": 0,
+    "total": 2
+  },
+  "results": [
+    {
+      "advert_name": "Prodej bytu",
+      "hash_id": 203
+    },
+    {
+      "advert_name": "Prodej bytu",
+      "hash_id": 204
+    }
+  ],
+  "status_code": 200,
+  "status_message": "OK"
+}

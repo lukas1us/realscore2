@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-10-31T17:23:00Z'
+updated_date: '2026-10-31T18:33:00Z'
 ---
 # Sreality API
 
@@ -28,14 +28,16 @@ Confirmed live from a real `estates/search` URL (captured from the site's own "s
 | `category_main_cb` | property type | `1`=byty confirmed; `2`=domy, `3`=pozemky, `4`=komerční, `5`=ostatní inherited from the old doc, not re-verified | PARTIALLY CONFIRMED |
 | `locality_region_id` | region filter | comma-separated list of region ids, e.g. `2,11,7,6` (same 1–14 table as before — see below) | CONFIRMED |
 | `multilocality_type_or` | OR vs AND across `locality_region_id`'s values | `true` / `false` | **NEW**, CONFIRMED |
-| `price_to` | price ceiling (CZK) | integer | CONFIRMED. `price_from` presumably symmetric — **[UNVERIFIED]**, not in the sample URL |
+| `price_to` | price ceiling (CZK) | integer | CONFIRMED (re-checked 2026-10-31, TASK-14: Praha sale flats `price_to=5000000` → 347 vs 6047 uncapped, title "…do 5 000 000 Kč"). `price_from` presumably symmetric — **[UNVERIFIED]**, not in the sample URL |
+| `category_type_cb` | transaction type | `1`=prodej, `2`=pronájem | CONFIRMED 2026-10-31 (TASK-14): Praha flats `=1` → 6047 "Byty na prodej Praha", `=2` → 3517 "Byty k pronájmu Praha"; results carry `category_type_cb.value` matching the filter |
+| `category_sub_cb` | disposition filter | codes from the disposition table below | CONFIRMED 2026-10-31 (TASK-14): `category_sub_cb=4` → title "Byty 2+kk na prodej Praha", 1860 results, every sampled result had `category_sub_cb.value=4` |
 | `ownership` | ownership filter | `1`=osobní CONFIRMED (resolves the old doc's `ownership`/`ownership_type_cb` ambiguity — **this is the real field name**); `2`=družstevní, `3`=státní/obecní **[UNVERIFIED]**, inherited from old code comments only |
 | `building_type` | construction type — **not** disposition | comma-separated list, see table below | **NEW**, CONFIRMED |
-| `limit` / `offset` | pagination | `limit=0` returns zero results with just the total count — a clean replacement for the old `per_page=1` probe hack | CONFIRMED |
+| `limit` / `offset` | pagination | `limit=0` returns zero results with just the total count — a clean replacement for the old `per_page=1` probe hack. No cap observed: `limit=1000` returned 1000 results, `offset=6000&limit=100` returned the last 47 of 6047 (TASK-14) | CONFIRMED |
 
-**[UNVERIFIED]** `category_type_cb` (transaction type: sale/rent) and `category_sub_cb` (disposition) were **not present** in the one real captured URL. Unknown whether they still work as search params on v1, were renamed, or simply weren't part of that particular saved search. Verify directly before relying on either for searching. (`category_sub_cb` is separately confirmed to still exist as a *response* field on the detail endpoint with unchanged semantics — see below.)
+`category_type_cb` and `category_sub_cb` were not in the one real captured URL, but were verified directly as v1 search params on 2026-10-31 (TASK-14) — see the table.
 
-**[UNVERIFIED]** `usable_area_from/to` and the old ~1000-result cap behavior have not been re-tested against v1 at all — carried over from the old doc as hypotheses only.
+**[UNVERIFIED]** `usable_area_from/to` have not been re-tested against v1 — carried over from the old doc as hypotheses only. The old ~1000-result cap was re-tested and not observed on v1 — see "The ~1000-result cap and bucketing workaround" below.
 
 ### Region IDs (`locality_region_id`) — re-confirmed
 
@@ -145,13 +147,15 @@ Checked 2026-10-31 (TASK-28): fetched estate `2494705740` twice via `GET /api/v1
 
 ## The ~1000-result cap and bucketing workaround
 
-**[UNVERIFIED — NOT RE-TESTED]** This whole section was originally inferred from the old app's `per_page`/`page`-based pagination under the now-retired v2 API. It has not been re-verified against v1's `limit`/`offset` model. The underlying problem (a single query likely still can't return an unbounded result set) probably still exists in some form, but the exact cap — and whether `offset` allows deeper paging than the old `page` math did — needs to be re-measured before porting the strategy below as-is. Treat the specific numbers (`BUCKET_LIMIT=950`, `per_page=20`, ~1000 cap) as historical only.
+**Re-tested 2026-10-31 (TASK-14): no cap observed on v1.** For Praha sale flats (`total=6047`), `limit=1000&offset=0` returned 1000 results, `limit=100&offset=5000` returned 100, and `limit=100&offset=6000` returned the remaining 47 — paging past 1000 works, and `pagination.total` matched what was reachable. **[UNVERIFIED]** whether an undocumented cap exists above ~6000 or for larger `limit` values (not tested), or whether this changes again.
+
+The bucketing below is implemented anyway (`SrealityIdCollector`, TASK-14) as a defensive measure: smaller queries are less exposed to listings shifting during long paging, and it guards against a cap returning. Threshold and page size are configurable (`realscore.sreality.bucket-threshold`, default 950; `realscore.sreality.page-size`, default 100). The old app's `BUCKET_LIMIT=950`, `per_page=20` and ~1000 cap are historical.
 
 The old app's workaround, for a *sale apartments, price-capped* scan:
 
-1. For each of the 14 regions, send a cheap probe with the target filters and `locality_region_id=<region>` and read the total count — now presumably `limit=0` on v1, replacing the old `per_page=1, page=1` probe.
+1. For each of the 14 regions, send a cheap probe with the target filters and `locality_region_id=<region>` and read the total count — `limit=0` on v1, replacing the old `per_page=1, page=1` probe.
 2. If a region's count is at or under a safety threshold, that region is one collection bucket — paginate it directly.
-3. If a region's count exceeds the threshold, subdivide further: probe every disposition code within that region, and treat each non-empty `(region, disposition)` pair as its own bucket.
+3. If a region's count exceeds the threshold, subdivide further: probe every disposition code (`category_sub_cb`) within that region, and treat each non-empty `(region, disposition)` pair as its own bucket.
 4. Collect IDs from every bucket by paginating with a fixed page size until exhausted.
 5. Dedupe all collected IDs across all buckets with a set.
 
@@ -166,10 +170,10 @@ The old app's workaround, for a *sale apartments, price-capped* scan:
 
 ## Rental benchmark lookups
 
-Used to estimate achievable rent for a (city, disposition) pair, via the same `/api/v1/estates/search` endpoint (path updated from the retired v2 search) with `category_main_cb=1` (byty) and `locality_region_id=<city's region>` when the city maps to one of the 14 regions (otherwise nationwide). **[UNVERIFIED — NOT RE-TESTED]** The old doc's `category_type_cb=2` (pronájem) and `category_sub_cb=<disposition>` params are themselves unverified as v1 search params (see above) — re-check before relying on this whole approach.
+Used to estimate achievable rent for a (city, disposition) pair, via the same `/api/v1/estates/search` endpoint (path updated from the retired v2 search) with `category_main_cb=1` (byty) and `locality_region_id=<city's region>` when the city maps to one of the 14 regions (otherwise nationwide). `category_type_cb=2` (pronájem) and `category_sub_cb=<disposition>` are confirmed v1 search params (TASK-14, see above). **[UNVERIFIED]** the rest of this approach has not been re-tested on v1.
 
 Two gotchas carried over from the old doc, **not yet re-verified against v1**:
-- `price_czk` on each result estate may still need defensive handling (the old API sometimes returned a bare number vs. an object) — unknown whether v1's `results` items have the same quirk; see the open question about the `results` item shape above.
+- `price_czk` on each result estate may still need defensive handling (the old API sometimes returned a bare number vs. an object) — unknown whether v1's `results` items have the same quirk; the `results` item shape is now confirmed (see "Search response shape"), and `price_czk` was a plain number in every item checked.
 - `listing_count` semantics (region-wide total vs. page-1 sample count for cities without a region match) — same caveat.
 
 ## Out of scope for v1 (of the roadmap, not the API version)

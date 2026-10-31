@@ -37,7 +37,7 @@ class SrealityClientTest {
     @BeforeEach
     void setUp() {
         client = new SrealityClient(new SrealityProperties(
-                sreality.baseUrl(), "test-agent", "https://www.sreality.cz/", "/api/v1/estates/{id}", SEARCH_PATH));
+                sreality.baseUrl(), "test-agent", "https://www.sreality.cz/", "/api/v1/estates/{id}", SEARCH_PATH, 950, 100));
     }
 
     @Test
@@ -119,6 +119,31 @@ class SrealityClientTest {
         assertThatThrownBy(() -> client.countEstates(PRAHA_FLATS))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("pagination.total");
+    }
+
+    @Test
+    void searchEstatesReturnsPageOfIdsAndTotal() throws IOException {
+        String fixture = readFixture("fixtures/sreality/search_page_small_region_1.json");
+        sreality.stubFor(get(urlPathEqualTo(SEARCH_PATH)).willReturn(okJson(fixture)));
+
+        SearchPage page = client.searchEstates(PRAHA_FLATS, 2, 0);
+
+        assertThat(page.total()).isEqualTo(3);
+        assertThat(page.estateIds()).containsExactly(101L, 102L);
+        sreality.verify(getRequestedFor(urlPathEqualTo(SEARCH_PATH))
+                .withQueryParam("category_main_cb", equalTo("1"))
+                .withQueryParam("locality_region_id", equalTo("10"))
+                .withQueryParam("limit", equalTo("2"))
+                .withQueryParam("offset", equalTo("0")));
+    }
+
+    @Test
+    void failedSearchRaisesSrealityApiException() {
+        sreality.stubFor(get(urlPathEqualTo(SEARCH_PATH)).willReturn(aResponse().withStatus(503)));
+
+        assertThatThrownBy(() -> client.searchEstates(PRAHA_FLATS, 2, 0))
+                .isInstanceOfSatisfying(SrealityApiException.class,
+                        e -> assertThat(e.statusCode()).isEqualTo(503));
     }
 
     private static String readFixture(String path) throws IOException {

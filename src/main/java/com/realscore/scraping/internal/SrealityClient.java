@@ -1,5 +1,7 @@
 package com.realscore.scraping.internal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -50,25 +52,40 @@ public class SrealityClient {
      * @throws IllegalStateException if a 200 response has no {@code pagination.total}
      */
     public long countEstates(Map<String, String> searchParams) {
-        SearchCountResponse response = restClient.get()
+        return searchEstates(searchParams, 0, 0).total();
+    }
+
+    /**
+     * Returns one page of estate IDs matching the given search params, plus the total match count.
+     *
+     * @param searchParams v1 search query params, e.g. {@code locality_region_id -> "10"}
+     * @throws SrealityApiException if the response status is not 200
+     * @throws IllegalStateException if a 200 response has no {@code pagination.total}
+     */
+    public SearchPage searchEstates(Map<String, String> searchParams, int limit, int offset) {
+        SearchResponse response = restClient.get()
                 .uri(uriBuilder -> {
                     uriBuilder.path(searchPath);
                     searchParams.forEach(uriBuilder::queryParam);
-                    return uriBuilder.queryParam("limit", 0).queryParam("offset", 0).build();
+                    return uriBuilder.queryParam("limit", limit).queryParam("offset", offset).build();
                 })
                 .retrieve()
                 .onStatus(status -> status.value() != 200, (request, errorResponse) -> {
                     throw new SrealityApiException(request.getURI().getPath(), errorResponse.getStatusCode().value());
                 })
-                .body(SearchCountResponse.class);
+                .body(SearchResponse.class);
         if (response == null || response.pagination() == null || response.pagination().total() == null) {
             throw new IllegalStateException("Sreality search response has no pagination.total");
         }
-        return response.pagination().total();
+        List<Long> estateIds = response.results() == null ? List.of()
+                : response.results().stream().map(SearchResponse.Result::hashId).toList();
+        return new SearchPage(response.pagination().total(), estateIds);
     }
 
-    private record SearchCountResponse(Pagination pagination) {
+    private record SearchResponse(Pagination pagination, List<Result> results) {
 
         private record Pagination(Long total) {}
+
+        private record Result(@JsonProperty("hash_id") long hashId) {}
     }
 }

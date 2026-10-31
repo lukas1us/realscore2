@@ -12,13 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 mvn test                 # run all tests
 mvn test -Dtest=PropertyScoringServiceTest        # run a single test class
 mvn test -Dtest=PropertyScoringServiceTest#scoresNewAffordableWellSizedPropertyHighly  # single test method
-mvn spring-boot:run      # run the app locally (needs Postgres, see below)
+docker compose up -d --build   # build and run the app + Postgres (app on :8080)
+mvn spring-boot:run      # run the app on the host (needs Postgres, see below)
 mvn package              # build the jar
 ```
 
 Tests run against an in-memory H2 database (`src/test/resources/application.properties` overrides the datasource), so `mvn test` does not require a running Postgres instance.
 
-Running the app for real (`spring-boot:run`) needs a reachable Postgres instance, configured via env vars (all have local defaults): `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`. See `src/main/resources/application.properties`. `docker compose up -d` starts a local Postgres matching those defaults (`docker-compose.yml`).
+Running the app for real (`spring-boot:run`) needs a reachable Postgres instance, configured via env vars (all have local defaults): `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`. See `src/main/resources/application.properties`. `docker compose up -d postgres` starts only the local Postgres matching those defaults (`docker-compose.yml`); `docker compose up -d` also starts the app container (`Dockerfile`), which points at that Postgres.
 
 ## Architecture
 

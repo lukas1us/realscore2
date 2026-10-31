@@ -10,10 +10,18 @@ Spring Boot service for scoring real estate properties.
 
 ## Running locally
 
-Start a local PostgreSQL instance:
+Build and start the app together with PostgreSQL:
 
 ```
-docker compose up -d
+docker compose up -d --build
+```
+
+The app is available on `http://localhost:8080`.
+
+To run the app on the host instead, start only PostgreSQL:
+
+```
+docker compose up -d postgres
 ```
 
 This matches the datasource defaults (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` default to `localhost`, `5432`, `realscore`, `realscore`, `realscore`) — override via env vars to point at a different database.

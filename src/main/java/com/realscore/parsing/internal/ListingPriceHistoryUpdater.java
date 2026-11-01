@@ -1,8 +1,8 @@
 package com.realscore.parsing.internal;
 
 import com.realscore.listing.ListingSnapshotView;
+import com.realscore.parsing.PricePoint;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -67,8 +67,5 @@ public class ListingPriceHistoryUpdater {
             }
         }
         return true;
-    }
-
-    private record PricePoint(Instant observedAt, BigDecimal priceCzk) {
     }
 }

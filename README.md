@@ -16,7 +16,8 @@ disposition). Scoring individual listings comes later.
    disposition, locality, sale or rent, and so on. Each parse also rebuilds the listing's price history
    (`listing_price_point`) from all its snapshots: one point per asking-price change, skipping snapshots without a
    price. Parsing is idempotent and can be re-run over all stored snapshots.
-4. **Analysis**: benchmarks are computed on demand from the parsed details of active listings.
+4. **Analysis**: benchmarks are computed on demand from the parsed details of active listings, and a single listing
+   can be looked up with its price history and stats.
 
 The code is a Spring Modulith monolith with one package per module under `com.realscore`: `scraping`, `listing`,
 `parsing` and `analysis`. Dependencies go one way only (scraping → listing ← parsing ← analysis), and `ModularityTests`
@@ -76,6 +77,7 @@ too.
 |---|---|
 | `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
 | `GET /api/analysis/benchmarks/rent` | Median monthly rent and median rent per m² of active flats for rent, per locality and disposition, each with its level and sample size |
+| `GET /api/listings/{source}/{externalId}` | One listing, removed or not: first/last seen and removed time, parsed details (`null` if never parsed), price history oldest first, and stats: days on market, number of price drops, % change from the first to the current price. 404 if unknown |
 | `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable), and rebuilds their price history. Synchronous; returns the `listing_detail` counts |
 | `GET /actuator/health` | Health check |
 
@@ -87,6 +89,8 @@ too.
   price history: listings parsed before it have no history until re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
   requests per second, which can take hours. Later runs only fetch new and due listings.
+- **Days on market count from the first time realscore saw a listing**, not from when it was published: Sreality's
+  detail has no publication date. Listings already online before the first scrape start at 0.
 - **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians
   describe the cheaper end of the market. Check the sample sizes.
 - The Sreality API is undocumented and has changed shape before. What is known about it is in the Backlog document

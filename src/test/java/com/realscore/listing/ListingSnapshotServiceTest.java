@@ -159,6 +159,18 @@ class ListingSnapshotServiceTest {
         assertThat(listingSnapshotService.findSnapshots(source, "unknown")).isEmpty();
     }
 
+    @Test
+    void findListingReturnsPresenceTimestampsOrEmptyIfUnknown() {
+        String source = "find-listing";
+        listingSnapshotService.recordFetch(source, "1", "{\"price\": 100}");
+
+        ListingView listing = listingSnapshotService.findListing(source, "1").orElseThrow();
+        assertThat(listing.externalId()).isEqualTo("1");
+        assertThat(listing.firstSeenAt()).isNotNull().isEqualTo(listing.lastSeenAt());
+        assertThat(listing.removedAt()).isNull();
+        assertThat(listingSnapshotService.findListing(source, "unknown")).isEmpty();
+    }
+
     private Instant removedAt(String source, String externalId) {
         return listingRepository.findBySourceAndExternalId(source, externalId).orElseThrow().getRemovedAt();
     }

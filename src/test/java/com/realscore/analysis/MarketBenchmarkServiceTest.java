@@ -137,6 +137,53 @@ class MarketBenchmarkServiceTest {
         assertThat(rentBenchmarks(region)).hasSize(1);
     }
 
+    @Test
+    void forListingGivesTheSameMediansAsTheBenchmarkEndpoints() {
+        String region = "Kraj lookup-same";
+        record(region, "Střed", SALE, FLATS, 5_000_000, 50);
+        record(region, "Sever", SALE, FLATS, 7_000_000, 50);
+        record(region, "Střed", RENT, FLATS, 20_000, 50);
+        record(region, "Střed", RENT, FLATS, 30_000, 60);
+
+        ListingBenchmarks benchmarks = marketBenchmarkService.benchmarks()
+                .forListing(region, "Testov-okres", "Testov", "Střed", 4);
+
+        SalePriceBenchmark sale = salePriceBenchmarks(region).stream()
+                .filter(b -> "Střed".equals(b.cityPart())).findFirst().orElseThrow();
+        RentBenchmark rent = rentBenchmarks(region).getFirst();
+        assertThat(benchmarks.salePricePerM2()).isEqualTo(
+                new BenchmarkValue(sale.benchmarkLevel(), sale.medianPricePerM2Czk(), sale.sampleSize()));
+        assertThat(benchmarks.monthlyRent()).isEqualTo(rent.monthlyRentCzk());
+        assertThat(benchmarks.rentPerM2()).isEqualTo(rent.rentPerM2Czk());
+        assertThat(benchmarks.salePricePerM2().benchmarkLevel()).isEqualTo(LocalityLevel.CITY);
+    }
+
+    @Test
+    void forListingFallsBackForALocalityWithoutRentalsOfItsOwn() {
+        String region = "Kraj lookup-fallback";
+        record(region, "Střed", RENT, FLATS, 20_000, 50);
+        record(region, "Střed", RENT, FLATS, 30_000, 60);
+
+        ListingBenchmarks benchmarks = marketBenchmarkService.benchmarks()
+                .forListing(region, "Testov-okres", "Testov", "Jih", 4);
+
+        assertThat(benchmarks.monthlyRent()).isEqualTo(
+                new BenchmarkValue(LocalityLevel.CITY, new BigDecimal("25000"), 2));
+        assertThat(benchmarks.salePricePerM2()).isNull();
+    }
+
+    @Test
+    void forListingWithoutDispositionLocalityOrAnyBenchmarkGivesNone() {
+        MarketBenchmarks benchmarks = marketBenchmarkService.benchmarks();
+
+        assertThat(benchmarks.forListing("Kraj lookup-none", "Testov-okres", "Testov", "Střed", 4))
+                .isEqualTo(new ListingBenchmarks(null, null, null));
+        assertThat(benchmarks.forListing(null, "Testov-okres", "Testov", "Střed", 4))
+                .isEqualTo(new ListingBenchmarks(null, null, null));
+        assertThat(benchmarks.forListing("Kraj lookup-none", "Testov-okres", "Testov", "Střed", null))
+                .isEqualTo(new ListingBenchmarks(null, null, null));
+    }
+
     private List<RentBenchmark> rentBenchmarks(String region) {
         return marketBenchmarkService.rent().stream().filter(b -> region.equals(b.region())).toList();
     }

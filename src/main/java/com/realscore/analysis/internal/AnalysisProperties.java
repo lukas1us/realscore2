@@ -7,7 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Settings of the market benchmarks and price drops; values live in {@code application.properties} under {@code realscore.analysis}.
+ * Settings of the market benchmarks and price drops; values live in {@code application.properties} under
+ * {@code realscore.analysis}.
  *
  * @param largeCities cities (as Sreality names them, e.g. {@code Praha}) grouped by city part instead of as a whole
  * @param minSampleSize fewest listings a group needs for its median to be used; smaller groups fall back to the

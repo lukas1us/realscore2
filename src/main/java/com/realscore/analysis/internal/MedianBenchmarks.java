@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 /**
@@ -37,28 +39,64 @@ public final class MedianBenchmarks {
     private record Group(Locality locality, int dispositionCode) {
     }
 
-    /** @return one benchmark per (finest locality, disposition) with a large enough group, ordered by locality path */
-    public static List<Benchmark> compute(List<Sample> samples, int minSampleSize) {
+    /**
+     * The medians of every (locality, disposition) group the samples fall into, at every level, for looking up the
+     * benchmark of any locality: also one with no samples of its own, which then falls back to an enclosing one.
+     */
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static final class Index {
+
+        private record Median(BigDecimal value, int sampleSize) {
+        }
+
+        private final Map<Group, Median> mediansByGroup;
+        private final Map<Integer, String> labelsByDisposition;
+        private final int minSampleSize;
+
+        /**
+         * @return the median of the first group, walking outwards from {@code locality}, with at least
+         *     {@code minSampleSize} samples; empty if there is none even at region level
+         */
+        public Optional<Benchmark> find(Locality locality, int dispositionCode) {
+            for (Locality l = locality; l != null; l = l.parent()) {
+                Median median = mediansByGroup.get(new Group(l, dispositionCode));
+                if (median != null && median.sampleSize() >= minSampleSize) {
+                    return Optional.of(new Benchmark(locality, dispositionCode,
+                            labelsByDisposition.get(dispositionCode), l, median.value(), median.sampleSize()));
+                }
+            }
+            return Optional.empty();
+        }
+    }
+
+    /** Groups each sample under its finest locality and every enclosing one, and takes each group's median. */
+    public static Index index(List<Sample> samples, int minSampleSize) {
         Map<Group, List<BigDecimal>> valuesByGroup = new HashMap<>();
-        Map<Group, String> finestGroups = new LinkedHashMap<>();
+        Map<Integer, String> labels = new HashMap<>();
         for (Sample sample : samples) {
-            finestGroups.putIfAbsent(new Group(sample.locality(), sample.dispositionCode()), sample.dispositionLabel());
+            labels.putIfAbsent(sample.dispositionCode(), sample.dispositionLabel());
             for (Locality l = sample.locality(); l != null; l = l.parent()) {
                 valuesByGroup.computeIfAbsent(new Group(l, sample.dispositionCode()), k -> new ArrayList<>())
                         .add(sample.value());
             }
         }
+        Map<Group, Index.Median> medians = new HashMap<>();
+        valuesByGroup.forEach((group, values) -> medians.put(group, new Index.Median(median(values), values.size())));
+        return new Index(medians, labels, minSampleSize);
+    }
+
+    /** @return one benchmark per (finest locality, disposition) with a large enough group, ordered by locality path */
+    public static List<Benchmark> compute(List<Sample> samples, int minSampleSize) {
+        Index index = index(samples, minSampleSize);
+        Map<Group, String> finestGroups = new LinkedHashMap<>();
+        for (Sample sample : samples) {
+            finestGroups.putIfAbsent(new Group(sample.locality(), sample.dispositionCode()), sample.dispositionLabel());
+        }
         List<Benchmark> benchmarks = new ArrayList<>();
-        finestGroups.forEach((finest, label) -> {
-            for (Locality l = finest.locality(); l != null; l = l.parent()) {
-                List<BigDecimal> values = valuesByGroup.get(new Group(l, finest.dispositionCode()));
-                if (values.size() >= minSampleSize) {
-                    benchmarks.add(new Benchmark(finest.locality(), finest.dispositionCode(), label, l,
-                            median(values), values.size()));
-                    return;
-                }
-            }
-        });
+        finestGroups.forEach((finest, label) -> index.find(finest.locality(), finest.dispositionCode())
+                .map(b -> new Benchmark(b.locality(), b.dispositionCode(), label, b.benchmarkLocality(), b.median(),
+                        b.sampleSize()))
+                .ifPresent(benchmarks::add));
         benchmarks.sort(ORDER);
         return benchmarks;
     }

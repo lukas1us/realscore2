@@ -100,6 +100,46 @@ class MedianBenchmarksTest {
                 .containsExactly(DISPOSITION_2KK);
     }
 
+    @Test
+    void indexFindsTheOwnGroupOfALargeEnoughLocality() {
+        MedianBenchmarks.Index index = MedianBenchmarks.index(samples(PLZEN, 100, 200, 300), 3);
+
+        assertThat(index.find(PLZEN, DISPOSITION_2KK)).contains(
+                new Benchmark(PLZEN, DISPOSITION_2KK, "2+kk", PLZEN, new BigDecimal("200"), 3));
+    }
+
+    @Test
+    void indexFallsBackForALocalityWithoutSamplesOfItsOwn() {
+        MedianBenchmarks.Index index = MedianBenchmarks.index(samples(PLZEN, 100, 200, 300), 3);
+
+        assertThat(index.find(STARY_PLZENEC, DISPOSITION_2KK)).contains(new Benchmark(STARY_PLZENEC,
+                DISPOSITION_2KK, "2+kk", STARY_PLZENEC.parent(), new BigDecimal("200"), 3));
+        assertThat(index.find(ROKYCANY, DISPOSITION_2KK)).hasValueSatisfying(
+                b -> assertThat(b.benchmarkLocality().level()).isEqualTo(LocalityLevel.REGION));
+    }
+
+    @Test
+    void indexFindsNothingWithoutALargeEnoughGroupOrForAnotherDisposition() {
+        MedianBenchmarks.Index index = MedianBenchmarks.index(samples(PLZEN, 100, 200, 300), 4);
+
+        assertThat(index.find(PLZEN, DISPOSITION_2KK)).isEmpty();
+        assertThat(MedianBenchmarks.index(samples(PLZEN, 100, 200, 300), 3).find(PLZEN, 6)).isEmpty();
+        assertThat(MedianBenchmarks.index(samples(PLZEN, 100, 200, 300), 3).find(SMICHOV, DISPOSITION_2KK)).isEmpty();
+    }
+
+    @Test
+    void computeAgreesWithTheIndexForEveryLocalityWithSamples() {
+        List<Sample> samples = new ArrayList<>(samples(PLZEN, 100, 200));
+        samples.addAll(samples(STARY_PLZENEC, 300));
+        samples.addAll(samples(ROKYCANY, 1000));
+        samples.addAll(samples(SMICHOV, 100, 200, 300));
+        samples.addAll(samples(KOSIRE, 400));
+        MedianBenchmarks.Index index = MedianBenchmarks.index(samples, 3);
+
+        assertThat(MedianBenchmarks.compute(samples, 3)).hasSize(5).allSatisfy(b ->
+                assertThat(index.find(b.locality(), b.dispositionCode())).contains(b));
+    }
+
     private static List<Sample> samples(Locality locality, int... values) {
         return values(values).stream().map(v -> new Sample(locality, DISPOSITION_2KK, "2+kk", v)).toList();
     }

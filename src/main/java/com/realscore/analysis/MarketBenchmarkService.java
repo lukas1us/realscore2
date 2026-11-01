@@ -36,11 +36,7 @@ public class MarketBenchmarkService {
      * only scraped below the configured sale price cap, so in expensive areas this is the median of the cheaper end.
      */
     public List<SalePriceBenchmark> salePricePerM2() {
-        List<Sample> samples = listingDetails.findActive(SALE, FLATS).stream()
-                .filter(d -> d.priceCzk() != null && d.sizeM2() != null && d.sizeM2().signum() > 0)
-                .map(d -> sample(d, d.priceCzk().divide(d.sizeM2(), 4, RoundingMode.HALF_UP)))
-                .filter(Objects::nonNull)
-                .toList();
+        List<Sample> samples = perM2Samples(listingDetails.findActive(SALE, FLATS));
         return MedianBenchmarks.compute(samples, properties.minSampleSize()).stream()
                 .map(MarketBenchmarkService::toSalePriceBenchmark)
                 .toList();
@@ -51,23 +47,43 @@ public class MarketBenchmarkService {
      * those of them that also have a positive size.
      */
     public List<RentBenchmark> rent() {
-        List<ActiveListingDetails> rentals = listingDetails.findActive(RENT, FLATS).stream()
-                .filter(d -> d.priceCzk() != null)
+        List<ActiveListingDetails> rentals = listingDetails.findActive(RENT, FLATS);
+        Map<BenchmarkKey, Benchmark> perM2 = MedianBenchmarks.compute(perM2Samples(rentals), properties.minSampleSize())
+                .stream()
+                .collect(Collectors.toMap(BenchmarkKey::of, b -> b));
+        return MedianBenchmarks.compute(rentSamples(rentals), properties.minSampleSize()).stream()
+                .map(b -> toRentBenchmark(b, perM2.get(BenchmarkKey.of(b))))
                 .toList();
-        List<Sample> rentSamples = rentals.stream()
-                .map(d -> sample(d, d.priceCzk()))
-                .filter(Objects::nonNull)
-                .toList();
-        List<Sample> perM2Samples = rentals.stream()
-                .filter(d -> d.sizeM2() != null && d.sizeM2().signum() > 0)
+    }
+
+    /**
+     * The sale and rent benchmarks of every locality, computed once from the same listings and with the same rules as
+     * {@link #salePricePerM2()} and {@link #rent()}, for looking up the ones that apply to individual flats.
+     */
+    public MarketBenchmarks benchmarks() {
+        List<ActiveListingDetails> rentals = listingDetails.findActive(RENT, FLATS);
+        int min = properties.minSampleSize();
+        return new MarketBenchmarks(
+                MedianBenchmarks.index(perM2Samples(listingDetails.findActive(SALE, FLATS)), min),
+                MedianBenchmarks.index(rentSamples(rentals), min),
+                MedianBenchmarks.index(perM2Samples(rentals), min),
+                properties.largeCities());
+    }
+
+    /** Price per m² of those listings with a price and a positive size. */
+    private List<Sample> perM2Samples(List<ActiveListingDetails> listings) {
+        return listings.stream()
+                .filter(d -> d.priceCzk() != null && d.sizeM2() != null && d.sizeM2().signum() > 0)
                 .map(d -> sample(d, d.priceCzk().divide(d.sizeM2(), 4, RoundingMode.HALF_UP)))
                 .filter(Objects::nonNull)
                 .toList();
-        Map<BenchmarkKey, Benchmark> perM2 = MedianBenchmarks.compute(perM2Samples, properties.minSampleSize())
-                .stream()
-                .collect(Collectors.toMap(BenchmarkKey::of, b -> b));
-        return MedianBenchmarks.compute(rentSamples, properties.minSampleSize()).stream()
-                .map(b -> toRentBenchmark(b, perM2.get(BenchmarkKey.of(b))))
+    }
+
+    private List<Sample> rentSamples(List<ActiveListingDetails> rentals) {
+        return rentals.stream()
+                .filter(d -> d.priceCzk() != null)
+                .map(d -> sample(d, d.priceCzk()))
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -94,11 +110,8 @@ public class MarketBenchmarkService {
     private static RentBenchmark toRentBenchmark(Benchmark rent, Benchmark perM2) {
         Locality l = rent.locality();
         return new RentBenchmark(l.region(), l.district(), l.city(), l.cityPart(), rent.dispositionCode(),
-                rent.dispositionLabel(), value(rent), perM2 == null ? null : value(perM2));
-    }
-
-    private static BenchmarkValue value(Benchmark b) {
-        return new BenchmarkValue(b.benchmarkLocality().level(), b.median(), b.sampleSize());
+                rent.dispositionLabel(), MarketBenchmarks.value(rent),
+                perM2 == null ? null : MarketBenchmarks.value(perM2));
     }
 
     private static SalePriceBenchmark toSalePriceBenchmark(Benchmark b) {

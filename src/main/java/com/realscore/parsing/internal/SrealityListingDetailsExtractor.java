@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.MissingNode;
 
 /**
  * Extracts normalized listing-detail fields from a raw Sreality v1 detail response
@@ -19,6 +20,7 @@ public class SrealityListingDetailsExtractor {
 
     public ListingDetailsFields extract(String rawPayload) {
         JsonNode result = parse(rawPayload).path("result");
+        JsonNode buildingCondition = enteredOrMissing(result.path("building_condition"));
 
         return new ListingDetailsFields(
                 extractPrice(result),
@@ -32,6 +34,8 @@ public class SrealityListingDetailsExtractor {
                 textOrNull(result.path("building_type"), "name"),
                 elevator(result),
                 ownership(result),
+                intOrNull(buildingCondition, "value"),
+                textOrNull(buildingCondition, "name"),
                 textOrNull(result.path("locality"), "city"),
                 textOrNull(result.path("locality"), "district"),
                 textOrNull(result.path("locality"), "region"),
@@ -98,6 +102,15 @@ public class SrealityListingDetailsExtractor {
             case 2 -> "DV";
             default -> "OTHER";
         };
+    }
+
+    /**
+     * Value 0 ("- nezadáno") means the seller left the field empty, so it is treated like a missing field and yields
+     * no code and no label. Other codes are kept raw (doc "Sreality API").
+     */
+    private static JsonNode enteredOrMissing(JsonNode codeAndName) {
+        Integer value = intOrNull(codeAndName, "value");
+        return value == null || value == 0 ? MissingNode.getInstance() : codeAndName;
     }
 
     private static BigDecimal decimalOrNull(JsonNode result, String primaryField, String fallbackField) {

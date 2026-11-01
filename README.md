@@ -105,6 +105,9 @@ too.
   - the price history: listings parsed before it have no history until re-parsed;
   - the not-entered elevator and energy class fix: until re-parsed, a not-entered elevator stays `false` instead of
     `NULL` and a not-chosen energy class stays `-` instead of `NULL`;
+  - building condition: `building_condition_code` and `building_condition_label` (in the listing endpoint
+    `buildingConditionCode` and `buildingConditionLabel`, Sreality's raw code and label, `null` when not entered)
+    stay empty until re-parsed;
   - the split building years: `year_built` is replaced by `acceptance_year` and `reconstruction_year` (in the
     listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two

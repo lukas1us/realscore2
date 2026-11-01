@@ -117,6 +117,23 @@ class ListingDetailsReparseServiceTest {
     }
 
     @Test
+    void reparseFillsTheBuildingConditionOfARowParsedBeforeIt() throws Exception {
+        String source = "reparse-building-condition";
+        listingSnapshotService.recordFetch(source, "1", fixture("detail_success.json"));
+        ListingDetail beforeV11 = detail(source, "1").orElseThrow();
+        beforeV11.setBuildingConditionCode(null);
+        beforeV11.setBuildingConditionLabel(null);
+        listingDetailRepository.save(beforeV11);
+
+        ReparseResult result = reparseService.reparseAll(source);
+
+        assertThat(result).isEqualTo(new ReparseResult(0, 1, 0, 0));
+        ListingDetail reparsed = detail(source, "1").orElseThrow();
+        assertThat(reparsed.getBuildingConditionCode()).isEqualTo(1);
+        assertThat(reparsed.getBuildingConditionLabel()).isEqualTo("Velmi dobrý");
+    }
+
+    @Test
     void aFailingListingIsCountedAndDoesNotStopTheOthers() throws Exception {
         String source = "reparse-failure";
         recordWithoutDetail(source, "1", UNSTORABLE_PAYLOAD);

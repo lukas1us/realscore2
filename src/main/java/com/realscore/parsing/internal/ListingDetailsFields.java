@@ -16,6 +16,8 @@ public record ListingDetailsFields(
         String constructionType,
         Boolean elevator,
         String ownership,
+        Integer buildingConditionCode,
+        String buildingConditionLabel,
         String city,
         String district,
         String region,

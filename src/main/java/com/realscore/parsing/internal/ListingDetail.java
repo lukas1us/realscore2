@@ -60,6 +60,12 @@ public class ListingDetail {
     @Column(name = "ownership")
     private String ownership;
 
+    @Column(name = "building_condition_code")
+    private Integer buildingConditionCode;
+
+    @Column(name = "building_condition_label")
+    private String buildingConditionLabel;
+
     @Column(name = "city")
     private String city;
 
@@ -106,6 +112,8 @@ public class ListingDetail {
         this.constructionType = fields.constructionType();
         this.elevator = fields.elevator();
         this.ownership = fields.ownership();
+        this.buildingConditionCode = fields.buildingConditionCode();
+        this.buildingConditionLabel = fields.buildingConditionLabel();
         this.city = fields.city();
         this.district = fields.district();
         this.region = fields.region();
@@ -118,7 +126,8 @@ public class ListingDetail {
 
     private ListingDetailsFields currentFields() {
         return new ListingDetailsFields(priceCzk, sizeM2, dispositionCode, dispositionLabel, acceptanceYear,
-                reconstructionYear, floor, energyClass, constructionType, elevator, ownership, city, district, region,
+                reconstructionYear, floor, energyClass, constructionType, elevator, ownership,
+                buildingConditionCode, buildingConditionLabel, city, district, region,
                 citypart, transactionTypeCode, propertyCategoryCode);
     }
 

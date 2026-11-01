@@ -29,6 +29,8 @@ class SrealityListingDetailsExtractorTest {
         assertThat(fields.constructionType()).isEqualTo("Cihlová");
         assertThat(fields.elevator()).isTrue();
         assertThat(fields.ownership()).isEqualTo("OV");
+        assertThat(fields.buildingConditionCode()).isEqualTo(1);
+        assertThat(fields.buildingConditionLabel()).isEqualTo("Velmi dobrý");
         assertThat(fields.city()).isEqualTo("Plzeň");
         assertThat(fields.district()).isEqualTo("Plzeň-město");
         assertThat(fields.region()).isEqualTo("Plzeňský kraj");
@@ -137,6 +139,43 @@ class SrealityListingDetailsExtractorTest {
         ListingDetailsFields fields = extractor.extract("{\"result\": {}}");
 
         assertThat(fields.ownership()).isNull();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "6, Novostavba",
+            "8, Před rekonstrukcí",
+            "9, Po rekonstrukci",
+    })
+    void keepsTheBuildingConditionCodeAndLabelAsGiven(int conditionValue, String name) {
+        String payload = """
+                {"result": {"building_condition": {"name": "%s", "value": %d}}}
+                """.formatted(name, conditionValue);
+
+        ListingDetailsFields fields = extractor.extract(payload);
+
+        assertThat(fields.buildingConditionCode()).isEqualTo(conditionValue);
+        assertThat(fields.buildingConditionLabel()).isEqualTo(name);
+    }
+
+    @Test
+    void notEnteredBuildingConditionYieldsNull() {
+        String payload = """
+                {"result": {"building_condition": {"name": "- nezadáno", "value": 0}}}
+                """;
+
+        ListingDetailsFields fields = extractor.extract(payload);
+
+        assertThat(fields.buildingConditionCode()).isNull();
+        assertThat(fields.buildingConditionLabel()).isNull();
+    }
+
+    @Test
+    void missingBuildingConditionYieldsNull() {
+        ListingDetailsFields fields = extractor.extract("{\"result\": {}}");
+
+        assertThat(fields.buildingConditionCode()).isNull();
+        assertThat(fields.buildingConditionLabel()).isNull();
     }
 
     @Test

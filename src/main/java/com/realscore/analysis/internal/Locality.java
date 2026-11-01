@@ -11,7 +11,7 @@ public record Locality(LocalityLevel level, String region, String district, Stri
 
     /**
      * The finest locality the fields allow: the city part for one of {@code largeCities}, otherwise the city, falling
-     * back to district or region when the finer fields are missing.
+     * back to district or region when the finer fields are missing. A blank city part counts as missing.
      *
      * @return {@code null} without a region, which leaves nothing to fall back to
      */
@@ -26,7 +26,8 @@ public record Locality(LocalityLevel level, String region, String district, Stri
         if (city == null) {
             return new Locality(LocalityLevel.DISTRICT, region, district, null, null);
         }
-        if (cityPart != null && largeCities.contains(city)) {
+        // Sreality sends an empty citypart when it has none; that is no city part, not one named "".
+        if (cityPart != null && !cityPart.isBlank() && largeCities.contains(city)) {
             return new Locality(LocalityLevel.CITY_PART, region, district, city, cityPart);
         }
         return new Locality(LocalityLevel.CITY, region, district, city, null);

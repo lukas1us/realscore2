@@ -78,6 +78,23 @@ class MarketBenchmarkServiceTest {
     }
 
     @Test
+    void anEmptyCityPartCountsInTheCityAndGetsNoCityPartBenchmarkOfItsOwn() {
+        String region = "Kraj sale-empty-citypart";
+        record(region, "Střed", SALE, FLATS, 5_000_000, 50);
+        record(region, "", SALE, FLATS, 7_000_000, 50);
+        record(region, "Sever", SALE, FLATS, 6_000_000, 50);
+        record(region, "Sever", SALE, FLATS, 6_000_000, 50);
+
+        assertThat(salePriceBenchmarks(region))
+                .extracting(SalePriceBenchmark::cityPart, SalePriceBenchmark::benchmarkLevel,
+                        SalePriceBenchmark::medianPricePerM2Czk, SalePriceBenchmark::sampleSize)
+                .containsExactly(
+                        tuple(null, LocalityLevel.CITY, new BigDecimal("120000"), 4),
+                        tuple("Sever", LocalityLevel.CITY_PART, new BigDecimal("120000"), 2),
+                        tuple("Střed", LocalityLevel.CITY, new BigDecimal("120000"), 4));
+    }
+
+    @Test
     void endpointReturnsTheSaleBenchmarks() {
         String region = "Kraj sale-endpoint";
         record(region, "Střed", SALE, FLATS, 5_000_000, 50);

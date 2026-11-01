@@ -35,19 +35,33 @@ public class SrealityClient {
 
     /**
      * Returns the detail response body exactly as received, including the {@code {"result": ...}} wrapper, or empty if
-     * Sreality answers 403 or 404 (the estate is gone or hidden: a skip, not an error).
+     * Sreality answers 403, 404 or 410 (the estate is gone or hidden: a skip, not an error).
      *
      * @throws SrealityApiException if the final response status is anything else but 200
      * @throws IllegalStateException if a 200 response has an empty or blank body
      */
     public Optional<String> fetchEstateDetail(long estateId) {
+        return fetchDetail(estateId) instanceof EstateDetail.Found(String body) ? Optional.of(body) : Optional.empty();
+    }
+
+    /**
+     * Fetches one estate's detail and tells a gone estate (404, 410) apart from a hidden one (403).
+     *
+     * @throws SrealityApiException if the final response status is anything else but 200, 403, 404 or 410
+     * @throws IllegalStateException if a 200 response has an empty or blank body
+     */
+    public EstateDetail fetchDetail(long estateId) {
         return restClient.get()
                 .uri(detailPath, estateId)
                 .exchange((request, response) -> {
                     int status = response.getStatusCode().value();
-                    if (status == 403 || status == 404) {
-                        log.info("Skipping Sreality estate {}: HTTP {}", estateId, status);
-                        return Optional.empty();
+                    if (status == 404 || status == 410) {
+                        log.info("Sreality estate {} is gone: HTTP {}", estateId, status);
+                        return new EstateDetail.Gone(status);
+                    }
+                    if (status == 403) {
+                        log.info("Sreality estate {} is forbidden: HTTP 403", estateId);
+                        return new EstateDetail.Forbidden();
                     }
                     if (status != 200) {
                         throw new SrealityApiException(estateId, request.getURI().getPath(), status);
@@ -56,7 +70,7 @@ public class SrealityClient {
                     if (body == null || body.isBlank()) {
                         throw new IllegalStateException("Sreality returned an empty body for estate " + estateId);
                     }
-                    return Optional.of(body);
+                    return new EstateDetail.Found(body);
                 });
     }
 

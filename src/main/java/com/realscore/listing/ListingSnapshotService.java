@@ -121,22 +121,44 @@ public class ListingSnapshotService {
     }
 
     /**
-     * Records which listings from {@code source} a run saw: each seen listing gets {@code last_seen_at = now} and, if
-     * it was marked removed, has {@code removed_at} cleared; every other active listing not seen since
-     * {@code runStartedAt} gets {@code removed_at = now}. Listings first recorded during the run count as seen.
+     * Records which listings from {@code source} a run saw: each gets {@code last_seen_at = now} and, if it was marked
+     * removed, has {@code removed_at} cleared. Listings the run did not see are left as they are; see
+     * {@link #findActiveExternalIdsNotSeenSince} and {@link #markRemoved}.
      *
      * @param seenExternalIds every ID the run found, already known or not
+     * @return how many seen listings had been marked removed and no longer are
      */
     @Transactional
-    public PresenceResult recordPresence(String source, Collection<String> seenExternalIds, Instant runStartedAt) {
+    public int recordPresence(String source, Collection<String> seenExternalIds) {
         Instant now = Instant.now();
         int[] reappeared = {0};
         forEachBatch(seenExternalIds, batch -> {
             reappeared[0] += listingRepository.clearRemovedAt(source, batch);
             listingRepository.markSeen(source, batch, now);
         });
-        int removed = listingRepository.markRemovedIfNotSeenSince(source, runStartedAt, now);
-        return new PresenceResult(reappeared[0], removed);
+        return reappeared[0];
+    }
+
+    /**
+     * Returns the external ID of every listing from {@code source} that is not marked removed and was last seen
+     * before {@code notSeenSince}, oldest listing first.
+     */
+    @Transactional(readOnly = true)
+    public List<String> findActiveExternalIdsNotSeenSince(String source, Instant notSeenSince) {
+        return listingRepository.findActiveExternalIdsNotSeenSince(source, notSeenSince);
+    }
+
+    /**
+     * Sets {@code removed_at = removedAt} on those of the given listings from {@code source} that are not marked
+     * removed yet.
+     *
+     * @return how many listings were marked removed
+     */
+    @Transactional
+    public int markRemoved(String source, Collection<String> externalIds, Instant removedAt) {
+        int[] removed = {0};
+        forEachBatch(externalIds, batch -> removed[0] += listingRepository.markRemoved(source, batch, removedAt));
+        return removed[0];
     }
 
     private static void forEachBatch(Collection<String> externalIds, Consumer<List<String>> action) {

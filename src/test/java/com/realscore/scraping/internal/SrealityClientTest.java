@@ -57,11 +57,34 @@ class SrealityClientTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {403, 404})
-    void forbiddenOrNotFoundDetailIsSkipped(int status) {
+    @ValueSource(ints = {403, 404, 410})
+    void forbiddenOrGoneDetailIsSkipped(int status) {
         sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(status)));
 
         assertThat(client.fetchEstateDetail(ESTATE_ID)).isEmpty();
+    }
+
+    @Test
+    void fetchDetailReturnsTheBodyOf200AsFound() throws IOException {
+        String fixture = readFixture("fixtures/sreality/detail_success.json");
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(okJson(fixture)));
+
+        assertThat(client.fetchDetail(ESTATE_ID)).isEqualTo(new EstateDetail.Found(fixture));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {404, 410})
+    void fetchDetailTells404And410AsGone(int status) {
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(status)));
+
+        assertThat(client.fetchDetail(ESTATE_ID)).isEqualTo(new EstateDetail.Gone(status));
+    }
+
+    @Test
+    void fetchDetailTells403AsForbiddenNotGone() {
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(403)));
+
+        assertThat(client.fetchDetail(ESTATE_ID)).isEqualTo(new EstateDetail.Forbidden());
     }
 
     @ParameterizedTest
@@ -77,11 +100,11 @@ class SrealityClientTest {
 
     @Test
     void otherClientErrorRaisesSrealityApiException() {
-        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(410)));
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(400)));
 
         assertThatThrownBy(() -> client.fetchEstateDetail(ESTATE_ID))
                 .isInstanceOfSatisfying(SrealityApiException.class, e -> {
-                    assertThat(e.statusCode()).isEqualTo(410);
+                    assertThat(e.statusCode()).isEqualTo(400);
                     assertThat(e.estateId()).isEqualTo(ESTATE_ID);
                     assertThat(e.requestPath()).isEqualTo(DETAIL_PATH);
                 });

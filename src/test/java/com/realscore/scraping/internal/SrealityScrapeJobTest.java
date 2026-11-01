@@ -19,6 +19,7 @@ import com.realscore.scraping.ScrapeRunStatus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -138,6 +139,7 @@ class SrealityScrapeJobTest {
         assertThat(removedAt(4302)).isNull();
 
         stubSearch(okJson(fixture("search_page_presence_one.json")));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4302")).willReturn(aResponse().withStatus(404)));
         job.run();
         assertThat(removedAt(4301)).isNull();
         assertThat(removedAt(4302)).isNotNull();
@@ -147,7 +149,50 @@ class SrealityScrapeJobTest {
         job.run();
         assertThat(removedAt(4302)).isNull();
         assertThat(latestRun().get("removed_count")).isEqualTo(0);
-        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4302")));
+        sreality.verify(2, getRequestedFor(urlEqualTo("/api/v1/estates/4302")));
+    }
+
+    @Test
+    void unseenListingStillOnlineAboveThePriceCapStaysActiveAndItsNewPriceIsRecorded() {
+        String detail = fixture("detail_success.json");
+        String aboveCap = detail.replace("\"price_summary_czk\": 3590000.0", "\"price_summary_czk\": 5900000.0");
+        assertThat(aboveCap).isNotEqualTo(detail);
+        listingSnapshotService.recordFetch("sreality", "4801", detail);
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4301")).willReturn(okJson(detail)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4801")).willReturn(okJson(aboveCap)));
+        stubSearch(okJson(fixture("search_page_presence_one.json")));
+
+        job.run();
+
+        assertThat(removedAt(4801)).isNull();
+        assertThat(snapshotCount(4801)).isEqualTo(2);
+        assertThat(pricePoints(4801)).usingElementComparator(BigDecimal::compareTo)
+                .containsExactly(new BigDecimal("3590000"), new BigDecimal("5900000"));
+        assertThat(latestRun().get("updated_count")).isEqualTo(1);
+        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4801")));
+    }
+
+    @Test
+    void unseenListingIsMarkedRemovedOnlyWhenItsDetailIsGone() {
+        for (String id : List.of("4811", "4812", "4813", "4814")) {
+            listingSnapshotService.recordFetch("sreality", id, "{}");
+        }
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4301")).willReturn(okJson(fixture("detail_success.json"))));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4811")).willReturn(aResponse().withStatus(404)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4812")).willReturn(aResponse().withStatus(410)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4813")).willReturn(aResponse().withStatus(403)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4814")).willReturn(aResponse().withStatus(500)));
+        stubSearch(okJson(fixture("search_page_presence_one.json")));
+
+        job.run();
+
+        assertThat(removedAt(4811)).isNotNull();
+        assertThat(removedAt(4812)).isNotNull();
+        assertThat(removedAt(4813)).isNull();
+        assertThat(removedAt(4814)).isNull();
+        Map<String, Object> run = latestRun();
+        assertThat(run.get("status")).isEqualTo(ScrapeRunStatus.SUCCEEDED.name());
+        assertThat(run.get("error_count")).isEqualTo(2);
     }
 
     @Test
@@ -214,6 +259,7 @@ class SrealityScrapeJobTest {
         jdbc.update("UPDATE listing SET last_fetched_at = now() - interval '8 days'"
                 + " WHERE source = 'sreality' AND external_id = '4601'");
         stubRentalSearch(okJson(fixture("search_page_rentals_one.json")));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4602")).willReturn(aResponse().withStatus(404)));
         job.run();
 
         assertThat(removedAt(4301)).isNull();
@@ -221,7 +267,7 @@ class SrealityScrapeJobTest {
         assertThat(removedAt(4602)).isNotNull();
         assertThat(latestRun().get("removed_count")).isEqualTo(1);
         sreality.verify(2, getRequestedFor(urlEqualTo("/api/v1/estates/4601")));
-        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4602")));
+        sreality.verify(2, getRequestedFor(urlEqualTo("/api/v1/estates/4602")));
         sreality.verify(0, getRequestedFor(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
                 .withQueryParam("category_type_cb", equalTo("2"))
                 .withQueryParam("price_to", matching(".*")));
@@ -250,6 +296,13 @@ class SrealityScrapeJobTest {
                 SELECT count(*) FROM listing_snapshot s JOIN listing l ON l.id = s.listing_id
                 WHERE l.source = 'sreality' AND l.external_id = ?
                 """, Integer.class, String.valueOf(estateId));
+    }
+
+    private List<BigDecimal> pricePoints(long estateId) {
+        return jdbc.queryForList("""
+                SELECT p.price_czk FROM listing_price_point p JOIN listing l ON l.id = p.listing_id
+                WHERE l.source = 'sreality' AND l.external_id = ? ORDER BY p.observed_at
+                """, BigDecimal.class, String.valueOf(estateId));
     }
 
     private Instant lastFetchedAt(long estateId) {

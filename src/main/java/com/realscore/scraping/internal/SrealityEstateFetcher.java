@@ -20,7 +20,7 @@ public class SrealityEstateFetcher {
     private final ListingSnapshotService listingSnapshotService;
 
     /**
-     * @return what was recorded, or empty if Sreality answered 403/404 and the estate was skipped
+     * @return what was recorded, or empty if Sreality answered 403, 404 or 410 and the estate was skipped
      * @throws SrealityApiException if Sreality fails in any other way; nothing is recorded then
      */
     public Optional<RecordedFetch> fetch(long estateId) {

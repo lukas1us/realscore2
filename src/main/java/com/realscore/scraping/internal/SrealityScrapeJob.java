@@ -1,7 +1,6 @@
 package com.realscore.scraping.internal;
 
 import com.realscore.listing.ListingSnapshotService;
-import com.realscore.listing.PresenceResult;
 import com.realscore.scraping.ScrapeRunCounts;
 import com.realscore.scraping.ScrapeRunService;
 import com.realscore.scraping.ScrapeRunStatus;
@@ -25,11 +24,13 @@ public class SrealityScrapeJob {
     private final ScrapeRunService scrapeRunService;
     private final ScrapeJobProperties properties;
     private final ListingSnapshotService listingSnapshotService;
+    private final SrealityRemovalCheck removalCheck;
 
     /**
      * Never throws: a failure closes the run as {@link ScrapeRunStatus#FAILED} with the cause as error details, and
-     * marks nothing removed. A successful run that found no IDs at all marks nothing removed either, since that more
-     * likely means Sreality misbehaved than that every listing is gone.
+     * marks nothing removed. After a successful run, every active listing it did not see is checked by
+     * {@link SrealityRemovalCheck}, and only those whose detail is gone are marked removed. A successful run that found
+     * no IDs at all checks nothing, since that more likely means Sreality misbehaved than that every listing is gone.
      */
     @Scheduled(cron = "${realscore.scrape.cron}", zone = ZONE)
     public void run() {
@@ -40,26 +41,26 @@ public class SrealityScrapeJob {
         try {
             BulkCollectionResult result = bulkCollector.collect(properties.priceCap(), properties.rentPriceCap(),
                     properties.refetchAfter());
-            int removed = recordPresence(runId, result, startedAt);
+            RemovalCheckResult check = recordPresenceAndCheckUnseen(runId, result, startedAt);
             scrapeRunService.updateCounts(runId, new ScrapeRunCounts(result.found(), result.fetched(),
-                    result.changed(), removed, result.skipped(), result.alreadyKnown(), result.failed()));
+                    result.changed() + check.changed(), check.removed(), result.skipped(), result.alreadyKnown(),
+                    result.failed() + check.failed()));
             scrapeRunService.closeRun(runId, ScrapeRunStatus.SUCCEEDED, null);
-            log.info("Scrape run {} succeeded: {}, {} removed", runId, result, removed);
+            log.info("Scrape run {} succeeded: {}, {}", runId, result, check);
         } catch (RuntimeException e) {
             log.error("Scrape run {} failed", runId, e);
             scrapeRunService.closeRun(runId, ScrapeRunStatus.FAILED, e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
-    private int recordPresence(Long runId, BulkCollectionResult result, Instant startedAt) {
+    private RemovalCheckResult recordPresenceAndCheckUnseen(Long runId, BulkCollectionResult result, Instant startedAt) {
         if (result.foundIds().isEmpty()) {
-            log.warn("Scrape run {} found no estates at all; not marking any listing removed", runId);
-            return 0;
+            log.warn("Scrape run {} found no estates at all; not checking or marking any listing removed", runId);
+            return new RemovalCheckResult(0, 0, 0, 0, 0);
         }
-        PresenceResult presence = listingSnapshotService.recordPresence(SrealityEstateFetcher.SOURCE,
-                result.foundIds().stream().map(String::valueOf).toList(), startedAt);
-        log.info("Scrape run {}: {} listings reappeared, {} marked removed", runId, presence.reappeared(),
-                presence.removed());
-        return presence.removed();
+        int reappeared = listingSnapshotService.recordPresence(SrealityEstateFetcher.SOURCE,
+                result.foundIds().stream().map(String::valueOf).toList());
+        log.info("Scrape run {}: {} listings reappeared", runId, reappeared);
+        return removalCheck.check(startedAt);
     }
 }

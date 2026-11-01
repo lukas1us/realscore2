@@ -74,7 +74,7 @@ class PriceDropControllerTest {
     void leavesOutRemovedListings() {
         String source = "drops-removed";
         record(source, "removed", SALE, "3590000", "3390000");
-        listingSnapshotService.recordPresence(source, List.of(), Instant.now());
+        listingSnapshotService.markRemoved(source, List.of("removed"), Instant.now());
 
         assertThat(drops("/api/analysis/price-drops", source)).isEmpty();
     }

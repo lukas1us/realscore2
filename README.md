@@ -10,8 +10,10 @@ disposition), and scores flats for sale against them.
    fetches the detail of every new listing, and refetches known ones once their last fetch is older than a
    configurable interval. Every run is recorded in `scrape_run`.
 2. **Listing**: every detail response is stored raw as JSONB in `listing_snapshot`, and a new snapshot is written
-   only when the payload changes. A listing missing from a run is marked removed, and the mark is cleared if it
-   shows up again.
+   only when the payload changes. Dropping out of the search results alone is no proof a listing is gone (its price
+   may have risen above the cap), so after each successful run the detail of every active listing the run did not
+   see is fetched: 404 or 410 marks it removed, 200 records its snapshot and keeps it active, and 403 or any other
+   failure leaves it active to be checked again next run. The removed mark is cleared if the listing shows up again.
 3. **Parsing**: each new or changed snapshot is parsed into a normalised `listing_detail` row: price, size,
    disposition, locality, sale or rent, and so on. Each parse also rebuilds the listing's price history
    (`listing_price_point`) from all its snapshots: one point per asking-price change, skipping snapshots without a
@@ -105,7 +107,10 @@ too.
   - the split building years: `year_built` is replaced by `acceptance_year` and `reconstruction_year` (in the
     listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
-  requests per second, which can take hours. Later runs only fetch new and due listings.
+  requests per second, which can take hours. Later runs only fetch new and due listings, plus every active listing
+  the run did not see: one that stays online outside the searches (e.g. above the price cap) is fetched on every run
+  until it is gone. In `scrape_run`, changed snapshots from that check count as `updated_count`, and 403s and other
+  failures as `error_count`.
 - **Days on market count from the first time realscore saw a listing**, not from when it was published: Sreality's
   detail has no publication date. Listings already online before the first scrape start at 0.
 - **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians

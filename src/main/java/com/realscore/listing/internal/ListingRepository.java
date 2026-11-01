@@ -33,9 +33,15 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     @Query("update Listing l set l.lastSeenAt = :seenAt where l.source = :source and l.externalId in :externalIds")
     int markSeen(String source, Collection<String> externalIds, Instant seenAt);
 
+    @Query("""
+            select l.externalId from Listing l
+            where l.source = :source and l.removedAt is null and l.lastSeenAt < :notSeenSince
+            order by l.id""")
+    List<String> findActiveExternalIdsNotSeenSince(String source, Instant notSeenSince);
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""
             update Listing l set l.removedAt = :removedAt
-            where l.source = :source and l.removedAt is null and l.lastSeenAt < :notSeenSince""")
-    int markRemovedIfNotSeenSince(String source, Instant notSeenSince, Instant removedAt);
+            where l.source = :source and l.externalId in :externalIds and l.removedAt is null""")
+    int markRemoved(String source, Collection<String> externalIds, Instant removedAt);
 }

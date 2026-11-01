@@ -71,23 +71,48 @@ class ListingSnapshotServiceTest {
     }
 
     @Test
-    void recordPresenceMarksUnseenListingsRemovedAndClearsReappearedOnes() {
+    void recordPresenceMarksSeenListingsAndClearsReappearedOnesButRemovesNothing() {
         String source = "presence-test";
         listingSnapshotService.recordFetch(source, "a", "{}");
         listingSnapshotService.recordFetch(source, "b", "{}");
-        listingSnapshotService.recordFetch("other", "b", "{}");
+        listingSnapshotService.markRemoved(source, List.of("b"), Instant.now());
 
-        PresenceResult firstRun = listingSnapshotService.recordPresence(source, List.of("a"), Instant.now());
-
-        assertThat(firstRun).isEqualTo(new PresenceResult(0, 1));
+        assertThat(listingSnapshotService.recordPresence(source, List.of("a"))).isEqualTo(0);
         assertThat(removedAt(source, "a")).isNull();
         assertThat(removedAt(source, "b")).isNotNull();
-        assertThat(removedAt("other", "b")).isNull();
 
-        PresenceResult secondRun = listingSnapshotService.recordPresence(source, List.of("a", "b"), Instant.now());
-
-        assertThat(secondRun).isEqualTo(new PresenceResult(1, 0));
+        assertThat(listingSnapshotService.recordPresence(source, List.of("a", "b"))).isEqualTo(1);
         assertThat(removedAt(source, "b")).isNull();
+    }
+
+    @Test
+    void findActiveExternalIdsNotSeenSinceLeavesOutSeenAndRemovedListingsAndOtherSources() {
+        String source = "unseen-test";
+        listingSnapshotService.recordFetch(source, "old", "{}");
+        listingSnapshotService.recordFetch(source, "old-removed", "{}");
+        listingSnapshotService.recordFetch("unseen-other-source", "old", "{}");
+        listingSnapshotService.markRemoved(source, List.of("old-removed"), Instant.now());
+        Instant runStartedAt = Instant.now().plusMillis(1);
+        listingSnapshotService.recordFetch(source, "seen", "{}");
+        listingSnapshotService.recordPresence(source, List.of("seen"));
+
+        assertThat(listingSnapshotService.findActiveExternalIdsNotSeenSince(source, runStartedAt))
+                .containsExactly("old");
+    }
+
+    @Test
+    void markRemovedMarksOnlyTheGivenActiveListingsOfTheSource() {
+        String source = "mark-removed-test";
+        listingSnapshotService.recordFetch(source, "1", "{}");
+        listingSnapshotService.recordFetch(source, "2", "{}");
+        listingSnapshotService.recordFetch("mark-removed-other-source", "1", "{}");
+        Instant firstRemoval = Instant.now();
+
+        assertThat(listingSnapshotService.markRemoved(source, List.of("1", "unknown"), firstRemoval)).isEqualTo(1);
+        assertThat(listingSnapshotService.markRemoved(source, List.of("1"), firstRemoval.plusSeconds(60))).isEqualTo(0);
+        assertThat(removedAt(source, "1")).isNotNull();
+        assertThat(removedAt(source, "2")).isNull();
+        assertThat(removedAt("mark-removed-other-source", "1")).isNull();
     }
 
     @Test
@@ -130,7 +155,7 @@ class ListingSnapshotServiceTest {
         listingSnapshotService.recordFetch(source, "1", "{}");
         listingSnapshotService.recordFetch(source, "2", "{}");
         listingSnapshotService.recordFetch("find-ids-other-source", "3", "{}");
-        listingSnapshotService.recordPresence(source, List.of("1"), Instant.now());
+        listingSnapshotService.markRemoved(source, List.of("2"), Instant.now());
 
         assertThat(removedAt(source, "2")).isNotNull();
         assertThat(listingSnapshotService.findExternalIds(source)).containsExactlyInAnyOrder("1", "2");

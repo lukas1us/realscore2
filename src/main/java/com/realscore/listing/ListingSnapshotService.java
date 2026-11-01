@@ -65,6 +65,14 @@ public class ListingSnapshotService {
     }
 
     /**
+     * Returns the external ID of every listing from {@code source}, removed ones included.
+     */
+    @Transactional(readOnly = true)
+    public List<String> findExternalIds(String source) {
+        return listingRepository.findExternalIdsBySource(source);
+    }
+
+    /**
      * Returns those of the given external IDs that already have a listing from {@code source}.
      */
     @Transactional(readOnly = true)

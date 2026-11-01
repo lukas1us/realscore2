@@ -1,7 +1,9 @@
 package com.realscore.parsing.internal;
 
 import java.math.BigDecimal;
+import lombok.With;
 
+@With
 public record ListingDetailsFields(
         BigDecimal priceCzk,
         BigDecimal sizeM2,

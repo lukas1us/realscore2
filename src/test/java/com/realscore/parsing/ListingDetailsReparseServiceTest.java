@@ -1,0 +1,143 @@
+package com.realscore.parsing;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.realscore.PostgresContainerConfig;
+import com.realscore.listing.ListingSnapshotService;
+import com.realscore.parsing.internal.ListingDetail;
+import com.realscore.parsing.internal.ListingDetailRepository;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestClient;
+
+/**
+ * Each test uses its own source so the shared Postgres container's listings from other tests don't leak in.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(PostgresContainerConfig.class)
+class ListingDetailsReparseServiceTest {
+
+    /** Valid JSON whose construction type is longer than listing_detail.construction_type allows. */
+    private static final String UNSTORABLE_PAYLOAD = """
+            {"result": {"building_type": {"name": "%s", "value": 1}}}
+            """.formatted("x".repeat(60));
+
+    @LocalServerPort
+    int port;
+
+    @Autowired
+    private ListingSnapshotService listingSnapshotService;
+
+    @Autowired
+    private ListingDetailsReparseService reparseService;
+
+    @Autowired
+    private ListingDetailRepository listingDetailRepository;
+
+    @Test
+    void reparsesEveryStoredListingOfTheSource() throws Exception {
+        String source = "reparse-all";
+        record(source, "1", fixture("detail_success.json"));
+        record(source, "2", fixture("detail_price_on_request.json"));
+
+        ReparseResult result = reparseService.reparseAll(source);
+
+        assertThat(result).isEqualTo(new ReparseResult(2, 0, 0, 0));
+        assertThat(detail(source, "1").orElseThrow().getOwnership()).isEqualTo("OV");
+        assertThat(detail(source, "2").orElseThrow().getPriceCzk()).isNull();
+    }
+
+    @Test
+    void secondRunWithoutParserChangesLeavesRowsIdentical() throws Exception {
+        String source = "reparse-twice";
+        record(source, "1", fixture("detail_success.json"));
+        record(source, "2", fixture("detail_price_on_request.json"));
+        reparseService.reparseAll(source);
+        List<ListingDetail> afterFirstRun = List.of(detail(source, "1").orElseThrow(), detail(source, "2").orElseThrow());
+
+        ReparseResult second = reparseService.reparseAll(source);
+
+        assertThat(second).isEqualTo(new ReparseResult(0, 0, 2, 0));
+        List<ListingDetail> afterSecondRun = List.of(detail(source, "1").orElseThrow(), detail(source, "2").orElseThrow());
+        assertThat(afterSecondRun).usingRecursiveFieldByFieldElementComparator().isEqualTo(afterFirstRun);
+    }
+
+    @Test
+    void reparsesOnlyTheGivenSubset() throws Exception {
+        String source = "reparse-subset";
+        record(source, "1", fixture("detail_success.json"));
+        record(source, "2", fixture("detail_price_on_request.json"));
+
+        ReparseResult result = reparseService.reparse(source, List.of("2"));
+
+        assertThat(result).isEqualTo(new ReparseResult(1, 0, 0, 0));
+        assertThat(detail(source, "1")).isEmpty();
+        assertThat(detail(source, "2")).isPresent();
+    }
+
+    @Test
+    void aNewerSnapshotOverwritesTheRow() throws Exception {
+        String source = "reparse-update";
+        record(source, "1", fixture("detail_success.json"));
+        reparseService.reparseAll(source);
+        record(source, "1", fixture("detail_price_on_request.json"));
+
+        ReparseResult result = reparseService.reparseAll(source);
+
+        assertThat(result).isEqualTo(new ReparseResult(0, 1, 0, 0));
+        assertThat(detail(source, "1").orElseThrow().getPriceCzk()).isNull();
+    }
+
+    @Test
+    void aFailingListingIsCountedAndDoesNotStopTheOthers() throws Exception {
+        String source = "reparse-failure";
+        record(source, "1", UNSTORABLE_PAYLOAD);
+        record(source, "2", fixture("detail_success.json"));
+
+        ReparseResult result = reparseService.reparse(source, List.of("1", "2", "unknown"));
+
+        assertThat(result).isEqualTo(new ReparseResult(1, 0, 0, 2));
+        assertThat(detail(source, "1")).isEmpty();
+        assertThat(detail(source, "2")).isPresent();
+    }
+
+    @Test
+    void endpointReparsesAllOrTheGivenIds() throws Exception {
+        String source = "reparse-endpoint";
+        record(source, "1", fixture("detail_success.json"));
+        record(source, "2", fixture("detail_price_on_request.json"));
+        RestClient client = RestClient.create("http://localhost:" + port);
+
+        ReparseResult subset = client.post()
+                .uri("/api/parsing/reparse?source={source}&externalId=1", source)
+                .retrieve()
+                .body(ReparseResult.class);
+        ReparseResult all = client.post()
+                .uri("/api/parsing/reparse?source={source}", source)
+                .retrieve()
+                .body(ReparseResult.class);
+
+        assertThat(subset).isEqualTo(new ReparseResult(1, 0, 0, 0));
+        assertThat(all).isEqualTo(new ReparseResult(1, 0, 1, 0));
+    }
+
+    private void record(String source, String externalId, String payload) {
+        listingSnapshotService.recordFetch(source, externalId, payload);
+    }
+
+    private Optional<ListingDetail> detail(String source, String externalId) {
+        Long listingId = listingSnapshotService.findLatestSnapshot(source, externalId).orElseThrow().listingId();
+        return listingDetailRepository.findByListingId(listingId);
+    }
+
+    private static String fixture(String name) throws Exception {
+        return Files.readString(Path.of("src/test/resources/fixtures/sreality", name));
+    }
+}

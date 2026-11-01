@@ -118,6 +118,18 @@ class ListingSnapshotServiceTest {
                 .isEmpty();
     }
 
+    @Test
+    void findExternalIdsReturnsEveryListingOfTheSourceIncludingRemovedOnes() {
+        String source = "find-ids-test";
+        listingSnapshotService.recordFetch(source, "1", "{}");
+        listingSnapshotService.recordFetch(source, "2", "{}");
+        listingSnapshotService.recordFetch("find-ids-other-source", "3", "{}");
+        listingSnapshotService.recordPresence(source, List.of("1"), Instant.now());
+
+        assertThat(removedAt(source, "2")).isNotNull();
+        assertThat(listingSnapshotService.findExternalIds(source)).containsExactlyInAnyOrder("1", "2");
+    }
+
     private Instant removedAt(String source, String externalId) {
         return listingRepository.findBySourceAndExternalId(source, externalId).orElseThrow().getRemovedAt();
     }

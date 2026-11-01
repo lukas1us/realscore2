@@ -73,7 +73,16 @@ public class ListingDetail {
         this.listingId = listingId;
     }
 
-    public void applyFields(ListingDetailsFields fields, Instant parsedAt) {
+    /**
+     * Overwrites the parsed fields with {@code fields}. Only when at least one value differs (or the row is new) is
+     * {@code parsedAt} moved, so re-applying the same fields leaves the row exactly as it was.
+     *
+     * @return whether any field changed
+     */
+    public boolean applyFields(ListingDetailsFields fields, Instant parsedAt) {
+        if (this.parsedAt != null && sameValues(currentFields(), fields)) {
+            return false;
+        }
         this.priceCzk = fields.priceCzk();
         this.sizeM2 = fields.sizeM2();
         this.dispositionCode = fields.dispositionCode();
@@ -88,5 +97,26 @@ public class ListingDetail {
         this.district = fields.district();
         this.region = fields.region();
         this.parsedAt = parsedAt;
+        return true;
+    }
+
+    private ListingDetailsFields currentFields() {
+        return new ListingDetailsFields(priceCzk, sizeM2, dispositionCode, dispositionLabel, yearBuilt, floor,
+                energyClass, constructionType, elevator, ownership, city, district, region);
+    }
+
+    /** Like {@code equals}, but compares decimals by value so a NUMERIC scale change from the DB isn't a change. */
+    private static boolean sameValues(ListingDetailsFields a, ListingDetailsFields b) {
+        return sameDecimal(a.priceCzk(), b.priceCzk())
+                && sameDecimal(a.sizeM2(), b.sizeM2())
+                && withoutDecimals(a).equals(withoutDecimals(b));
+    }
+
+    private static ListingDetailsFields withoutDecimals(ListingDetailsFields fields) {
+        return fields.withPriceCzk(null).withSizeM2(null);
+    }
+
+    private static boolean sameDecimal(BigDecimal a, BigDecimal b) {
+        return a == null ? b == null : b != null && a.compareTo(b) == 0;
     }
 }

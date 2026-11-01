@@ -12,6 +12,9 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
 
     Optional<Listing> findBySourceAndExternalId(String source, String externalId);
 
+    @Query("select l.externalId from Listing l where l.source = :source order by l.id")
+    List<String> findExternalIdsBySource(String source);
+
     @Query("select l.externalId from Listing l where l.source = :source and l.externalId in :externalIds")
     List<String> findExternalIdsBySourceAndExternalIdIn(String source, Collection<String> externalIds);
 

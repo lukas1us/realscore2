@@ -39,8 +39,11 @@ public class ListingDetail {
     @Column(name = "disposition_label")
     private String dispositionLabel;
 
-    @Column(name = "year_built")
-    private Integer yearBuilt;
+    @Column(name = "acceptance_year")
+    private Integer acceptanceYear;
+
+    @Column(name = "reconstruction_year")
+    private Integer reconstructionYear;
 
     @Column(name = "floor")
     private Integer floor;
@@ -96,7 +99,8 @@ public class ListingDetail {
         this.sizeM2 = fields.sizeM2();
         this.dispositionCode = fields.dispositionCode();
         this.dispositionLabel = fields.dispositionLabel();
-        this.yearBuilt = fields.yearBuilt();
+        this.acceptanceYear = fields.acceptanceYear();
+        this.reconstructionYear = fields.reconstructionYear();
         this.floor = fields.floor();
         this.energyClass = fields.energyClass();
         this.constructionType = fields.constructionType();
@@ -113,9 +117,9 @@ public class ListingDetail {
     }
 
     private ListingDetailsFields currentFields() {
-        return new ListingDetailsFields(priceCzk, sizeM2, dispositionCode, dispositionLabel, yearBuilt, floor,
-                energyClass, constructionType, elevator, ownership, city, district, region, citypart, transactionTypeCode,
-                propertyCategoryCode);
+        return new ListingDetailsFields(priceCzk, sizeM2, dispositionCode, dispositionLabel, acceptanceYear,
+                reconstructionYear, floor, energyClass, constructionType, elevator, ownership, city, district, region,
+                citypart, transactionTypeCode, propertyCategoryCode);
     }
 
     /** Like {@code equals}, but compares decimals by value so a NUMERIC scale change from the DB isn't a change. */

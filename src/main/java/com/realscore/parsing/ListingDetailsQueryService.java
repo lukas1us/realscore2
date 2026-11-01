@@ -110,7 +110,7 @@ public class ListingDetailsQueryService {
 
     private static ListingDetails toDetails(ListingDetail d) {
         return new ListingDetails(d.getPriceCzk(), d.getSizeM2(), d.getDispositionCode(), d.getDispositionLabel(),
-                d.getYearBuilt(), d.getFloor(), d.getEnergyClass(), d.getConstructionType(), d.getElevator(),
+                d.getAcceptanceYear(), d.getReconstructionYear(), d.getFloor(), d.getEnergyClass(), d.getConstructionType(), d.getElevator(),
                 d.getOwnership(), d.getCity(), d.getDistrict(), d.getRegion(), d.getCitypart(),
                 d.getTransactionTypeCode(), d.getPropertyCategoryCode(), d.getParsedAt());
     }

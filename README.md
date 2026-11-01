@@ -98,10 +98,12 @@ too.
 
 - **After a parser or schema change** (e.g. a new `listing_detail` column), run
   `POST /api/parsing/reparse?source=sreality` once so existing rows pick it up. Until then, new columns stay empty,
-  and listings missing a field the benchmarks need are left out of them. The same applies after upgrading to the
-  price history: listings parsed before it have no history until re-parsed, and to the not-entered elevator and
-  energy class fix: until re-parsed, a not-entered elevator stays `false` instead of `NULL` and a not-chosen energy
-  class stays `-` instead of `NULL`.
+  and listings missing a field the benchmarks need are left out of them. The same applies after upgrading to:
+  - the price history: listings parsed before it have no history until re-parsed;
+  - the not-entered elevator and energy class fix: until re-parsed, a not-entered elevator stays `false` instead of
+    `NULL` and a not-chosen energy class stays `-` instead of `NULL`;
+  - the split building years: `year_built` is replaced by `acceptance_year` and `reconstruction_year` (in the
+    listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
   requests per second, which can take hours. Later runs only fetch new and due listings.
 - **Days on market count from the first time realscore saw a listing**, not from when it was published: Sreality's

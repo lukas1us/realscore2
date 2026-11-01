@@ -25,7 +25,8 @@ public class SrealityListingDetailsExtractor {
                 decimalOrNull(result, "usable_area", "floor_area"),
                 intOrNull(result.path("category_sub_cb"), "value"),
                 textOrNull(result.path("category_sub_cb"), "name"),
-                yearBuilt(result),
+                intOrNull(result, "acceptance_year"),
+                intOrNull(result, "reconstruction_year"),
                 intOrNull(result, "floor_number"),
                 energyClass(result),
                 textOrNull(result.path("building_type"), "name"),
@@ -57,11 +58,6 @@ public class SrealityListingDetailsExtractor {
             return null;
         }
         return price.decimalValue();
-    }
-
-    private static Integer yearBuilt(JsonNode result) {
-        Integer acceptanceYear = intOrNull(result, "acceptance_year");
-        return acceptanceYear != null ? acceptanceYear : intOrNull(result, "reconstruction_year");
     }
 
     /**

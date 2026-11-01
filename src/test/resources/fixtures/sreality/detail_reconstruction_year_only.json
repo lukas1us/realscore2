@@ -1,0 +1,2181 @@
+{
+  "result": {
+    "rus": null,
+    "user": {
+      "image": "",
+      "user_id": 311549,
+      "user_name": "REDACTED",
+      "user_email": "redacted@example.com",
+      "user_phones": [],
+      "broker_rating": null,
+      "broker_review_count": null
+    },
+    "basin": false,
+    "price": 2990000.0,
+    "since": "2026-10-26",
+    "stats": 797,
+    "cellar": true,
+    "edited": "2026-11-01",
+    "floors": 5,
+    "garage": false,
+    "garret": null,
+    "labels": [
+      {
+        "lat": 49.428253173828125,
+        "lon": 13.884272575378418,
+        "url": "https://www.firmy.cz/detail/13478354-potraviny-bowling-blatna.html",
+        "name": "small_shop",
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+        "rating": -1,
+        "source": "firm",
+        "distance": 131.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDzG4UBoSGIOjvKG/9d31.jpeg",
+        "source_id": 13478354,
+        "description": "Potraviny Bowling",
+        "review_count": 0
+      },
+      {
+        "lat": 49.42890021177034,
+        "lon": 13.88423160675947,
+        "url": "https://mapy.cz/zakladni?x=13.88423160675947&y=49.42890021177034&z=17&source=base&id=2550567",
+        "name": "playground",
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+        "rating": -1,
+        "source": "base",
+        "distance": 80.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdk3RI9Bh8LIOjvQS/9f30.jpeg",
+        "source_id": 2550567,
+        "description": "",
+        "review_count": 0
+      },
+      {
+        "lat": 49.425987243652344,
+        "lon": 13.887971878051758,
+        "url": "https://www.firmy.cz/detail/340607-mvdr-viktor-stosek-blatna.html",
+        "name": "vet",
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+        "rating": 5,
+        "source": "firm",
+        "distance": 418.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDzG4UBoPEIOgr7K/7278.jpeg",
+        "source_id": 340607,
+        "description": "MVDr. Viktor Stošek",
+        "review_count": 9
+      },
+      {
+        "lat": 49.425899505615234,
+        "lon": 13.883328437805176,
+        "url": "https://www.firmy.cz/detail/13381846-zakladna-bar-blatna.html",
+        "name": "tavern",
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+        "rating": 4,
+        "source": "firm",
+        "distance": 398.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDi9WNBqc1IOgsNC/84ed.jpeg",
+        "source_id": 13381846,
+        "description": "Základna bar",
+        "review_count": 3
+      },
+      {
+        "lat": 49.428524017333984,
+        "lon": 13.877131462097168,
+        "url": "https://www.firmy.cz/detail/12729171-kino-blatna-blatna.html",
+        "name": "movies",
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+        "rating": 4,
+        "source": "firm",
+        "distance": 588.0,
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/R4cBLab.jpeg",
+        "source_id": 12729171,
+        "description": "Kino Blatná",
+        "review_count": 2
+      },
+      {
+        "lat": 49.4260368347168,
+        "lon": 13.882035255432129,
+        "url": "https://www.firmy.cz/detail/2427369-cukrarna-segafredo-city-blatna.html",
+        "name": "candy_shop",
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+        "rating": 4,
+        "source": "firm",
+        "distance": 425.0,
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/veR88z.jpeg",
+        "source_id": 2427369,
+        "description": "Cukrárna Segafredo-city",
+        "review_count": 43
+      },
+      {
+        "lat": 49.425880432128906,
+        "lon": 13.884243965148926,
+        "url": "https://www.firmy.cz/detail/356377-zs-j-a-komenskeho-blatna-blatna.html",
+        "name": "school",
+        "time": 363,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+        "rating": 4,
+        "source": "firm",
+        "distance": 383.0,
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/YuABLyY.jpeg",
+        "source_id": 356377,
+        "description": "ZŠ J. A. Komenského, Blatná",
+        "review_count": 3,
+        "walkDistance": 403
+      },
+      {
+        "lat": 49.4271125793457,
+        "lon": 13.8844633102417,
+        "url": "https://www.firmy.cz/detail/660141-bankomat-ceske-sporitelny-blatna.html",
+        "name": "atm",
+        "time": 236,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/28",
+        "rating": -1,
+        "source": "firm",
+        "distance": 246.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdk3whEFDCcIOjvUY/d474.jpeg",
+        "source_id": 660141,
+        "description": "Bankomat České spořitelny",
+        "review_count": 0,
+        "walkDistance": 260
+      },
+      {
+        "lat": 49.4309146659,
+        "lon": 13.8726766832,
+        "url": "https://mapy.cz/zakladni?x=13.8726766832&y=49.4309146659&z=17&source=pubt&id=15210979",
+        "name": "train",
+        "time": 996,
+        "lines": [
+          {
+            "type": "vlak",
+            "poi_id": 15210979,
+            "line_id": "JČ-S12",
+            "terminus": "Nepomuk",
+            "line_label": "S12",
+            "departure_direction": -1
+          },
+          {
+            "type": "vlak",
+            "poi_id": 15210979,
+            "line_id": "JČ-S60",
+            "terminus": "Beroun",
+            "line_label": "S60",
+            "departure_direction": -1
+          },
+          {
+            "type": "vlak",
+            "poi_id": 15210979,
+            "line_id": "JČ-S60",
+            "terminus": "Strakonice",
+            "line_label": "S60",
+            "departure_direction": 1
+          },
+          {
+            "type": "vlak",
+            "poi_id": 15210979,
+            "line_id": "SČ-S60",
+            "terminus": "Strakonice",
+            "line_label": "S60",
+            "departure_direction": 1
+          },
+          {
+            "type": "vlak",
+            "poi_id": 15210979,
+            "line_id": "SČ-S60",
+            "terminus": "Beroun",
+            "line_label": "S60",
+            "departure_direction": -1
+          },
+          {
+            "type": "vlak",
+            "poi_id": 15210979,
+            "line_id": "SČ-T6",
+            "terminus": "Praha hlavní nádraží",
+            "line_label": "T6",
+            "departure_direction": -1
+          }
+        ],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+        "rating": -1,
+        "source": "pubt",
+        "distance": 922.0,
+        "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qG_A/nCR9NVflLCsdQ6PykIAq2NR/34db.jpeg",
+        "source_id": 15210979,
+        "description": "Blatná",
+        "review_count": 0,
+        "walkDistance": 1075
+      },
+      {
+        "lat": 49.42863464355469,
+        "lon": 13.882495880126953,
+        "url": "https://www.firmy.cz/detail/13284621-cliniprax-blatna.html",
+        "name": "medic",
+        "time": 233,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+        "rating": -1,
+        "source": "firm",
+        "distance": 206.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TCcWhaBMvCIN2bKo/8445.jpeg",
+        "source_id": 13284621,
+        "description": "Cliniprax, s.r.o.",
+        "review_count": 0,
+        "walkDistance": 256
+      },
+      {
+        "lat": 49.42656326293945,
+        "lon": 13.883157730102539,
+        "url": "https://www.firmy.cz/detail/12991965-u-mlsouna-blatna.html",
+        "name": "restaurant",
+        "time": 379,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+        "rating": 5,
+        "source": "firm",
+        "distance": 335.0,
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qE_A/kPVqmweP7JB4z4nB2yHoGx74/b4fa.jpeg",
+        "source_id": 12991965,
+        "description": "U Mlsouna",
+        "review_count": 25,
+        "walkDistance": 421
+      },
+      {
+        "lat": 49.42814636230469,
+        "lon": 13.884089469909668,
+        "url": "https://www.firmy.cz/detail/739834-bowling-centrum-blatna-blatna.html",
+        "name": "sports",
+        "time": 202,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/31",
+        "rating": 4,
+        "source": "firm",
+        "distance": 148.0,
+        "photo_url": "https://d34-a.sdn.cz/d_34/c_img_of_A/nDJ4VEZEqCF40aCnGFCAofX/f898.jpeg",
+        "source_id": 739834,
+        "description": "Bowling centrum Blatná",
+        "review_count": 13,
+        "walkDistance": 224
+      },
+      {
+        "lat": 49.42813491821289,
+        "lon": 13.880041122436523,
+        "url": "https://www.firmy.cz/detail/216981-posta-blatna-blatna.html",
+        "name": "post_office",
+        "time": 535,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/122",
+        "rating": 5,
+        "source": "firm",
+        "distance": 392.0,
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/F52BBuU.jpeg",
+        "source_id": 216981,
+        "description": "Pošta Blatná - Česká pošta, s.p.",
+        "review_count": 15,
+        "walkDistance": 593
+      },
+      {
+        "lat": 49.42935562133789,
+        "lon": 13.886126518249512,
+        "url": "https://www.firmy.cz/detail/1995323-ms-blatna-silhova-blatna.html",
+        "name": "kindergarten",
+        "time": 70,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+        "rating": 5,
+        "source": "firm",
+        "distance": 70.0,
+        "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QO_m/b91Dlb.jpeg",
+        "source_id": 1995323,
+        "description": "MŠ Blatná, Šilhova",
+        "review_count": 1,
+        "walkDistance": 78
+      },
+      {
+        "lat": 49.4310510992735,
+        "lon": 13.8839127950798,
+        "url": "https://mapy.cz/zakladni?x=13.8839127950798&y=49.4310510992735&z=17&source=pubt&id=15322275",
+        "name": "bus_public_transport",
+        "time": 315,
+        "lines": [
+          {
+            "type": "bus",
+            "poi_id": 15322275,
+            "line_id": "380477",
+            "terminus": "Březí",
+            "line_label": "477",
+            "departure_direction": 1
+          },
+          {
+            "type": "bus",
+            "poi_id": 15322275,
+            "line_id": "380766",
+            "terminus": "Uzeničky",
+            "line_label": "766",
+            "departure_direction": 1
+          },
+          {
+            "type": "bus",
+            "poi_id": 15322275,
+            "line_id": "L477",
+            "terminus": "Březí",
+            "line_label": "477",
+            "departure_direction": 1
+          }
+        ],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+        "rating": -1,
+        "source": "pubt",
+        "distance": 218.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/kPyfG4fPEe0kCSBS2NILeRGo/b212.jpeg",
+        "source_id": 15322275,
+        "description": "Blatná, poliklinika",
+        "review_count": 0,
+        "walkDistance": 330
+      },
+      {
+        "lat": 49.4307861328125,
+        "lon": 13.88338565826416,
+        "url": "https://www.firmy.cz/detail/13204351-lekarna-poliklinika-blatna.html",
+        "name": "drugstore",
+        "time": 275,
+        "lines": [],
+        "imgUrl": "https://api.mapy.cz/poiimg/icon/72",
+        "rating": 5,
+        "source": "firm",
+        "distance": 212.0,
+        "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkDyuEmE6mzIOgrwy/4306.jpeg",
+        "source_id": 13204351,
+        "description": "Lékárna Poliklinika",
+        "review_count": 10,
+        "walkDistance": 288
+      }
+    ],
+    "loggia": false,
+    "videos": [],
+    "annuity": null,
+    "balcony": true,
+    "gas_set": [
+      {
+        "name": "Plynovod",
+        "value": 2
+      }
+    ],
+    "hash_id": 4059889740,
+    "parking": null,
+    "premise": {
+      "id": 20658,
+      "logo": "https://d48-a.sdn.cz/d_48/c_img_oY_A/nPw2pRkMOeC4jvZqbCwnuEb/cca7.png",
+      "name": "CENTURY 21 4fin Reality",
+      "ask_id": 13217447,
+      "company": {
+        "company_ic": 6542107,
+        "company_subject_id": 4072826,
+        "sos_custom_advert_card": false
+      },
+      "web_url": "https://redacted.example.com",
+      "locality": {
+        "zip": 14000,
+        "city": "Praha",
+        "ward": "Nusle",
+        "region": "Hlavní město Praha",
+        "street": "Na Hřebenech II",
+        "country": null,
+        "gps_lat": 50.0518,
+        "gps_lon": 14.4311,
+        "quarter": "Praha 4",
+        "ward_id": 14960,
+        "citypart": null,
+        "district": "Praha 4",
+        "entity_id": 11502813,
+        "region_id": 10,
+        "street_id": 120681,
+        "quarter_id": 90,
+        "district_id": 5004,
+        "entity_type": "address",
+        "housenumber": null,
+        "municipality": null,
+        "streetnumber": "10",
+        "city_seo_name": "praha",
+        "ward_seo_name": "nusle",
+        "municipality_id": 3468,
+        "region_seo_name": "hlavni-mesto-praha",
+        "street_seo_name": "na-hrebenech-ii",
+        "country_seo_name": null,
+        "quarter_seo_name": "praha-4",
+        "citypart_seo_name": null,
+        "district_seo_name": "praha-4",
+        "municipality_seo_name": null
+      },
+      "seo_name": "century-21-4fin-reality",
+      "review_count": 304,
+      "review_score": 4.8,
+      "web_visible_url": "https://redacted.example.com",
+      "premise_paid_firmy": 1,
+      "premise_retargeting_id": 28151
+    },
+    "project": null,
+    "terrace": false,
+    "elevator": {
+      "name": "- nezadáno",
+      "value": 0
+    },
+    "keywords": null,
+    "locality": {
+      "zip": 38801,
+      "city": "Blatná",
+      "ward": null,
+      "region": "Jihočeský kraj",
+      "street": "Nerudova",
+      "country": "Česká republika",
+      "gps_lat": 49.429272,
+      "gps_lon": 13.885174,
+      "quarter": null,
+      "ward_id": 14077,
+      "citypart": "Blatná",
+      "district": "Strakonice",
+      "geometry": {
+        "geometry": [],
+        "bounding_box": {},
+        "geometry_type": null
+      },
+      "region_id": 1,
+      "street_id": 130135,
+      "country_id": 112,
+      "quarter_id": -1,
+      "district_id": 6,
+      "entity_type": "address",
+      "housenumber": null,
+      "municipality": null,
+      "streetnumber": "",
+      "city_seo_name": "blatna",
+      "ward_seo_name": null,
+      "inaccuracy_type": "gps",
+      "municipality_id": 973,
+      "region_seo_name": "jihocesky-kraj",
+      "street_seo_name": "nerudova",
+      "country_seo_name": "ceska-republika",
+      "quarter_seo_name": null,
+      "citypart_seo_name": "blatna",
+      "district_seo_name": "strakonice",
+      "municipality_seo_name": null
+    },
+    "panorama": true,
+    "personal": {
+      "name": "- vyber možnost",
+      "value": 0
+    },
+    "state_cb": {
+      "name": "- vyber stav",
+      "value": 0
+    },
+    "furnished": {
+      "name": "Ne",
+      "value": 2
+    },
+    "gully_set": [
+      {
+        "name": "Veřejná kanalizace",
+        "value": 1
+      }
+    ],
+    "ownership": {
+      "name": "Osobní",
+      "value": 1
+    },
+    "price_czk": 2990000.0,
+    "rus_reply": null,
+    "sale_date": null,
+    "water_set": [
+      {
+        "name": "Vodovod",
+        "value": 2
+      }
+    ],
+    "basin_area": null,
+    "flat_class": {
+      "name": "- vyber typ",
+      "value": 0
+    },
+    "floor_area": 49,
+    "low_energy": false,
+    "object_age": 1960,
+    "price_note": null,
+    "protection": {
+      "name": "- vyber ochranu",
+      "value": 0
+    },
+    "ready_date": "2026-10-06",
+    "advert_code": "995559",
+    "advert_name": "Prodej bytu 2+1 45 m²",
+    "cellar_area": 3,
+    "easy_access": {
+      "name": "- vyber možnost",
+      "value": 0
+    },
+    "finish_date": null,
+    "garden_area": null,
+    "heating_set": [],
+    "loggia_area": null,
+    "usable_area": 45,
+    "balcony_area": 2,
+    "floor_number": 2,
+    "garage_count": null,
+    "parking_lots": false,
+    "price_czk_m2": 66444,
+    "terrace_area": null,
+    "advert_images": [
+      {
+        "id": 1017685802,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUD8nezBWdwIL6D9M/0449.jpeg",
+        "kind": 2,
+        "order": 1,
+        "width": 8256,
+        "height": 5504,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685805,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkbxLFHifIL6EFZ/6d68.jpeg",
+        "kind": 2,
+        "order": 4,
+        "width": 8255,
+        "height": 5503,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685808,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkB87eWEQ5IL6ELL/43bb.jpeg",
+        "kind": 2,
+        "order": 5,
+        "width": 8255,
+        "height": 5503,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685811,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUB13CvBTIoIL6ENp/e41f.jpeg",
+        "kind": 2,
+        "order": 6,
+        "width": 1264,
+        "height": 848,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685814,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUBL8BsDiYNIL6ERC/0b1f.jpeg",
+        "kind": 2,
+        "order": 7,
+        "width": 8164,
+        "height": 5443,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685817,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUBL8BsDjsJIL6ETE/b980.jpeg",
+        "kind": 2,
+        "order": 8,
+        "width": 1264,
+        "height": 848,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685820,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkCfcGaEYfIL6EU1/ac4f.jpeg",
+        "kind": 2,
+        "order": 9,
+        "width": 7954,
+        "height": 5303,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685823,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCaRYmBNfZIL6EXj/2e0b.jpeg",
+        "kind": 2,
+        "order": 10,
+        "width": 1264,
+        "height": 848,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685826,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdk3whETBMIL6EZT/a1d5.jpeg",
+        "kind": 2,
+        "order": 11,
+        "width": 8137,
+        "height": 5425,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685829,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdk3RI9CrOIL6Eda/b1af.jpeg",
+        "kind": 2,
+        "order": 12,
+        "width": 8218,
+        "height": 5479,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685832,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCaRYmBNKYIL6EhB/3534.jpeg",
+        "kind": 2,
+        "order": 13,
+        "width": 1264,
+        "height": 848,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685835,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdk3whELXPIL6Ekj/6190.jpeg",
+        "kind": 2,
+        "order": 14,
+        "width": 8048,
+        "height": 5365,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685838,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUB6IMDDpNgIL6Emz/4877.jpeg",
+        "kind": 2,
+        "order": 15,
+        "width": 1264,
+        "height": 848,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685841,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkbxLFHgqIL6EpO/8144.jpeg",
+        "kind": 2,
+        "order": 16,
+        "width": 8054,
+        "height": 5369,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685850,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkDyuEmHkcIL6Eu2/86bd.jpeg",
+        "kind": 2,
+        "order": 17,
+        "width": 8212,
+        "height": 5475,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685868,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkBcInfD6SIL6EzN/dd46.jpeg",
+        "kind": 2,
+        "order": 18,
+        "width": 8256,
+        "height": 5504,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685886,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCHypVBOPkIL6E3r/c75d.jpeg",
+        "kind": 2,
+        "order": 19,
+        "width": 8256,
+        "height": 5504,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685892,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkB87eWEjMIL6E7v/4e2b.jpeg",
+        "kind": 2,
+        "order": 20,
+        "width": 8256,
+        "height": 5504,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685895,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUD8nezBWd0IL6FA4/a654.jpeg",
+        "kind": 2,
+        "order": 21,
+        "width": 3728,
+        "height": 2796,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685898,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkDyuEmHkcIL6FB0/d957.jpeg",
+        "kind": 2,
+        "order": 22,
+        "width": 3728,
+        "height": 2796,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685901,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUD9QxwBPMmIL6FCj/40d7.jpeg",
+        "kind": 2,
+        "order": 23,
+        "width": 3140,
+        "height": 2355,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685904,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkDyuEmHiQIL6FDa/aae8.jpeg",
+        "kind": 2,
+        "order": 24,
+        "width": 3787,
+        "height": 2840,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685907,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCaRYmBNKYIL6FEc/d7bc.jpeg",
+        "kind": 2,
+        "order": 25,
+        "width": 3787,
+        "height": 2840,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685910,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkDyuEmHiQIL6FFc/5c98.jpeg",
+        "kind": 4,
+        "order": 26,
+        "width": 2400,
+        "height": 1792,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685913,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdk3RI9DKUIL6FF9/9379.jpeg",
+        "kind": 4,
+        "order": 27,
+        "width": 2400,
+        "height": 1792,
+        "ai_edited": false
+      },
+      {
+        "id": 1017685916,
+        "alt": "",
+        "url": "//d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUBL8BsDjsFIL6FGa/fdb0.jpeg",
+        "kind": 4,
+        "order": 28,
+        "width": 2400,
+        "height": 1792,
+        "ai_edited": false
+      }
+    ],
+    "building_area": null,
+    "building_type": {
+      "name": "Cihlová",
+      "value": 2
+    },
+    "discount_show": false,
+    "panorama_data": {
+      "pid": 88056206,
+      "yaw": 0.4182355236389208,
+      "distance": 19.876950668225753,
+      "has_panorama": true
+    },
+    "price_summary": 2990000.0,
+    "price_unit_cb": {
+      "name": "za nemovitost",
+      "value": 1
+    },
+    "road_type_set": [
+      {
+        "name": "Asfaltová",
+        "value": 3
+      }
+    ],
+    "transport_set": [
+      {
+        "name": "Silnice",
+        "value": 3
+      },
+      {
+        "name": "Autobus",
+        "value": 5
+      }
+    ],
+    "well_type_set": [],
+    "beginning_date": null,
+    "cost_of_living": "",
+    "matterport_url": "",
+    "acceptance_year": null,
+    "category_sub_cb": {
+      "name": "2+1",
+      "value": 5
+    },
+    "electricity_set": [
+      {
+        "name": "230V",
+        "value": 2
+      }
+    ],
+    "first_tour_date": null,
+    "labels_extended": {
+      "doctors": {
+        "url": "https://www.firmy.cz/Prvni-pomoc-a-zdravotnictvi/Zdravotnicke-sluzby/Zdravotnicka-zarizeni?x=13.885174&y=49.429272&rt=adresa",
+        "data": [
+          {
+            "lat": 49.42863464355469,
+            "lon": 13.882495880126953,
+            "url": "https://www.firmy.cz/detail/13284621-cliniprax-blatna.html",
+            "name": "medic",
+            "time": 233,
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "rating": -1,
+            "source": "firm",
+            "distance": 206.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TCcWhaBMvCIN2bKo/8445.jpeg",
+            "source_id": 13284621,
+            "description": "Cliniprax, s.r.o.",
+            "review_count": 0,
+            "walkDistance": 256
+          },
+          {
+            "lat": 49.430782318115234,
+            "lon": 13.883386611938477,
+            "url": "https://www.firmy.cz/detail/13290199-linmed-blatna.html",
+            "name": "medic_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "rating": -1,
+            "source": "firm",
+            "distance": 212.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkDyuEmDyjSIN2bL7/a9f6.jpeg",
+            "source_id": 13290199,
+            "description": "LinMed, s.r.o.",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4307861328125,
+            "lon": 13.88338565826416,
+            "url": "https://www.firmy.cz/detail/575921-poliklinika-blatna-blatna.html",
+            "name": "medic_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/418",
+            "rating": 4,
+            "source": "firm",
+            "distance": 212.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/UXO3r1.jpeg",
+            "source_id": 575921,
+            "description": "Poliklinika Blatná, s.r.o.",
+            "review_count": 6
+          },
+          {
+            "lat": 49.4307861328125,
+            "lon": 13.88338565826416,
+            "url": "https://www.firmy.cz/detail/13289397-mediprax-blatna-s-r-o-blatna.html",
+            "name": "medic_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "rating": -1,
+            "source": "firm",
+            "distance": 212.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDhsIbDDQ9IN2bJE/9e8f.jpeg",
+            "source_id": 13289397,
+            "description": "MEDIPRAX Blatná s.r.o.",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4307861328125,
+            "lon": 13.88338565826416,
+            "url": "https://www.firmy.cz/detail/13965030-gynekologie-blatna-blatna.html",
+            "name": "medic_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/405",
+            "rating": -1,
+            "source": "firm",
+            "distance": 212.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/kb4JgeTdkCJCefhFKIMpyEi/7713.jpeg",
+            "source_id": 13965030,
+            "description": "Gynekologie Blatná, s.r.o.",
+            "review_count": 0
+          },
+          {
+            "lat": 49.425987243652344,
+            "lon": 13.887971878051758,
+            "url": "https://www.firmy.cz/detail/340607-mvdr-viktor-stosek-blatna.html",
+            "name": "vet",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "rating": 5,
+            "source": "firm",
+            "distance": 418.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDzG4UBoPEIOgr7K/7278.jpeg",
+            "source_id": 340607,
+            "description": "MVDr. Viktor Stošek",
+            "review_count": 9
+          },
+          {
+            "lat": 49.428260803222656,
+            "lon": 13.87634563446045,
+            "url": "https://www.firmy.cz/detail/13584207-veterinarni-ordinace-mvdr-jiri-sole-blatna.html",
+            "name": "vet_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "rating": 5,
+            "source": "firm",
+            "distance": 648.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_p9_A/kcHp2YdDtzYqGDYiGDrJjw/b7e0.jpeg",
+            "source_id": 13584207,
+            "description": "Veterinární ordinace MVDr. Jiří Šole",
+            "review_count": 4
+          },
+          {
+            "lat": 49.43507766723633,
+            "lon": 13.881927490234375,
+            "url": "https://www.firmy.cz/detail/12912823-mvdr-kaluzik-milan-blatna.html",
+            "name": "vet_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/164",
+            "rating": 5,
+            "source": "firm",
+            "distance": 687.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86Tw5RPEofjIOgsJ3/57e0.jpeg",
+            "source_id": 12912823,
+            "description": "MVDr. Kalužík Milan",
+            "review_count": 17
+          }
+        ]
+      },
+      "grocery": {
+        "url": "https://www.firmy.cz/Obchody-a-obchudky/Prodejci-potravin?x=13.885174&y=49.429272&rt=adresa",
+        "data": [
+          {
+            "lat": 49.428253173828125,
+            "lon": 13.884272575378418,
+            "url": "https://www.firmy.cz/detail/13478354-potraviny-bowling-blatna.html",
+            "name": "small_shop",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "rating": -1,
+            "source": "firm",
+            "distance": 131.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDzG4UBoSGIOjvKG/9d31.jpeg",
+            "source_id": 13478354,
+            "description": "Potraviny Bowling",
+            "review_count": 0
+          },
+          {
+            "lat": 49.42702865600586,
+            "lon": 13.88464641571045,
+            "url": "https://www.firmy.cz/detail/13568541-potraviny-kostka-blatna.html",
+            "name": "small_shop_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "rating": 5,
+            "source": "firm",
+            "distance": 252.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkBcInfBjqOIOgroU/b5d0.jpeg",
+            "source_id": 13568541,
+            "description": "Potraviny Kostka",
+            "review_count": 1
+          },
+          {
+            "lat": 49.42580795288086,
+            "lon": 13.882707595825195,
+            "url": "https://www.firmy.cz/detail/2121133-coop-terno-blatna.html",
+            "name": "small_shop_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "rating": 4,
+            "source": "firm",
+            "distance": 425.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/0YOBLZz.jpeg",
+            "source_id": 2121133,
+            "description": "COOP - TERNO",
+            "review_count": 15
+          },
+          {
+            "lat": 49.42864227294922,
+            "lon": 13.875945091247559,
+            "url": "https://www.firmy.cz/detail/13413479-potraviny-p-h-blatna.html",
+            "name": "small_shop_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "rating": 2,
+            "source": "firm",
+            "distance": 671.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkB87eWCYcLIO9wrC/8bc9.jpeg",
+            "source_id": 13413479,
+            "description": "Potraviny P+H",
+            "review_count": 2
+          },
+          {
+            "lat": 49.4022216796875,
+            "lon": 13.948331832885742,
+            "url": "https://www.firmy.cz/detail/13203365-coop-skvoretice.html",
+            "name": "small_shop_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/423",
+            "rating": 5,
+            "source": "firm",
+            "distance": 5470.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QJ_0/BuxQbN.jpeg",
+            "source_id": 13203365,
+            "description": "COOP",
+            "review_count": 1
+          }
+        ]
+      },
+      "leisure": {
+        "url": "https://mapy.cz/zakladni?x=13.885174&y=49.429272&z=16&q=volny%20%C4%8Das",
+        "data": [
+          {
+            "lat": 49.42890021177034,
+            "lon": 13.88423160675947,
+            "url": "https://mapy.cz/zakladni?x=13.88423160675947&y=49.42890021177034&z=17&source=base&id=2550567",
+            "name": "playground",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "rating": -1,
+            "source": "base",
+            "distance": 80.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdk3RI9Bh8LIOjvQS/9f30.jpeg",
+            "source_id": 2550567,
+            "description": "",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4283608333,
+            "lon": 13.8855408333,
+            "url": "https://mapy.cz/zakladni?x=13.8855408333&y=49.4283608333&z=17&source=base&id=1930642",
+            "name": "playground_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "rating": -1,
+            "source": "base",
+            "distance": 105.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/d_15120364/img/12/1280x853_Gwzvkj.jpg",
+            "source_id": 1930642,
+            "description": "Rákosníčkové hřiště",
+            "review_count": 0
+          },
+          {
+            "lat": 49.42814636230469,
+            "lon": 13.884089469909668,
+            "url": "https://www.firmy.cz/detail/739834-bowling-centrum-blatna-blatna.html",
+            "name": "sports",
+            "time": 202,
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/31",
+            "rating": 4,
+            "source": "firm",
+            "distance": 148.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_of_A/nDJ4VEZEqCF40aCnGFCAofX/f898.jpeg",
+            "source_id": 739834,
+            "description": "Bowling centrum Blatná",
+            "review_count": 13,
+            "walkDistance": 224
+          },
+          {
+            "lat": 49.42705933333333,
+            "lon": 13.889101166666666,
+            "url": "https://mapy.cz/zakladni?x=13.889101166666666&y=49.42705933333333&z=17&source=base&id=2530116",
+            "name": "playground_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "rating": -1,
+            "source": "base",
+            "distance": 376.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86Tw5RPEpSSIOgr6R/f95d.jpeg",
+            "source_id": 2530116,
+            "description": "Dětské hřiště Brigádnická",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4260075,
+            "lon": 13.8883283,
+            "url": "https://mapy.cz/zakladni?x=13.8883283&y=49.4260075&z=17&source=base&id=1928521",
+            "name": "playground_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "rating": -1,
+            "source": "base",
+            "distance": 429.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oa_A/nQOSLp28xnkoODBFVDekTiy/42f4.jpeg",
+            "source_id": 1928521,
+            "description": "Dětské hřiště plovárna Blatná",
+            "review_count": 0
+          },
+          {
+            "lat": 49.42582702636719,
+            "lon": 13.887956619262695,
+            "url": "https://www.firmy.cz/detail/12815098-plovarna-blatna-blatna.html",
+            "name": "sports_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/67",
+            "rating": 4,
+            "source": "firm",
+            "distance": 433.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/b8rBt9y.jpeg",
+            "source_id": 12815098,
+            "description": "Plovárna Blatná",
+            "review_count": 40
+          },
+          {
+            "lat": 49.4286119444,
+            "lon": 13.8780547222,
+            "url": "https://mapy.cz/zakladni?x=13.8780547222&y=49.4286119444&z=17&source=base&id=1930644",
+            "name": "playground_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/204",
+            "rating": -1,
+            "source": "base",
+            "distance": 520.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkCJCefB0MJIOgro5/175e.jpeg",
+            "source_id": 1930644,
+            "description": "Dětské hřiště na nábřeží",
+            "review_count": 0
+          },
+          {
+            "lat": 49.428524017333984,
+            "lon": 13.877131462097168,
+            "url": "https://www.firmy.cz/detail/12729171-kino-blatna-blatna.html",
+            "name": "movies",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+            "rating": 4,
+            "source": "firm",
+            "distance": 588.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_H_D/R4cBLab.jpeg",
+            "source_id": 12729171,
+            "description": "Kino Blatná",
+            "review_count": 2
+          },
+          {
+            "lat": 49.42858123779297,
+            "lon": 13.876928329467773,
+            "url": "https://www.firmy.cz/detail/2131726-telocvicna-jednota-sokol-blatna-blatna.html",
+            "name": "sports_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "rating": 4,
+            "source": "firm",
+            "distance": 601.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/Ln4BLzN.jpeg",
+            "source_id": 2131726,
+            "description": "Tělocvičná jednota Sokol Blatná",
+            "review_count": 1
+          },
+          {
+            "lat": 49.42740249633789,
+            "lon": 13.877337455749512,
+            "url": "https://www.firmy.cz/detail/2256852-tj-blatna-z-s-blatna.html",
+            "name": "sports_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "rating": 5,
+            "source": "firm",
+            "distance": 604.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TBSHZcBjYkIOgr34/6519.jpeg",
+            "source_id": 2256852,
+            "description": "TJ BLATNÁ z.s.",
+            "review_count": 2
+          },
+          {
+            "lat": 49.42748260498047,
+            "lon": 13.87684154510498,
+            "url": "https://www.firmy.cz/detail/13328628-kuzelna-tj-blatna-blatna.html",
+            "name": "sports_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/144",
+            "rating": 5,
+            "source": "firm",
+            "distance": 635.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QP_p/YKDBT7.jpeg",
+            "source_id": 13328628,
+            "description": "Kuželna TJ Blatná",
+            "review_count": 6
+          },
+          {
+            "lat": 49.3768310546875,
+            "lon": 13.942164421081543,
+            "url": "https://www.firmy.cz/detail/396597-kino-sedlice-sedlice.html",
+            "name": "movies_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/62",
+            "rating": 4,
+            "source": "firm",
+            "distance": 7142.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QR_p/VXoq17.jpeg",
+            "source_id": 396597,
+            "description": "Kino Sedlice",
+            "review_count": 2
+          }
+        ]
+      },
+      "schools": {
+        "url": "https://www.firmy.cz/Instituce-a-urady/Vzdelavaci-instituce?x=13.885174&y=49.429272&rt=adresa",
+        "data": [
+          {
+            "lat": 49.42935562133789,
+            "lon": 13.886126518249512,
+            "url": "https://www.firmy.cz/detail/1995323-ms-blatna-silhova-blatna.html",
+            "name": "kindergarten",
+            "time": 70,
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "rating": 5,
+            "source": "firm",
+            "distance": 70.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_QO_m/b91Dlb.jpeg",
+            "source_id": 1995323,
+            "description": "MŠ Blatná, Šilhova",
+            "review_count": 1,
+            "walkDistance": 78
+          },
+          {
+            "lat": 49.425880432128906,
+            "lon": 13.884243965148926,
+            "url": "https://www.firmy.cz/detail/356377-zs-j-a-komenskeho-blatna-blatna.html",
+            "name": "school",
+            "time": 363,
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "rating": 4,
+            "source": "firm",
+            "distance": 383.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/YuABLyY.jpeg",
+            "source_id": 356377,
+            "description": "ZŠ J. A. Komenského, Blatná",
+            "review_count": 3,
+            "walkDistance": 403
+          },
+          {
+            "lat": 49.42848205566406,
+            "lon": 13.878742218017578,
+            "url": "https://www.firmy.cz/detail/356379-zs-t-g-masaryka-blatna-blatna.html",
+            "name": "school_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "rating": 3,
+            "source": "firm",
+            "distance": 473.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/kr5BLzb.jpeg",
+            "source_id": 356379,
+            "description": "ZŠ T. G. Masaryka Blatná",
+            "review_count": 2
+          },
+          {
+            "lat": 49.42512893676758,
+            "lon": 13.881689071655273,
+            "url": "https://www.firmy.cz/detail/427318-zus-blatna-blatna.html",
+            "name": "school_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "rating": -1,
+            "source": "firm",
+            "distance": 525.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/fmDBLym.jpeg",
+            "source_id": 427318,
+            "description": "ZUŠ Blatná",
+            "review_count": 0
+          },
+          {
+            "lat": 49.430355072021484,
+            "lon": 13.877083778381348,
+            "url": "https://www.firmy.cz/detail/12913036-ms-blatna-u-jesli-blatna.html",
+            "name": "kindergarten_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "rating": -1,
+            "source": "firm",
+            "distance": 597.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TCcWhaBdmXIOgr0v/6250.jpeg",
+            "source_id": 12913036,
+            "description": "MŠ Blatná, U Jeslí",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4311408996582,
+            "lon": 13.876421928405762,
+            "url": "https://www.firmy.cz/detail/12913033-materska-skola-blatna-vrchlickeho-blatna.html",
+            "name": "kindergarten_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "rating": -1,
+            "source": "firm",
+            "distance": 666.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDzG4UBoPQIOgsBJ/6a20.jpeg",
+            "source_id": 12913033,
+            "description": "Mateřská škola Blatná, Vrchlického",
+            "review_count": 0
+          },
+          {
+            "lat": 49.434661865234375,
+            "lon": 13.880949974060059,
+            "url": "https://www.firmy.cz/detail/356376-zs-blatna-holeckova-blatna.html",
+            "name": "school_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "rating": -1,
+            "source": "firm",
+            "distance": 673.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkB87eWBwZiIOjvQ2/adb5.jpeg",
+            "source_id": 356376,
+            "description": "ZŠ Blatná, Holečkova",
+            "review_count": 0
+          },
+          {
+            "lat": 49.434661865234375,
+            "lon": 13.880949974060059,
+            "url": "https://www.firmy.cz/detail/13510967-ds-trempik-blatna.html",
+            "name": "kindergarten_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "rating": -1,
+            "source": "firm",
+            "distance": 673.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86Tw5RPEpSSIOgrrf/2441.jpeg",
+            "source_id": 13510967,
+            "description": "DS Trempík - Rodinná školka Špuntík",
+            "review_count": 0
+          },
+          {
+            "lat": 49.419891357421875,
+            "lon": 13.87828254699707,
+            "url": "https://www.firmy.cz/detail/232236-stredni-odborne-uciliste-blatna-u-sladovny-671-blatna.html",
+            "name": "school_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/142",
+            "rating": 2,
+            "source": "firm",
+            "distance": 1156.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TnJSEBhorIOgr17/eb5d.jpeg",
+            "source_id": 232236,
+            "description": "Střední odborné učiliště, Blatná, U Sladovny 671",
+            "review_count": 2
+          },
+          {
+            "lat": 49.37990951538086,
+            "lon": 13.83001708984375,
+            "url": "https://www.firmy.cz/detail/442633-materska-skola-zabori-zabori.html",
+            "name": "kindergarten_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/412",
+            "rating": -1,
+            "source": "firm",
+            "distance": 6786.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkC4TclBvRyIOgrsR/160e.jpeg",
+            "source_id": 442633,
+            "description": "Mateřská škola Záboří",
+            "review_count": 0
+          }
+        ]
+      },
+      "transport": {
+        "url": "https://mapy.cz/zakladni?x=13.885174&y=49.429272&z=16&q=zast%C3%A1vky",
+        "data": [
+          {
+            "lat": 49.4310510992735,
+            "lon": 13.8839127950798,
+            "url": "https://mapy.cz/zakladni?x=13.8839127950798&y=49.4310510992735&z=17&source=pubt&id=15322275",
+            "name": "bus_public_transport",
+            "time": 315,
+            "lines": [
+              {
+                "type": "bus",
+                "poi_id": 15322275,
+                "line_id": "380477",
+                "terminus": "Březí",
+                "line_label": "477",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15322275,
+                "line_id": "380766",
+                "terminus": "Uzeničky",
+                "line_label": "766",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15322275,
+                "line_id": "L477",
+                "terminus": "Březí",
+                "line_label": "477",
+                "departure_direction": 1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 218.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/kPyfG4fPEe0kCSBS2NILeRGo/b212.jpeg",
+            "source_id": 15322275,
+            "description": "Blatná, poliklinika",
+            "review_count": 0,
+            "walkDistance": 330
+          },
+          {
+            "lat": 49.4310573877937,
+            "lon": 13.8837488754328,
+            "url": "https://mapy.cz/zakladni?x=13.8837488754328&y=49.4310573877937&z=17&source=pubt&id=15290997",
+            "name": "bus_public_transport_2",
+            "lines": [
+              {
+                "type": "bus",
+                "poi_id": 15290997,
+                "line_id": "380477",
+                "terminus": "Blatná, žel.st",
+                "line_label": "477",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15290997,
+                "line_id": "380766",
+                "terminus": "Blatná, žel.st",
+                "line_label": "766",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15290997,
+                "line_id": "L477",
+                "terminus": "Blatná, žel.st",
+                "line_label": "477",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 224.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUCaRYmBGgQILeRF9/ce43.jpeg",
+            "source_id": 15290997,
+            "description": "Blatná, poliklinika",
+            "review_count": 0
+          },
+          {
+            "lat": 49.428020868408815,
+            "lon": 13.882025038028758,
+            "url": "https://mapy.cz/zakladni?x=13.882025038028758&y=49.428020868408815&z=17&source=pubt&id=27551280",
+            "name": "bus_public_transport_3",
+            "lines": [
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "360875",
+                "terminus": "Blatná, žel.st",
+                "line_label": "875",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "380472",
+                "terminus": "Blatná, žel.st",
+                "line_label": "472",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "380477",
+                "terminus": "Blatná, žel.st",
+                "line_label": "477",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "380766",
+                "terminus": "Blatná, žel.st",
+                "line_label": "766",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "380768",
+                "terminus": "Blatná, žel.st",
+                "line_label": "768",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "380959",
+                "terminus": "Mladý Smolivec",
+                "line_label": "959",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "450446",
+                "terminus": "Blatná, žel.st",
+                "line_label": "446",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "L416",
+                "terminus": "Smíchovské nádraží",
+                "line_label": "416",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "L472",
+                "terminus": "Příbram, Školní kruhový objezd",
+                "line_label": "472",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 27551280,
+                "line_id": "L472",
+                "terminus": "Strakonice, aut.nádr.",
+                "line_label": "472",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 267.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_D/nCXhmtHPUChHuMBK00IMFVbr/4203.jpeg",
+            "source_id": 27551280,
+            "description": "Blatná, Palackého",
+            "review_count": 0
+          },
+          {
+            "lat": 49.428074,
+            "lon": 13.881964,
+            "url": "https://mapy.cz/zakladni?x=13.881964&y=49.428074&z=17&source=pubt&id=32142030",
+            "name": "bus_public_transport_4",
+            "lines": [
+              {
+                "type": "bus",
+                "poi_id": 32142030,
+                "line_id": "L496",
+                "terminus": "Březnice, aut.st.",
+                "line_label": "496",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 268.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdkBQkMFDvERIN39k9/1cdc.jpeg",
+            "source_id": 32142030,
+            "description": "Blatná, Palackého",
+            "review_count": 0
+          },
+          {
+            "lat": 49.42806644498692,
+            "lon": 13.881966307713043,
+            "url": "https://mapy.cz/zakladni?x=13.881966307713043&y=49.42806644498692&z=17&source=pubt&id=15294887",
+            "name": "bus_public_transport_5",
+            "lines": [
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "143103",
+                "terminus": "Modrava, Filipova Huť",
+                "line_label": "143103",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "143103",
+                "terminus": "Praha, ÚAN Florenc",
+                "line_label": "143103",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "360815",
+                "terminus": "Písek, aut.nádr.",
+                "line_label": "815",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "360815",
+                "terminus": "Blatná, žel.st",
+                "line_label": "815",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380472",
+                "terminus": "Příbram, aut.nádr.",
+                "line_label": "472",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380477",
+                "terminus": "Březí",
+                "line_label": "477",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380735",
+                "terminus": "Blatná, žel.st",
+                "line_label": "735",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380737",
+                "terminus": "Blatná, žel.st",
+                "line_label": "737",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380737",
+                "terminus": "Doubravice, Nahošín, II",
+                "line_label": "737",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380740",
+                "terminus": "Blatná, žel.st",
+                "line_label": "740",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380761",
+                "terminus": "Blatná, žel.st",
+                "line_label": "761",
+                "departure_direction": -1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380766",
+                "terminus": "Uzeničky",
+                "line_label": "766",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380768",
+                "terminus": "Buzice",
+                "line_label": "768",
+                "departure_direction": 1
+              },
+              {
+                "type": "bus",
+                "poi_id": 15294887,
+                "line_id": "380958",
+                "terminus": "Blatná, žel.st",
+                "line_label": "958",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/198",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 268.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_A_C/P0wCqX.jpeg",
+            "source_id": 15294887,
+            "description": "Blatná, Palackého",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4309146659,
+            "lon": 13.8726766832,
+            "url": "https://mapy.cz/zakladni?x=13.8726766832&y=49.4309146659&z=17&source=pubt&id=15210979",
+            "name": "train",
+            "time": 996,
+            "lines": [
+              {
+                "type": "vlak",
+                "poi_id": 15210979,
+                "line_id": "JČ-S12",
+                "terminus": "Nepomuk",
+                "line_label": "S12",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210979,
+                "line_id": "JČ-S60",
+                "terminus": "Beroun",
+                "line_label": "S60",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210979,
+                "line_id": "JČ-S60",
+                "terminus": "Strakonice",
+                "line_label": "S60",
+                "departure_direction": 1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210979,
+                "line_id": "SČ-S60",
+                "terminus": "Strakonice",
+                "line_label": "S60",
+                "departure_direction": 1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210979,
+                "line_id": "SČ-S60",
+                "terminus": "Beroun",
+                "line_label": "S60",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210979,
+                "line_id": "SČ-T6",
+                "terminus": "Praha hlavní nádraží",
+                "line_label": "T6",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 922.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qG_A/nCR9NVflLCsdQ6PykIAq2NR/34db.jpeg",
+            "source_id": 15210979,
+            "description": "Blatná",
+            "review_count": 0,
+            "walkDistance": 1075
+          },
+          {
+            "lat": 49.4449396607,
+            "lon": 13.87581193,
+            "url": "https://mapy.cz/zakladni?x=13.87581193&y=49.4449396607&z=17&source=pubt&id=15210955",
+            "name": "train_2",
+            "lines": [
+              {
+                "type": "vlak",
+                "poi_id": 15210955,
+                "line_id": "JČ-S60",
+                "terminus": "Beroun",
+                "line_label": "S60",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210955,
+                "line_id": "SČ-S60",
+                "terminus": "Blatná",
+                "line_label": "S60",
+                "departure_direction": 1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15210955,
+                "line_id": "SČ-S60",
+                "terminus": "Beroun",
+                "line_label": "S60",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 1869.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oe_A/kBlLbSfl8BW941DvYEipY4v/d637.jpeg",
+            "source_id": 15210955,
+            "description": "Bezdědovice",
+            "review_count": 0
+          },
+          {
+            "lat": 49.4014487588,
+            "lon": 13.8861094055,
+            "url": "https://mapy.cz/zakladni?x=13.8861094055&y=49.4014487588&z=17&source=pubt&id=15212064",
+            "name": "train_3",
+            "lines": [
+              {
+                "type": "vlak",
+                "poi_id": 15212064,
+                "line_id": "JČ-S60",
+                "terminus": "Strakonice",
+                "line_label": "S60",
+                "departure_direction": 1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15212064,
+                "line_id": "JČ-S60",
+                "terminus": "Blatná",
+                "line_label": "S60",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15212064,
+                "line_id": "SČ-S60",
+                "terminus": "Strakonice",
+                "line_label": "S60",
+                "departure_direction": 1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 3095.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QL_1/RTLJGI.jpeg",
+            "source_id": 15212064,
+            "description": "Mačkov",
+            "review_count": 0
+          },
+          {
+            "lat": 49.438777095798535,
+            "lon": 13.810053869047579,
+            "url": "https://mapy.cz/zakladni?x=13.810053869047579&y=49.438777095798535&z=17&source=pubt&id=15213039",
+            "name": "train_4",
+            "lines": [
+              {
+                "type": "vlak",
+                "poi_id": 15213039,
+                "line_id": "JČ-S12",
+                "terminus": "Nepomuk",
+                "line_label": "S12",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15213039,
+                "line_id": "PL-P12",
+                "terminus": "Blatná",
+                "line_label": "P12",
+                "departure_direction": 1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 5534.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_QP_R/SaQ0A.jpeg",
+            "source_id": 15213039,
+            "description": "Tchořovice",
+            "review_count": 0
+          },
+          {
+            "lat": 49.48064021355246,
+            "lon": 13.87028718258645,
+            "url": "https://mapy.cz/zakladni?x=13.87028718258645&y=49.48064021355246&z=17&source=pubt&id=15213362",
+            "name": "train_5",
+            "lines": [
+              {
+                "type": "vlak",
+                "poi_id": 15213362,
+                "line_id": "JČ-S60",
+                "terminus": "Beroun",
+                "line_label": "S60",
+                "departure_direction": -1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15213362,
+                "line_id": "SČ-S60",
+                "terminus": "Blatná",
+                "line_label": "S60",
+                "departure_direction": 1
+              },
+              {
+                "type": "vlak",
+                "poi_id": 15213362,
+                "line_id": "SČ-S60",
+                "terminus": "Beroun",
+                "line_label": "S60",
+                "departure_direction": -1
+              }
+            ],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/169",
+            "rating": -1,
+            "source": "pubt",
+            "distance": 5812.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_gW_z/nfGGhY.jpeg",
+            "source_id": 15213362,
+            "description": "Závišín",
+            "review_count": 0
+          }
+        ]
+      },
+      "restaurants": {
+        "url": "https://www.firmy.cz/Restauracni-a-pohostinske-sluzby?x=13.885174&y=49.429272&rt=adresa",
+        "data": [
+          {
+            "lat": 49.42656326293945,
+            "lon": 13.883157730102539,
+            "url": "https://www.firmy.cz/detail/12991965-u-mlsouna-blatna.html",
+            "name": "restaurant",
+            "time": 379,
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "rating": 5,
+            "source": "firm",
+            "distance": 335.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_qE_A/kPVqmweP7JB4z4nB2yHoGx74/b4fa.jpeg",
+            "source_id": 12991965,
+            "description": "U Mlsouna",
+            "review_count": 25,
+            "walkDistance": 421
+          },
+          {
+            "lat": 49.425899505615234,
+            "lon": 13.883328437805176,
+            "url": "https://www.firmy.cz/detail/13381846-zakladna-bar-blatna.html",
+            "name": "tavern",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "rating": 4,
+            "source": "firm",
+            "distance": 398.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TDi9WNBqc1IOgsNC/84ed.jpeg",
+            "source_id": 13381846,
+            "description": "Základna bar",
+            "review_count": 3
+          },
+          {
+            "lat": 49.425994873046875,
+            "lon": 13.882843017578125,
+            "url": "https://www.firmy.cz/detail/13508154-bistro-labut-blatna.html",
+            "name": "restaurant_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "rating": 4,
+            "source": "firm",
+            "distance": 402.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_qA_A/kcHp2YdDtDrxR2qf0GVNnIR/9712.jpeg",
+            "source_id": 13508154,
+            "description": "Bistro Labuť",
+            "review_count": 14
+          },
+          {
+            "lat": 49.4260368347168,
+            "lon": 13.882035255432129,
+            "url": "https://www.firmy.cz/detail/2427369-cukrarna-segafredo-city-blatna.html",
+            "name": "candy_shop",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/38",
+            "rating": 4,
+            "source": "firm",
+            "distance": 425.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_G_C/veR88z.jpeg",
+            "source_id": 2427369,
+            "description": "Cukrárna Segafredo-city",
+            "review_count": 43
+          },
+          {
+            "lat": 49.42486572265625,
+            "lon": 13.882136344909668,
+            "url": "https://www.firmy.cz/detail/12919096-hotel-beranek-restaurace-blatna.html",
+            "name": "restaurant_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "rating": 4,
+            "source": "firm",
+            "distance": 537.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oW_A/nO1SBfAluiBJE31wcCWiMgJ/894f.jpeg",
+            "source_id": 12919096,
+            "description": "Hotel Beránek - restaurace",
+            "review_count": 127
+          },
+          {
+            "lat": 49.42436599731445,
+            "lon": 13.883423805236816,
+            "url": "https://www.firmy.cz/detail/13430273-pizzeria-casa-verde-blatna.html",
+            "name": "restaurant_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "rating": 5,
+            "source": "firm",
+            "distance": 560.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_gU_r/AH1Ppr.jpeg",
+            "source_id": 13430273,
+            "description": "Pizzeria Casa Verde",
+            "review_count": 136
+          },
+          {
+            "lat": 49.426475524902344,
+            "lon": 13.87855339050293,
+            "url": "https://www.firmy.cz/detail/12712806-hospoda-stadak-blatna.html",
+            "name": "tavern_2",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "rating": 2,
+            "source": "firm",
+            "distance": 571.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/kb4JgeTdk3whEFC5DIOgrme/755b.jpeg",
+            "source_id": 12712806,
+            "description": "Hospoda Staďák",
+            "review_count": 3
+          },
+          {
+            "lat": 49.42866134643555,
+            "lon": 13.8768949508667,
+            "url": "https://www.firmy.cz/detail/2460989-restaurace-v-sokolovne-blatna.html",
+            "name": "restaurant_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/133",
+            "rating": 4,
+            "source": "firm",
+            "distance": 603.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oc_A/kcukOQcMmDmihggfD6tyJo/6213.jpeg",
+            "source_id": 2460989,
+            "description": "Restaurace V Sokolovně",
+            "review_count": 58
+          },
+          {
+            "lat": 49.43473434448242,
+            "lon": 13.882378578186035,
+            "url": "https://www.firmy.cz/detail/13117372-hospoda-na-vinici-blatna.html",
+            "name": "tavern_3",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "rating": 4,
+            "source": "firm",
+            "distance": 640.0,
+            "photo_url": "https://d48-a.sdn.cz/d_48/c_img_oW_A/kPWmeC9soBDLwnhUZCcZ3sd/db0f.jpeg",
+            "source_id": 13117372,
+            "description": "Hospoda Na Vinici",
+            "review_count": 3
+          },
+          {
+            "lat": 49.43053436279297,
+            "lon": 13.875116348266602,
+            "url": "https://www.firmy.cz/detail/13275814-hospoda-u-datla-blatna.html",
+            "name": "tavern_4",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "rating": 5,
+            "source": "firm",
+            "distance": 741.0,
+            "photo_url": "https://d34-a.sdn.cz/d_34/c_img_oX_A/kPWmeC9soBCihh3jaCjVP2d/f868.jpeg",
+            "source_id": 13275814,
+            "description": "Hospoda U Datla",
+            "review_count": 27
+          },
+          {
+            "lat": 49.402225494384766,
+            "lon": 13.886564254760742,
+            "url": "https://www.firmy.cz/detail/13217637-mackovska-hospoda-mackov.html",
+            "name": "tavern_5",
+            "lines": [],
+            "imgUrl": "https://api.mapy.cz/poiimg/icon/362",
+            "rating": 4,
+            "source": "firm",
+            "distance": 3009.0,
+            "photo_url": "https://d18-a.sdn.cz/d_18/c_img_qG_E/nQO0xPd86TBSHZcBja8IOh54Z/9209.jpeg",
+            "source_id": 13217637,
+            "description": "Mačkovská hospoda",
+            "review_count": 1
+          }
+        ]
+      }
+    },
+    "object_location": {
+      "name": "- vyber umístění",
+      "value": 0
+    },
+    "category_main_cb": {
+      "name": "Byty",
+      "value": 1
+    },
+    "category_type_cb": {
+      "name": "Prodej",
+      "value": 1
+    },
+    "exclusively_at_rk": true,
+    "price_currency_cb": {
+      "name": "Kč",
+      "value": 1
+    },
+    "price_summary_czk": 2990000.0,
+    "price_summary_old": 0.0,
+    "surroundings_type": {
+      "name": "- vyber zástavbu",
+      "value": 0
+    },
+    "advert_description": "Hledáte byt, který si můžete upravit přesně podle svého vkusu nebo výbornou investiční příležitost v domě bez dalších nutných výdajů do budovy? Tento rohový byt s podlahovou plochou 49 m² a užitnou plochou 45 m² nabízí perfektní základ pro moderní proměnu a zároveň jistotu zrekonstruovaného, energeticky úsporného domu.\r\nByt se nachází v 1. patře (2. NP) čtyřpodlažního zděného domu s pouze 12 bytovými jednotkami, což zaručuje klidné a komorní bydlení.\r\nDům po kompletní revitalizaci (2025) – čistý štít bez investic\r\nDům prošel v roce 2025 kompletní a nákladnou revitalizací:\r\nNové zateplení a fasáda\r\nNová střecha\r\nEnergetická třída C (garance nízkých nákladů na vytápění a provoz)\r\nDíky tomu vás ani případné nájemníky nečekají žádné nečekané výdaje do fondu oprav z důvodu havarijního stavu či nutných sanací pláště budovy.\r\nProstor pro vaši vizi – skvělý potenciál dispozičních úprav\r\nInteriér je určen ke kompletní rekonstrukci, což představuje ideální šanci přizpůsobit si prostor na míru vlastním požadavkům:\r\nVelká výhoda pro přestavbu: příčka mezi kuchyní a koupelnou není zděná, což výrazně usnadňuje stavební úpravy, posunutí stěny, propojení prostor či rozšíření koupelny s toaletou bez náročného bourání nosného zdiva.\r\nZachovalé prvky: v pokojích se nachází klasické parketové podlahy, které lze zrenovovat a dodat interiéru hřejivý a nadčasový styl.\r\nKvalitní okna: v bytě jsou již osazena izolační trojskla a na jižní straně komfortní elektricky ovládané venkovní žaluzie.\r\nSvětlý rohový byt s orientací do 3 světových stran\r\nDíky rohovému umístění má byt dostatek denního světla a snadné přirozené větrání:\r\nJižní pokoj (20 m²): velkorysý, sluncem prosvětlený obývací prostor.\r\nVýchodní pokoj (14,8 m²): ideální jako ložnice s výhledem k mateřské škole a příjemným ranním sluncem.\r\nSeverní kuchyně s balkonem: praktická orientace pro vaření a přímý vstup na balkon orientovaný do klidné části za domem.\r\nShrnutí parametrů nemovitosti\r\nDispozice: 2+1\r\nPodlahová plocha: 49 m² (k bytu dále náleží balkon a sklepní kóje)\r\nPodlaží: 1. patro / 4 NP (zděný dům s 12 jednotkami)\r\nStav bytu: před rekonstrukcí interiéru (nenosná příčka mezi kuchyní a koupelnou pro snadnější úpravy)\r\nStav domu: po kompletní revitalizaci v r. 2025 (energetický štítek třídy C)\r\nVybavení a prvky: izolační trojskla, venkovní elektrické žaluzie, parketové podlahy, balkon, sklepní kóje\r\nVytápění: ústřední plynové\r\nLokalita s plnou občanskou vybaveností\r\nNerudova ulice nabízí klidné rezidenční zázemí s výbornou dostupností služeb. Mateřská škola se nachází hned vedle domu, základní škola, obchody i zdravotní středisko jsou v pohodlném pěším dosahu. Blatná je dlouhodobě vyhledávaným místem se stálou a stabilní poptávkou po nájemním bydlení.\r\nNeváhejte mě kontaktovat pro více informací či domluvení termínu prohlídky.",
+    "building_condition": {
+      "name": "Dobrý",
+      "value": 2
+    },
+    "circuit_breaker_cb": null,
+    "first_tour_date_to": null,
+    "heating_source_set": [],
+    "underground_floors": null,
+    "heating_element_set": [],
+    "reconstruction_year": 2025,
+    "price_summary_old_czk": null,
+    "price_summary_unit_cb": {
+      "name": "za nemovitost",
+      "value": 1
+    },
+    "telecommunication_set": [],
+    "water_heat_source_set": [],
+    "phase_distributions_cb": null,
+    "internet_connection_speed": null,
+    "price_flag_negotiation_cb": false,
+    "energy_performance_summary": null,
+    "energy_efficiency_rating_cb": {
+      "name": "C - Úsporná",
+      "value": 3
+    },
+    "internet_connection_provider": null,
+    "internet_connection_type_set": [],
+    "energy_performance_certificate": {
+      "name": "č. 148/2007 Sb.",
+      "value": 1
+    },
+    "sdn_energy_performance_attachment_url": null
+  },
+  "status_code": 200,
+  "status_message": "OK"
+}

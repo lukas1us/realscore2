@@ -12,8 +12,8 @@ class ListingDetailTest {
     private static final Instant SECOND = Instant.parse("2026-11-02T10:00:00Z");
 
     private static final ListingDetailsFields FIELDS = new ListingDetailsFields(
-            new BigDecimal("3590000"), new BigDecimal("37"), 3, "1+1", 1975, 1, "C", "Cihlová", true, "OV",
-            "Plzeň", "Plzeň-město", "Plzeňský kraj", "Plzeň 2-Slovany", 1, 1);
+            new BigDecimal("3590000"), new BigDecimal("37"), 3, "1+1", 1975, null, 1, "C", "Cihlová", true,
+            "OV", "Plzeň", "Plzeň-město", "Plzeňský kraj", "Plzeň 2-Slovany", 1, 1);
 
     @Test
     void firstApplyOnANewRowIsAChange() {
@@ -61,6 +61,16 @@ class ListingDetailTest {
         assertThat(detail.getTransactionTypeCode()).isEqualTo(2);
         assertThat(detail.applyFields(FIELDS.withTransactionTypeCode(2).withCitypart("Plzeň 3"), SECOND)).isTrue();
         assertThat(detail.getCitypart()).isEqualTo("Plzeň 3");
+    }
+
+    @Test
+    void aChangedReconstructionYearIsAChange() {
+        ListingDetail detail = new ListingDetail(1L);
+        detail.applyFields(FIELDS, FIRST);
+
+        assertThat(detail.applyFields(FIELDS.withReconstructionYear(2010), SECOND)).isTrue();
+        assertThat(detail.getAcceptanceYear()).isEqualTo(1975);
+        assertThat(detail.getReconstructionYear()).isEqualTo(2010);
     }
 
     @Test

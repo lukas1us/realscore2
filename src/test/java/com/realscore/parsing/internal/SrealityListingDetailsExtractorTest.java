@@ -22,7 +22,8 @@ class SrealityListingDetailsExtractorTest {
         assertThat(fields.sizeM2()).isEqualByComparingTo(new BigDecimal("37"));
         assertThat(fields.dispositionCode()).isEqualTo(3);
         assertThat(fields.dispositionLabel()).isEqualTo("1+1");
-        assertThat(fields.yearBuilt()).isEqualTo(1975);
+        assertThat(fields.acceptanceYear()).isEqualTo(1975);
+        assertThat(fields.reconstructionYear()).isNull();
         assertThat(fields.floor()).isEqualTo(1);
         assertThat(fields.energyClass()).isEqualTo("C");
         assertThat(fields.constructionType()).isEqualTo("Cihlová");
@@ -139,12 +140,23 @@ class SrealityListingDetailsExtractorTest {
     }
 
     @Test
-    void fallsBackToReconstructionYearWhenAcceptanceYearMissing() {
+    void aReconstructionYearIsNotTakenAsTheAcceptanceYear() throws Exception {
+        ListingDetailsFields fields = extractor.extract(fixture("detail_reconstruction_year_only.json"));
+
+        assertThat(fields.acceptanceYear()).isNull();
+        assertThat(fields.reconstructionYear()).isEqualTo(2025);
+    }
+
+    @Test
+    void readsBothYearsWhenBothAreGiven() {
         String payload = """
-                {"result": {"reconstruction_year": 2010}}
+                {"result": {"acceptance_year": 1975, "reconstruction_year": 2010}}
                 """;
 
-        assertThat(extractor.extract(payload).yearBuilt()).isEqualTo(2010);
+        ListingDetailsFields fields = extractor.extract(payload);
+
+        assertThat(fields.acceptanceYear()).isEqualTo(1975);
+        assertThat(fields.reconstructionYear()).isEqualTo(2010);
     }
 
     @Test

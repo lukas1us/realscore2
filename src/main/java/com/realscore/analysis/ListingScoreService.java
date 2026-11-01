@@ -3,7 +3,10 @@ package com.realscore.analysis;
 import com.realscore.analysis.internal.AnalysisProperties;
 import com.realscore.analysis.internal.ScoreCalculator;
 import com.realscore.parsing.ActiveListingDetails;
+import com.realscore.parsing.ActivePriceHistory;
+import com.realscore.parsing.ListingDetails;
 import com.realscore.parsing.ListingDetailsQueryService;
+import com.realscore.parsing.ListingOverview;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
@@ -41,55 +44,113 @@ public class ListingScoreService {
     private record Key(String source, String externalId) {
     }
 
+    /** The fields a score needs, from either a list of active listings or a single listing. */
+    private record Candidate(String source, String externalId, Integer dispositionCode, String dispositionLabel,
+            String region, String district, String city, String citypart, BigDecimal priceCzk, BigDecimal sizeM2) {
+
+        static Candidate of(ActiveListingDetails d) {
+            return new Candidate(d.source(), d.externalId(), d.dispositionCode(), d.dispositionLabel(), d.region(),
+                    d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2());
+        }
+
+        static Candidate of(ListingOverview listing) {
+            ListingDetails d = listing.details();
+            return new Candidate(listing.source(), listing.externalId(), d.dispositionCode(), d.dispositionLabel(),
+                    d.region(), d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2());
+        }
+
+        boolean isScorable() {
+            return priceCzk != null && priceCzk.signum() > 0 && sizeM2 != null && sizeM2.signum() > 0
+                    && dispositionCode != null && region != null;
+        }
+    }
+
     /** @return every scorable flat, best first */
     public List<ListingScore> scoreAll() {
         MarketBenchmarks benchmarks = marketBenchmarkService.benchmarks();
         Map<Key, PriceDrop> drops = priceDropService.find(properties.priceDropDays(), TransactionType.SALE).stream()
                 .collect(Collectors.toMap(d -> new Key(d.source(), d.externalId()), Function.identity()));
         return listingDetails.findActive(TransactionType.SALE.code(), MarketBenchmarkService.FLATS).stream()
-                .filter(ListingScoreService::isScorable)
-                .map(d -> score(d, benchmarks, drops.get(new Key(d.source(), d.externalId()))))
+                .map(Candidate::of)
+                .filter(Candidate::isScorable)
+                .map(c -> score(c, benchmarks, drops.get(new Key(c.source(), c.externalId()))))
                 .flatMap(Optional::stream)
                 .sorted(BEST_FIRST)
                 .toList();
     }
 
-    private static boolean isScorable(ActiveListingDetails d) {
-        return d.priceCzk() != null && d.priceCzk().signum() > 0 && d.sizeM2() != null && d.sizeM2().signum() > 0
-                && d.dispositionCode() != null && d.region() != null;
+    /**
+     * Each filter is optional ({@code null}) and matches exactly, ignoring case.
+     *
+     * @param disposition label such as {@code 2+kk}
+     * @return the best {@code limit} scored flats that match the filters, best first
+     */
+    public List<ListingScore> top(int limit, String region, String city, String disposition) {
+        return scoreAll().stream()
+                .filter(s -> matches(region, s.region()) && matches(city, s.city())
+                        && matches(disposition, s.dispositionLabel()))
+                .limit(limit)
+                .toList();
     }
 
-    private Optional<ListingScore> score(ActiveListingDetails d, MarketBenchmarks benchmarks, PriceDrop drop) {
-        ListingBenchmarks b = benchmarks.forListing(d.region(), d.district(), d.city(), d.citypart(),
-                d.dispositionCode());
+    /**
+     * Scores one listing like {@link #scoreAll()} would, with its drop taken from its own price history.
+     *
+     * @return empty unless the listing is an active, scorable flat for sale
+     */
+    public Optional<ListingScore> score(ListingOverview listing) {
+        ListingDetails d = listing.details();
+        if (listing.removedAt() != null || d == null
+                || !Integer.valueOf(TransactionType.SALE.code()).equals(d.transactionTypeCode())
+                || !Integer.valueOf(MarketBenchmarkService.FLATS).equals(d.propertyCategoryCode())) {
+            return Optional.empty();
+        }
+        Candidate candidate = Candidate.of(listing);
+        if (!candidate.isScorable()) {
+            return Optional.empty();
+        }
+        ActivePriceHistory history = new ActivePriceHistory(listing.source(), listing.externalId(),
+                d.transactionTypeCode(), d.dispositionLabel(), d.sizeM2(), d.city(), d.citypart(),
+                listing.priceHistory());
+        PriceDrop drop = PriceDrop.of(history, PriceDropService.windowStart(properties.priceDropDays())).orElse(null);
+        return score(candidate, marketBenchmarkService.benchmarks(), drop);
+    }
+
+    private static boolean matches(String filter, String value) {
+        return filter == null || filter.equalsIgnoreCase(value);
+    }
+
+    private Optional<ListingScore> score(Candidate c, MarketBenchmarks benchmarks, PriceDrop drop) {
+        ListingBenchmarks b = benchmarks.forListing(c.region(), c.district(), c.city(), c.citypart(),
+                c.dispositionCode());
         BenchmarkValue saleBenchmark = b.salePricePerM2();
         BenchmarkValue rentBenchmark = b.rentPerM2() != null ? b.rentPerM2() : b.monthlyRent();
 
-        BigDecimal discount = saleBenchmark == null ? null : discountPercent(d, saleBenchmark.median());
-        BigDecimal rentalYield = rentBenchmark == null ? null : rentalYieldPercent(d, expectedRent(d, b));
+        BigDecimal discount = saleBenchmark == null ? null : discountPercent(c, saleBenchmark.median());
+        BigDecimal rentalYield = rentBenchmark == null ? null : rentalYieldPercent(c, expectedRent(c, b));
         BigDecimal priceDrop = drop == null ? BigDecimal.ZERO : drop.dropPercent();
 
-        return calculator.score(discount, rentalYield, priceDrop).map(r -> new ListingScore(d.source(),
-                d.externalId(), d.dispositionLabel(), d.region(), d.district(), d.city(), d.citypart(), d.priceCzk(),
-                d.sizeM2(), r.total(), part(r.discount(), saleBenchmark), part(r.rentalYield(), rentBenchmark),
+        return calculator.score(discount, rentalYield, priceDrop).map(r -> new ListingScore(c.source(),
+                c.externalId(), c.dispositionLabel(), c.region(), c.district(), c.city(), c.citypart(), c.priceCzk(),
+                c.sizeM2(), r.total(), part(r.discount(), saleBenchmark), part(r.rentalYield(), rentBenchmark),
                 part(r.priceDrop(), null)));
     }
 
     /** (median − listing price per m²) / median, in percent: positive when cheaper than the market. */
-    private static BigDecimal discountPercent(ActiveListingDetails d, BigDecimal medianPerM2) {
-        BigDecimal perM2 = d.priceCzk().divide(d.sizeM2(), DIVISION_SCALE, RoundingMode.HALF_UP);
+    private static BigDecimal discountPercent(Candidate c, BigDecimal medianPerM2) {
+        BigDecimal perM2 = c.priceCzk().divide(c.sizeM2(), DIVISION_SCALE, RoundingMode.HALF_UP);
         return medianPerM2.subtract(perM2).multiply(HUNDRED).divide(medianPerM2, DIVISION_SCALE, RoundingMode.HALF_UP);
     }
 
     /** Rent per m² median × size, or the monthly rent median when no per-m² median applies. */
-    private static BigDecimal expectedRent(ActiveListingDetails d, ListingBenchmarks b) {
-        return b.rentPerM2() != null ? b.rentPerM2().median().multiply(d.sizeM2()) : b.monthlyRent().median();
+    private static BigDecimal expectedRent(Candidate c, ListingBenchmarks b) {
+        return b.rentPerM2() != null ? b.rentPerM2().median().multiply(c.sizeM2()) : b.monthlyRent().median();
     }
 
     /** Expected monthly rent × 12 / price, in percent. */
-    private static BigDecimal rentalYieldPercent(ActiveListingDetails d, BigDecimal monthlyRent) {
+    private static BigDecimal rentalYieldPercent(Candidate c, BigDecimal monthlyRent) {
         return monthlyRent.multiply(MONTHS).multiply(HUNDRED)
-                .divide(d.priceCzk(), DIVISION_SCALE, RoundingMode.HALF_UP);
+                .divide(c.priceCzk(), DIVISION_SCALE, RoundingMode.HALF_UP);
     }
 
     private static ScorePart part(ScoreCalculator.Part part, BenchmarkValue benchmark) {

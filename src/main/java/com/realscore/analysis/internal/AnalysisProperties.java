@@ -14,9 +14,11 @@ import org.springframework.validation.annotation.Validated;
  * @param minSampleSize fewest listings a group needs for its median to be used; smaller groups fall back to the
  *                      enclosing locality
  * @param priceDropDays default length in days of the window over which price drops are listed
+ * @param scoresLimit default number of scored listings returned by the scores endpoint
  */
 @Validated
 @ConfigurationProperties("realscore.analysis")
 public record AnalysisProperties(@NotNull Set<String> largeCities, @Positive int minSampleSize,
-        @Positive int priceDropDays) {
+        @Positive int priceDropDays,
+        @Positive int scoresLimit) {
 }

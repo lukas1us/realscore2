@@ -26,11 +26,16 @@ public class PriceDropService {
      * @return the drops, largest first and, for equal drops, latest first
      */
     public List<PriceDrop> find(int days, TransactionType type) {
-        Instant since = Instant.now().minus(Duration.ofDays(days));
+        Instant since = windowStart(days);
         return listingDetails.findActivePriceHistoriesChangedSince(since, type == null ? null : type.code()).stream()
                 .map(listing -> PriceDrop.of(listing, since))
                 .flatMap(Optional::stream)
                 .sorted(LARGEST_THEN_LATEST)
                 .toList();
+    }
+
+    /** @return the start of a window of {@code days} days ending now */
+    static Instant windowStart(int days) {
+        return Instant.now().minus(Duration.ofDays(days));
     }
 }

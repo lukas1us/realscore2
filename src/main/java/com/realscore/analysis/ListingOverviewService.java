@@ -6,17 +6,19 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-/** One listing with its parsed details, price history and the figures derived from them. */
+/** One listing with its parsed details, price history, and the figures and score derived from them. */
 @Service
 @RequiredArgsConstructor
 public class ListingOverviewService {
 
     private final ListingDetailsQueryService listingDetails;
+    private final ListingScoreService listingScoreService;
 
     /** @return the listing, removed or not, or empty if no listing from {@code source} has that external ID */
     public Optional<ListingResponse> find(String source, String externalId) {
         Instant now = Instant.now();
         return listingDetails.findListing(source, externalId)
-                .map(listing -> ListingResponse.of(listing, ListingStats.of(listing, now)));
+                .map(listing -> ListingResponse.of(listing, ListingStats.of(listing, now),
+                        listingScoreService.score(listing).orElse(null)));
     }
 }

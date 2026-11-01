@@ -1,11 +1,11 @@
 ---
 id: TASK-24
 title: 'Later: scoring engine'
-status: In Progress
+status: Done
 assignee:
   - '@claude'
 created_date: '2026-10-30T23:43:00Z'
-updated_date: '2026-11-01T16:20:00Z'
+updated_date: '2026-11-01T16:58:00Z'
 labels:
   - analysis
 milestone: m-6
@@ -29,3 +29,9 @@ Coarse placeholder for a scoring engine replacing the old app's US-style price-p
 <!-- SECTION:NOTES:BEGIN -->
 Scoped into TASK-24.1 (benchmarks per listing), TASK-24.2 (score calculation), TASK-24.3 (HTTP endpoints). Quality factors split out as TASK-35.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+All subtasks done: per-listing benchmark lookup (24.1), v1 score from discount, rental yield and price drop (24.2), scores endpoint and score in the listing endpoint (24.3). Quality factors follow in TASK-35.
+<!-- SECTION:FINAL_SUMMARY:END -->

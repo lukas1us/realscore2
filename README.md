@@ -16,8 +16,8 @@ disposition). Scoring individual listings comes later.
    disposition, locality, sale or rent, and so on. Each parse also rebuilds the listing's price history
    (`listing_price_point`) from all its snapshots: one point per asking-price change, skipping snapshots without a
    price. Parsing is idempotent and can be re-run over all stored snapshots.
-4. **Analysis**: benchmarks are computed on demand from the parsed details of active listings, and a single listing
-   can be looked up with its price history and stats.
+4. **Analysis**: benchmarks are computed on demand from the parsed details of active listings, a single listing
+   can be looked up with its price history and stats, and recent price drops can be listed.
 
 The code is a Spring Modulith monolith with one package per module under `com.realscore`: `scraping`, `listing`,
 `parsing` and `analysis`. Dependencies go one way only (scraping → listing ← parsing ← analysis), and `ModularityTests`
@@ -61,12 +61,13 @@ Set through environment variables; defaults are in `src/main/resources/applicati
 | `SCRAPE_RENT_PRICE_CAP` | empty (no cap) | Maximum monthly rent in CZK of flats for rent |
 | `SCRAPE_REFETCH_AFTER` | `7d` | A known listing is fetched again once its last fetch is older than this; `0` refetches on every run |
 
-Market benchmark settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZE`):
+Analysis settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZE`):
 
 | Property | Default | Meaning |
 |---|---|---|
 | `realscore.analysis.large-cities` | `Praha,Brno,Ostrava` | Cities grouped by city part instead of as a whole |
 | `realscore.analysis.min-sample-size` | `5` | Fewest listings a group needs; smaller groups fall back to city, then district, then region |
+| `realscore.analysis.price-drop-days` | `30` | Default window in days of `GET /api/analysis/price-drops` |
 
 Sreality client settings (`realscore.sreality.*`: page size, retries, request pacing) are in `application.properties`
 too.
@@ -78,6 +79,7 @@ too.
 | `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
 | `GET /api/analysis/benchmarks/rent` | Median monthly rent and median rent per m² of active flats for rent, per locality and disposition, each with its level and sample size |
 | `GET /api/listings/{source}/{externalId}` | One listing, removed or not: first/last seen and removed time, parsed details (`null` if never parsed), price history oldest first, and stats: days on market, number of price drops, % change from the first to the current price. 404 if unknown |
+| `GET /api/analysis/price-drops[?days=30][&type=sale\|rent]` | Active listings whose current price is below the price they had `days` ago (default `realscore.analysis.price-drop-days`), or below their first price if they appeared later; several drops add up. Each with old and new price, percent drop and when the current price was first seen; largest drop first. Without `type`, sales and rentals both; `days` < 1 or another `type` gives 400 |
 | `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable), and rebuilds their price history. Synchronous; returns the `listing_detail` counts |
 | `GET /actuator/health` | Health check |
 

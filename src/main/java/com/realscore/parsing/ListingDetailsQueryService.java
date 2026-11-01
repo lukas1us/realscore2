@@ -4,7 +4,13 @@ import com.realscore.listing.ListingSnapshotService;
 import com.realscore.parsing.internal.ListingDetail;
 import com.realscore.parsing.internal.ListingDetailRepository;
 import com.realscore.parsing.internal.ListingPricePointRepository;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -12,8 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Read access to parsed listing details for other modules: all active listings for market analysis, or one listing
- * with its price history.
+ * Read access to parsed listing details for other modules: all active listings for market analysis, recent price
+ * histories, or one listing with its price history.
  */
 @Service
 @RequiredArgsConstructor
@@ -61,6 +67,45 @@ public class ListingDetailsQueryService {
                 .param("propertyCategory", propertyCategoryCode)
                 .query(ActiveListingDetails.class)
                 .list();
+    }
+
+    /**
+     * @param since only listings with a price point observed at or after this time are returned
+     * @param transactionTypeCode Sreality {@code category_type_cb} value (1 = sale, 2 = rent), or {@code null} for both
+     * @return the full price history of every matching active listing, in no particular order of listings
+     */
+    @Transactional(readOnly = true)
+    public List<ActivePriceHistory> findActivePriceHistoriesChangedSince(Instant since, Integer transactionTypeCode) {
+        Map<Long, ActivePriceHistory> histories = new LinkedHashMap<>();
+        jdbc.sql("""
+                        SELECT l.id, l.source, l.external_id, d.transaction_type_code, d.disposition_label, d.size_m2,
+                               d.city, d.citypart, p.observed_at, p.price_czk
+                        FROM listing l
+                        JOIN listing_detail d ON d.listing_id = l.id
+                        JOIN listing_price_point p ON p.listing_id = l.id
+                        WHERE l.removed_at IS NULL
+                          AND (CAST(:transactionType AS INTEGER) IS NULL OR d.transaction_type_code = :transactionType)
+                          AND EXISTS (SELECT 1 FROM listing_price_point recent
+                                      WHERE recent.listing_id = l.id AND recent.observed_at >= :since)
+                        ORDER BY l.id, p.observed_at
+                        """)
+                .param("transactionType", transactionTypeCode)
+                .param("since", OffsetDateTime.ofInstant(since, ZoneOffset.UTC))
+                .query(rs -> {
+                    Long listingId = rs.getLong("id");
+                    ActivePriceHistory history = histories.get(listingId);
+                    if (history == null) {
+                        history = new ActivePriceHistory(rs.getString("source"), rs.getString("external_id"),
+                                rs.getObject("transaction_type_code", Integer.class), rs.getString("disposition_label"),
+                                rs.getBigDecimal("size_m2"), rs.getString("city"), rs.getString("citypart"),
+                                new ArrayList<>());
+                        histories.put(listingId, history);
+                    }
+                    history.priceHistory().add(new PricePoint(
+                            rs.getObject("observed_at", OffsetDateTime.class).toInstant(),
+                            rs.getBigDecimal("price_czk")));
+                });
+        return List.copyOf(histories.values());
     }
 
     private static ListingDetails toDetails(ListingDetail d) {

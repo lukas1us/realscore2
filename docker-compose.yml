@@ -30,6 +30,20 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    # The JRE image has no curl/wget, so the request goes through bash's /dev/tcp (not CMD-SHELL: /bin/sh is dash).
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -c
+        - >-
+          exec 3<>/dev/tcp/localhost/8080
+          && printf 'GET /actuator/health HTTP/1.0\r\n\r\n' >&3
+          && grep -q '"status":"UP"' <&3
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
 volumes:
   postgres-data:

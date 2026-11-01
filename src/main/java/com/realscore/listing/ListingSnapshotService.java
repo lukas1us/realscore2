@@ -69,6 +69,20 @@ public class ListingSnapshotService {
     }
 
     /**
+     * Returns every stored snapshot of the listing, oldest first, or an empty list if the listing is unknown.
+     */
+    @Transactional(readOnly = true)
+    public List<ListingSnapshotView> findSnapshots(String source, String externalId) {
+        return listingRepository.findBySourceAndExternalId(source, externalId)
+                .map(snapshotRepository::findByListingOrderByFetchedAtAsc)
+                .orElse(List.of())
+                .stream()
+                .map(snapshot -> new ListingSnapshotView(
+                        snapshot.getListing().getId(), source, externalId, snapshot.getPayload(), snapshot.getFetchedAt()))
+                .toList();
+    }
+
+    /**
      * Returns the external ID of every listing from {@code source}, removed ones included.
      */
     @Transactional(readOnly = true)

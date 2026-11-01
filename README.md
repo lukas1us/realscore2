@@ -13,7 +13,9 @@ disposition). Scoring individual listings comes later.
    only when the payload changes. A listing missing from a run is marked removed, and the mark is cleared if it
    shows up again.
 3. **Parsing**: each new or changed snapshot is parsed into a normalised `listing_detail` row: price, size,
-   disposition, locality, sale or rent, and so on. Parsing is idempotent and can be re-run over all stored snapshots.
+   disposition, locality, sale or rent, and so on. Each parse also rebuilds the listing's price history
+   (`listing_price_point`) from all its snapshots: one point per asking-price change, skipping snapshots without a
+   price. Parsing is idempotent and can be re-run over all stored snapshots.
 4. **Analysis**: benchmarks are computed on demand from the parsed details of active listings.
 
 The code is a Spring Modulith monolith with one package per module under `com.realscore`: `scraping`, `listing`,
@@ -74,14 +76,15 @@ too.
 |---|---|
 | `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
 | `GET /api/analysis/benchmarks/rent` | Median monthly rent and median rent per m² of active flats for rent, per locality and disposition, each with its level and sample size |
-| `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable). Synchronous; returns the counts |
+| `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable), and rebuilds their price history. Synchronous; returns the `listing_detail` counts |
 | `GET /actuator/health` | Health check |
 
 ## Operations notes
 
 - **After a parser or schema change** (e.g. a new `listing_detail` column), run
   `POST /api/parsing/reparse?source=sreality` once so existing rows pick it up. Until then, new columns stay empty,
-  and listings missing a field the benchmarks need are left out of them.
+  and listings missing a field the benchmarks need are left out of them. The same applies after upgrading to the
+  price history: listings parsed before it have no history until re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
   requests per second, which can take hours. Later runs only fetch new and due listings.
 - **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians

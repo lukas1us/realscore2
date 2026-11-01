@@ -4,8 +4,10 @@ title: 'Later: scoring engine'
 status: To Do
 assignee: []
 created_date: '2026-10-30T23:43:00Z'
+updated_date: '2026-11-01T14:16:00Z'
 labels:
   - analysis
+milestone: m-6
 dependencies: []
 ordinal: 24000
 ---

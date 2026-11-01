@@ -147,6 +147,18 @@ class ListingSnapshotServiceTest {
                 .containsExactly(new ListingSnapshotRecorded(source, "1"), new ListingSnapshotRecorded(source, "1"));
     }
 
+    @Test
+    void findSnapshotsReturnsEverySnapshotOldestFirst() {
+        String source = "find-snapshots";
+        listingSnapshotService.recordFetch(source, "1", "{\"price\": 100}");
+        listingSnapshotService.recordFetch(source, "1", "{\"price\": 200}");
+
+        assertThat(listingSnapshotService.findSnapshots(source, "1"))
+                .extracting(ListingSnapshotView::payload)
+                .containsExactly("{\"price\": 100}", "{\"price\": 200}");
+        assertThat(listingSnapshotService.findSnapshots(source, "unknown")).isEmpty();
+    }
+
     private Instant removedAt(String source, String externalId) {
         return listingRepository.findBySourceAndExternalId(source, externalId).orElseThrow().getRemovedAt();
     }

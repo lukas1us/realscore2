@@ -68,6 +68,13 @@ Analysis settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZ
 | `realscore.analysis.large-cities` | `Praha,Brno,Ostrava` | Cities grouped by city part instead of as a whole |
 | `realscore.analysis.min-sample-size` | `5` | Fewest listings a group needs; smaller groups fall back to city, then district, then region |
 | `realscore.analysis.price-drop-days` | `30` | Default window in days of `GET /api/analysis/price-drops` |
+| `realscore.analysis.scoring.discount.{min,max,weight}` | `-30`, `30`, `50` | Listing score part: % cheaper per m² than the local sale median |
+| `realscore.analysis.scoring.rental-yield.{min,max,weight}` | `2`, `8`, `35` | Listing score part: gross yearly rent (from the local rent medians) over the price, in % |
+| `realscore.analysis.scoring.price-drop.{min,max,weight}` | `0`, `15`, `15` | Listing score part: % price drop over the price-drop window (0 without a drop) |
+
+Each listing score part maps linearly to 0–100 between `min` and `max` (clamped), and the total is the weighted
+average of the parts that have data. A flat with neither a sale nor a rent benchmark is not scored. Only active flats
+for sale with a price, size, disposition and region are scored.
 
 Sreality client settings (`realscore.sreality.*`: page size, retries, request pacing) are in `application.properties`
 too.

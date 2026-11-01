@@ -8,6 +8,8 @@ import java.math.BigDecimal;
  */
 public record ActiveListingDetails(
         Long listingId,
+        String source,
+        String externalId,
         BigDecimal priceCzk,
         BigDecimal sizeM2,
         Integer dispositionCode,

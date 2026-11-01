@@ -9,15 +9,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```
-mvn test                 # run all tests
-mvn test -Dtest=PropertyScoringServiceTest        # run a single test class
-mvn test -Dtest=PropertyScoringServiceTest#scoresNewAffordableWellSizedPropertyHighly  # single test method
+mvn verify               # run all tests and checks (needs Docker for Testcontainers)
+mvn test -Dtest=MarketBenchmarkServiceTest        # run a single test class
+mvn test -Dtest=MarketBenchmarkServiceTest#saleMedianIsOverActiveSaleFlatsWithPriceAndSize  # single test method
 docker compose up -d --build   # build and run the app + Postgres (app on :8080)
 mvn spring-boot:run      # run the app on the host (needs Postgres, see below)
 mvn package              # build the jar
 ```
 
-Tests run against an in-memory H2 database (`src/test/resources/application.properties` overrides the datasource), so `mvn test` does not require a running Postgres instance.
+DB tests run against PostgreSQL 16 in Testcontainers (`PostgresContainerConfig`, imported by `@SpringBootTest` tests), so Docker must be running; no local Postgres is needed. HTTP tests use WireMock with JSON fixtures in `src/test/resources/fixtures`.
 
 Running the app for real (`spring-boot:run`) needs a reachable Postgres instance, configured via env vars (all have local defaults): `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`. See `src/main/resources/application.properties`. `docker compose up -d postgres` starts only the local Postgres matching those defaults (`docker-compose.yml`); `docker compose up -d` also starts the app container (`Dockerfile`), which points at that Postgres.
 
@@ -34,7 +34,7 @@ Running the app for real (`spring-boot:run`) needs a reachable Postgres instance
 
 ### Current state
 
-The current layered scaffold (`model/`, `repository/`, `service/`, `controller/`, `Property`, `PropertyScoringService`, H2, `ddl-auto=update`) is a placeholder. It will be replaced in milestone M1. Do not build on it.
+The target architecture above is in place. `scraping` runs the scheduled Sreality collection of flats for sale and for rent (`SrealityScrapeJob`, recorded in `scrape_run`); `listing` stores listings and raw snapshots and detects removed ones; `parsing` turns each new or changed snapshot into a `listing_detail` row (automatically via an event from `listing`, or on demand via `POST /api/parsing/reparse`) and exposes `ListingDetailsQueryService` for reading; `analysis` computes sale and rent benchmarks on demand (`MarketBenchmarkService`). Scoring (TASK-24) does not exist yet. `README.md` documents endpoints and configuration.
 
 Java version is pinned to 25 in `pom.xml` (`<java.version>`) to match the JDK configured in `.idea/misc.xml`. This requires Spring Boot 4.x — Spring Boot 3.x's bundled ASM version cannot parse Java 25 class files and will fail test discovery with `Unsupported class file major version 69`. Keep these in sync if either changes.
 
@@ -46,7 +46,7 @@ Lombok's annotation processor must be declared explicitly in the `maven-compiler
 - Before writing code, present a plan (files, classes, steps) and wait for approval.
 - Ask before adding any dependency.
 - Always use Lombok for boilerplate (getters/setters, constructors, builders) instead of hand-writing it.
-- A task is done when `mvn verify` passes, new code has tests, and you've given a short summary of what changed, why, and what I should review.
+- A task is done when `mvn verify` passes, new code has tests, `README.md` reflects any change to endpoints, configuration, run commands or documented behaviour, and you've given a short summary of what changed, why, and what I should review.
 
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.55.3 -->

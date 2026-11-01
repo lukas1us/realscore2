@@ -1,12 +1,30 @@
 # realscore
 
-Spring Boot service for scoring real estate properties.
+Collects Czech real estate listings from [Sreality](https://www.sreality.cz) into PostgreSQL, keeps their full
+history, and computes market benchmarks from them (median sale price per m² and median rents per locality and
+disposition). Scoring individual listings comes later.
+
+## How it works
+
+1. **Scraping**: a scheduled job searches Sreality for flats for sale (under a price cap) and flats for rent. It
+   fetches the detail of every new listing, and refetches known ones once their last fetch is older than a
+   configurable interval. Every run is recorded in `scrape_run`.
+2. **Listing**: every detail response is stored raw as JSONB in `listing_snapshot`, and a new snapshot is written
+   only when the payload changes. A listing missing from a run is marked removed, and the mark is cleared if it
+   shows up again.
+3. **Parsing**: each new or changed snapshot is parsed into a normalised `listing_detail` row: price, size,
+   disposition, locality, sale or rent, and so on. Parsing is idempotent and can be re-run over all stored snapshots.
+4. **Analysis**: benchmarks are computed on demand from the parsed details of active listings.
+
+The code is a Spring Modulith monolith with one package per module under `com.realscore`: `scraping`, `listing`,
+`parsing` and `analysis`. Dependencies go one way only (scraping → listing ← parsing ← analysis), and `ModularityTests`
+enforces this. The schema is managed only by Flyway migrations (`src/main/resources/db/migration`).
 
 ## Requirements
 
 - Java 25
 - Maven
-- PostgreSQL (for running against a real database; tests use an in-memory H2 database)
+- Docker, for the local PostgreSQL 16 and for the tests (Testcontainers)
 
 ## Running locally
 
@@ -16,29 +34,66 @@ Build and start the app together with PostgreSQL:
 docker compose up -d --build
 ```
 
-The app is available on `http://localhost:8080`.
+The app is available on `http://localhost:8080`. Compose runs the scrape job daily at 03:00 Europe/Prague
+(`SCRAPE_CRON`) and health-checks the app via `/actuator/health`.
 
-To run the app on the host instead, start only PostgreSQL:
+To run the app on the host instead, start only PostgreSQL and then the app:
 
 ```
 docker compose up -d postgres
-```
-
-This matches the datasource defaults (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` default to `localhost`, `5432`, `realscore`, `realscore`, `realscore`) — override via env vars to point at a different database.
-
-```
 mvn spring-boot:run
 ```
+
+On the host, scraping is off unless `SCRAPE_CRON` is set.
+
+## Configuration
+
+Set through environment variables; defaults are in `src/main/resources/application.properties`.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | `localhost`, `5432`, `realscore`, `realscore`, `realscore` | PostgreSQL connection |
+| `SCRAPE_CRON` | `-` (disabled) | Spring cron expression (6 fields, Europe/Prague time) for the scrape job |
+| `SCRAPE_PRICE_CAP` | `5000000` | Maximum price in CZK of flats for sale |
+| `SCRAPE_RENT_PRICE_CAP` | empty (no cap) | Maximum monthly rent in CZK of flats for rent |
+| `SCRAPE_REFETCH_AFTER` | `7d` | A known listing is fetched again once its last fetch is older than this; `0` refetches on every run |
+
+Market benchmark settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZE`):
+
+| Property | Default | Meaning |
+|---|---|---|
+| `realscore.analysis.large-cities` | `Praha,Brno,Ostrava` | Cities grouped by city part instead of as a whole |
+| `realscore.analysis.min-sample-size` | `5` | Fewest listings a group needs; smaller groups fall back to city, then district, then region |
+
+Sreality client settings (`realscore.sreality.*`: page size, retries, request pacing) are in `application.properties`
+too.
+
+## HTTP API
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
+| `GET /api/analysis/benchmarks/rent` | Median monthly rent and median rent per m² of active flats for rent, per locality and disposition, each with its level and sample size |
+| `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable). Synchronous; returns the counts |
+| `GET /actuator/health` | Health check |
+
+## Operations notes
+
+- **After a parser or schema change** (e.g. a new `listing_detail` column), run
+  `POST /api/parsing/reparse?source=sreality` once so existing rows pick it up. Until then, new columns stay empty,
+  and listings missing a field the benchmarks need are left out of them.
+- **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
+  requests per second, which can take hours. Later runs only fetch new and due listings.
+- **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians
+  describe the cheaper end of the market. Check the sample sizes.
+- The Sreality API is undocumented and has changed shape before. What is known about it is in the Backlog document
+  "Sreality API".
 
 ## Testing
 
 ```
-mvn test
+mvn verify
 ```
 
-## API
-
-- `GET /api/properties` — list properties
-- `POST /api/properties` — create a property
-- `GET /api/properties/{id}` — fetch a property
-- `GET /api/properties/{id}/score` — compute a property's score
+Tests run against PostgreSQL in Testcontainers (Docker must be running) and against WireMock with JSON fixtures in
+`src/test/resources/fixtures`. They never call the live Sreality API. CI runs the same command on every push.

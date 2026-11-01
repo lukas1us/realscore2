@@ -14,10 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 
 @SpringBootTest
 @Import(PostgresContainerConfig.class)
+@RecordApplicationEvents
 class ListingSnapshotServiceTest {
+
+    @Autowired
+    private ApplicationEvents events;
 
     @Autowired
     private ListingSnapshotService listingSnapshotService;
@@ -128,6 +134,17 @@ class ListingSnapshotServiceTest {
 
         assertThat(removedAt(source, "2")).isNotNull();
         assertThat(listingSnapshotService.findExternalIds(source)).containsExactlyInAnyOrder("1", "2");
+    }
+
+    @Test
+    void announcesOnlyFetchesThatWroteASnapshot() {
+        String source = "event-test";
+        listingSnapshotService.recordFetch(source, "1", "{\"price\":100}");
+        listingSnapshotService.recordFetch(source, "1", "{\"price\":100}");
+        listingSnapshotService.recordFetch(source, "1", "{\"price\":200}");
+
+        assertThat(events.stream(ListingSnapshotRecorded.class))
+                .containsExactly(new ListingSnapshotRecorded(source, "1"), new ListingSnapshotRecorded(source, "1"));
     }
 
     private Instant removedAt(String source, String externalId) {

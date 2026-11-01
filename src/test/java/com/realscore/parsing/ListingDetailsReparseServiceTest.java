@@ -18,7 +18,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestClient;
 
 /**
- * Each test uses its own source so the shared Postgres container's listings from other tests don't leak in.
+ * {@code recordFetch} already parses each new snapshot (TASK-33), so tests set up what a re-parse is for: listings
+ * stored before automatic parsing ({@link #recordWithoutDetail}) or rows derived by an older parser
+ * ({@link #makeStale}). Each test uses its own source so the shared Postgres container's listings from other tests
+ * don't leak in.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(PostgresContainerConfig.class)
@@ -44,8 +47,8 @@ class ListingDetailsReparseServiceTest {
     @Test
     void reparsesEveryStoredListingOfTheSource() throws Exception {
         String source = "reparse-all";
-        record(source, "1", fixture("detail_success.json"));
-        record(source, "2", fixture("detail_price_on_request.json"));
+        recordWithoutDetail(source, "1", fixture("detail_success.json"));
+        recordWithoutDetail(source, "2", fixture("detail_price_on_request.json"));
 
         ReparseResult result = reparseService.reparseAll(source);
 
@@ -57,8 +60,8 @@ class ListingDetailsReparseServiceTest {
     @Test
     void secondRunWithoutParserChangesLeavesRowsIdentical() throws Exception {
         String source = "reparse-twice";
-        record(source, "1", fixture("detail_success.json"));
-        record(source, "2", fixture("detail_price_on_request.json"));
+        recordWithoutDetail(source, "1", fixture("detail_success.json"));
+        recordWithoutDetail(source, "2", fixture("detail_price_on_request.json"));
         reparseService.reparseAll(source);
         List<ListingDetail> afterFirstRun = List.of(detail(source, "1").orElseThrow(), detail(source, "2").orElseThrow());
 
@@ -72,8 +75,8 @@ class ListingDetailsReparseServiceTest {
     @Test
     void reparsesOnlyTheGivenSubset() throws Exception {
         String source = "reparse-subset";
-        record(source, "1", fixture("detail_success.json"));
-        record(source, "2", fixture("detail_price_on_request.json"));
+        recordWithoutDetail(source, "1", fixture("detail_success.json"));
+        recordWithoutDetail(source, "2", fixture("detail_price_on_request.json"));
 
         ReparseResult result = reparseService.reparse(source, List.of("2"));
 
@@ -83,23 +86,22 @@ class ListingDetailsReparseServiceTest {
     }
 
     @Test
-    void aNewerSnapshotOverwritesTheRow() throws Exception {
+    void aRowFromAnOlderParserIsOverwritten() throws Exception {
         String source = "reparse-update";
-        record(source, "1", fixture("detail_success.json"));
-        reparseService.reparseAll(source);
-        record(source, "1", fixture("detail_price_on_request.json"));
+        listingSnapshotService.recordFetch(source, "1", fixture("detail_success.json"));
+        makeStale(source, "1");
 
         ReparseResult result = reparseService.reparseAll(source);
 
         assertThat(result).isEqualTo(new ReparseResult(0, 1, 0, 0));
-        assertThat(detail(source, "1").orElseThrow().getPriceCzk()).isNull();
+        assertThat(detail(source, "1").orElseThrow().getOwnership()).isEqualTo("OV");
     }
 
     @Test
     void aFailingListingIsCountedAndDoesNotStopTheOthers() throws Exception {
         String source = "reparse-failure";
-        record(source, "1", UNSTORABLE_PAYLOAD);
-        record(source, "2", fixture("detail_success.json"));
+        recordWithoutDetail(source, "1", UNSTORABLE_PAYLOAD);
+        recordWithoutDetail(source, "2", fixture("detail_success.json"));
 
         ReparseResult result = reparseService.reparse(source, List.of("1", "2", "unknown"));
 
@@ -111,8 +113,8 @@ class ListingDetailsReparseServiceTest {
     @Test
     void endpointReparsesAllOrTheGivenIds() throws Exception {
         String source = "reparse-endpoint";
-        record(source, "1", fixture("detail_success.json"));
-        record(source, "2", fixture("detail_price_on_request.json"));
+        recordWithoutDetail(source, "1", fixture("detail_success.json"));
+        recordWithoutDetail(source, "2", fixture("detail_price_on_request.json"));
         RestClient client = RestClient.create("http://localhost:" + port);
 
         ReparseResult subset = client.post()
@@ -128,8 +130,17 @@ class ListingDetailsReparseServiceTest {
         assertThat(all).isEqualTo(new ReparseResult(1, 0, 1, 0));
     }
 
-    private void record(String source, String externalId, String payload) {
+    /** Records a snapshot and drops the detail row automatic parsing wrote for it. */
+    private void recordWithoutDetail(String source, String externalId, String payload) {
         listingSnapshotService.recordFetch(source, externalId, payload);
+        detail(source, externalId).ifPresent(listingDetailRepository::delete);
+    }
+
+    /** Overwrites a parsed field, as if an older parser had derived it differently. */
+    private void makeStale(String source, String externalId) {
+        ListingDetail detail = detail(source, externalId).orElseThrow();
+        detail.setOwnership("STALE");
+        listingDetailRepository.save(detail);
     }
 
     private Optional<ListingDetail> detail(String source, String externalId) {

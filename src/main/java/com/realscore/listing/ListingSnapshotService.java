@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +29,12 @@ public class ListingSnapshotService {
 
     private final ListingRepository listingRepository;
     private final ListingSnapshotRepository snapshotRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * Records one fetch of a listing's detail: creates the listing if needed, moves {@code last_seen_at} and
-     * {@code last_fetched_at}, and writes a snapshot unless the payload equals the latest one.
+     * {@code last_fetched_at}, and writes a snapshot unless the payload equals the latest one. A written snapshot is
+     * announced as a {@link ListingSnapshotRecorded} event.
      */
     @Transactional
     public RecordedFetch recordFetch(String source, String externalId, String payload) {
@@ -54,6 +57,7 @@ public class ListingSnapshotService {
             return RecordedFetch.UNCHANGED;
         }
         snapshotRepository.save(new ListingSnapshot(listing, payload, payloadHash, now));
+        eventPublisher.publishEvent(new ListingSnapshotRecorded(source, externalId));
         return existing.isPresent() ? RecordedFetch.CHANGED : RecordedFetch.CREATED;
     }
 

@@ -4,13 +4,9 @@ import com.realscore.listing.internal.Listing;
 import com.realscore.listing.internal.ListingRepository;
 import com.realscore.listing.internal.ListingSnapshot;
 import com.realscore.listing.internal.ListingSnapshotRepository;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,8 +29,9 @@ public class ListingSnapshotService {
 
     /**
      * Records one fetch of a listing's detail: creates the listing if needed, moves {@code last_seen_at} and
-     * {@code last_fetched_at}, and writes a snapshot unless the payload equals the latest one. A written snapshot is
-     * announced as a {@link ListingSnapshotRecorded} event.
+     * {@code last_fetched_at}, and writes a snapshot unless the payload equals the latest one (same
+     * {@code payload_hash}, so whitespace and key order do not count). A written snapshot is announced as a
+     * {@link ListingSnapshotRecorded} event.
      */
     @Transactional
     public RecordedFetch recordFetch(String source, String externalId, String payload) {
@@ -49,7 +46,7 @@ public class ListingSnapshotService {
                 .orElseGet(() -> new Listing(source, externalId, now));
         listing = listingRepository.save(listing);
 
-        String payloadHash = sha256Hex(payload);
+        String payloadHash = snapshotRepository.hashPayload(payload);
         boolean unchanged = snapshotRepository.findTopByListingOrderByFetchedAtDesc(listing)
                 .map(latest -> latest.getPayloadHash().equals(payloadHash))
                 .orElse(false);
@@ -165,16 +162,6 @@ public class ListingSnapshotService {
         List<String> ids = List.copyOf(externalIds);
         for (int from = 0; from < ids.size(); from += ID_BATCH_SIZE) {
             action.accept(ids.subList(from, Math.min(from + ID_BATCH_SIZE, ids.size())));
-        }
-    }
-
-    private static String sha256Hex(String payload) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(payload.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(hash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 is not available", e);
         }
     }
 }

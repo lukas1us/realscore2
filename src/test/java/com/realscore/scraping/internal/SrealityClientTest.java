@@ -49,7 +49,8 @@ class SrealityClientTest {
 
         Optional<String> body = client.fetchEstateDetail(ESTATE_ID);
 
-        assertThat(body).contains(fixture);
+        assertThat(body).contains(SrealityPayloadScrubber.scrub(fixture));
+        assertThat(body.orElseThrow()).doesNotContain("user_email", "user_phones", "web_visible_url");
         sreality.verify(getRequestedFor(urlEqualTo(DETAIL_PATH))
                 .withHeader("User-Agent", equalTo("test-agent"))
                 .withHeader("Accept", equalTo("application/json"))
@@ -69,7 +70,14 @@ class SrealityClientTest {
         String fixture = readFixture("fixtures/sreality/detail_success.json");
         sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(okJson(fixture)));
 
-        assertThat(client.fetchDetail(ESTATE_ID)).isEqualTo(new EstateDetail.Found(fixture));
+        assertThat(client.fetchDetail(ESTATE_ID)).isEqualTo(new EstateDetail.Found(SrealityPayloadScrubber.scrub(fixture)));
+    }
+
+    @Test
+    void detailBodyThatIsNotJsonFailsAsIllegalState() {
+        sreality.stubFor(get(urlEqualTo(DETAIL_PATH)).willReturn(aResponse().withStatus(200).withBody("<html>")));
+
+        assertThatThrownBy(() -> client.fetchDetail(ESTATE_ID)).isInstanceOf(IllegalStateException.class);
     }
 
     @ParameterizedTest

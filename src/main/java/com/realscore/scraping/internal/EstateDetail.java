@@ -5,7 +5,7 @@ package com.realscore.scraping.internal;
  */
 public sealed interface EstateDetail {
 
-    /** HTTP 200: the response body exactly as received, including the {@code {"result": ...}} wrapper. */
+    /** HTTP 200: the response body including the {@code {"result": ...}} wrapper, seller contact data removed. */
     record Found(String body) implements EstateDetail {
     }
 

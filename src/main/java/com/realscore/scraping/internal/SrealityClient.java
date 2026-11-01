@@ -34,7 +34,8 @@ public class SrealityClient {
     }
 
     /**
-     * Returns the detail response body exactly as received, including the {@code {"result": ...}} wrapper, or empty if
+     * Returns the detail response body as received, including the {@code {"result": ...}} wrapper but without the
+     * seller's contact data ({@link SrealityPayloadScrubber}), or empty if
      * Sreality answers 403, 404 or 410 (the estate is gone or hidden: a skip, not an error).
      *
      * @throws SrealityApiException if the final response status is anything else but 200
@@ -45,10 +46,11 @@ public class SrealityClient {
     }
 
     /**
-     * Fetches one estate's detail and tells a gone estate (404, 410) apart from a hidden one (403).
+     * Fetches one estate's detail and tells a gone estate (404, 410) apart from a hidden one (403). A found body has
+     * the seller's contact data removed ({@link SrealityPayloadScrubber}).
      *
      * @throws SrealityApiException if the final response status is anything else but 200, 403, 404 or 410
-     * @throws IllegalStateException if a 200 response has an empty or blank body
+     * @throws IllegalStateException if a 200 response has an empty or blank body, or one that is not valid JSON
      */
     public EstateDetail fetchDetail(long estateId) {
         return restClient.get()
@@ -70,7 +72,7 @@ public class SrealityClient {
                     if (body == null || body.isBlank()) {
                         throw new IllegalStateException("Sreality returned an empty body for estate " + estateId);
                     }
-                    return new EstateDetail.Found(body);
+                    return new EstateDetail.Found(SrealityPayloadScrubber.scrub(body));
                 });
     }
 

@@ -15,12 +15,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -49,6 +52,9 @@ class SrealityEstateFetcherTest {
     @Autowired
     private JdbcTemplate jdbc;
 
+    @Autowired
+    private DataSource dataSource;
+
     @BeforeAll
     static void loadFixture() throws IOException {
         try (InputStream in = SrealityEstateFetcherTest.class.getClassLoader()
@@ -71,7 +77,39 @@ class SrealityEstateFetcherTest {
                 SELECT s.payload = ?::jsonb
                 FROM listing_snapshot s JOIN listing l ON l.id = s.listing_id
                 WHERE l.source = 'sreality' AND l.external_id = ?
-                """, Boolean.class, fixture, String.valueOf(estateId))).isTrue();
+                """, Boolean.class, SrealityPayloadScrubber.scrub(fixture), String.valueOf(estateId))).isTrue();
+    }
+
+    @Test
+    void storedSnapshotHasNoSellerContactData() {
+        long estateId = 1006;
+        assertThat(fixture).contains("user_email", "user_phones", "web_url");
+        stubDetail(estateId, fixture);
+
+        fetcher.fetch(estateId);
+
+        assertThat(storedPayload(estateId)).doesNotContain("user_email", "user_phones", "web_url", "web_visible_url");
+    }
+
+    @Test
+    void scrubMigrationRemovesContactDataAndTheNextFetchOfTheSameResponseWritesNoSnapshot() {
+        long estateId = 1007;
+        jdbc.update("INSERT INTO listing (source, external_id, first_seen_at, last_seen_at, last_fetched_at)"
+                + " VALUES ('sreality', ?, now(), now(), now())", String.valueOf(estateId));
+        jdbc.update("""
+                INSERT INTO listing_snapshot (listing_id, payload, payload_hash, fetched_at)
+                SELECT id, ?::jsonb, 'sha256-of-the-raw-response-text', now() FROM listing
+                WHERE source = 'sreality' AND external_id = ?
+                """, fixture, String.valueOf(estateId));
+        assertThat(storedPayload(estateId)).contains("user_email", "user_phones");
+
+        new ResourceDatabasePopulator(new ClassPathResource(
+                "db/migration/V10__strip_seller_contact_data_from_listing_snapshot.sql")).execute(dataSource);
+
+        assertThat(storedPayload(estateId)).doesNotContain("user_email", "user_phones", "web_url", "web_visible_url");
+        stubDetail(estateId, fixture);
+        assertThat(fetcher.fetch(estateId)).contains(RecordedFetch.UNCHANGED);
+        assertThat(snapshotCount(estateId)).isEqualTo(1);
     }
 
     @Test
@@ -125,6 +163,13 @@ class SrealityEstateFetcherTest {
 
     private static void stubDetail(long estateId, String body) {
         sreality.stubFor(get(urlEqualTo("/api/v1/estates/" + estateId)).willReturn(okJson(body)));
+    }
+
+    private String storedPayload(long estateId) {
+        return jdbc.queryForObject("""
+                SELECT s.payload::text FROM listing_snapshot s JOIN listing l ON l.id = s.listing_id
+                WHERE l.source = 'sreality' AND l.external_id = ?
+                """, String.class, String.valueOf(estateId));
     }
 
     private int listingCount(long estateId) {

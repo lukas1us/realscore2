@@ -157,7 +157,7 @@ class SrealityScrapeJobTest {
         String detail = fixture("detail_success.json");
         String aboveCap = detail.replace("\"price_summary_czk\": 3590000.0", "\"price_summary_czk\": 5900000.0");
         assertThat(aboveCap).isNotEqualTo(detail);
-        listingSnapshotService.recordFetch("sreality", "4801", detail);
+        listingSnapshotService.recordFetch("sreality", "4801", SrealityPayloadScrubber.scrub(detail));
         sreality.stubFor(get(urlEqualTo("/api/v1/estates/4301")).willReturn(okJson(detail)));
         sreality.stubFor(get(urlEqualTo("/api/v1/estates/4801")).willReturn(okJson(aboveCap)));
         stubSearch(okJson(fixture("search_page_presence_one.json")));
@@ -223,7 +223,7 @@ class SrealityScrapeJobTest {
         String repriced = detail.replace("\"price_czk\": 3590000.0", "\"price_czk\": 3490000.0");
         assertThat(repriced).isNotEqualTo(detail);
         for (String id : List.of("4501", "4502", "4503")) {
-            listingSnapshotService.recordFetch("sreality", id, detail);
+            listingSnapshotService.recordFetch("sreality", id, SrealityPayloadScrubber.scrub(detail));
         }
         jdbc.update("UPDATE listing SET last_fetched_at = now() - interval '8 days'"
                 + " WHERE source = 'sreality' AND external_id IN ('4501', '4502')");

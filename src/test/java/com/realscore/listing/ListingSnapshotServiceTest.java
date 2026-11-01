@@ -125,6 +125,17 @@ class ListingSnapshotServiceTest {
     }
 
     @Test
+    void theSameJsonWithOtherWhitespaceOrKeyOrderIsUnchanged() {
+        String source = "hash-normalised-test";
+        listingSnapshotService.recordFetch(source, "1", "{\"a\": 1, \"b\": {\"c\": [1, 2]}}");
+
+        assertThat(listingSnapshotService.recordFetch(source, "1", "{\"b\":{\"c\":[1,2]},\"a\":1}"))
+                .isEqualTo(RecordedFetch.UNCHANGED);
+        assertThat(listingSnapshotService.recordFetch(source, "1", "{\"b\":{\"c\":[2,1]},\"a\":1}"))
+                .isEqualTo(RecordedFetch.CHANGED);
+    }
+
+    @Test
     void unchangedFetchStillMovesLastFetchedAt() throws InterruptedException {
         String source = "last-fetched-test";
         listingSnapshotService.recordFetch(source, "1", "{}");

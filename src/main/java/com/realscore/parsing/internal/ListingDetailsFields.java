@@ -17,5 +17,8 @@ public record ListingDetailsFields(
         String ownership,
         String city,
         String district,
-        String region) {
+        String region,
+        String citypart,
+        Integer transactionTypeCode,
+        Integer propertyCategoryCode) {
 }

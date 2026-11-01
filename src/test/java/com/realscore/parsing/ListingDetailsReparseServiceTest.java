@@ -98,6 +98,25 @@ class ListingDetailsReparseServiceTest {
     }
 
     @Test
+    void reparseFillsColumnsAddedAfterARowWasParsed() throws Exception {
+        String source = "reparse-new-columns";
+        listingSnapshotService.recordFetch(source, "1", fixture("detail_success.json"));
+        ListingDetail beforeV6 = detail(source, "1").orElseThrow();
+        beforeV6.setTransactionTypeCode(null);
+        beforeV6.setPropertyCategoryCode(null);
+        beforeV6.setCitypart(null);
+        listingDetailRepository.save(beforeV6);
+
+        ReparseResult result = reparseService.reparseAll(source);
+
+        assertThat(result).isEqualTo(new ReparseResult(0, 1, 0, 0));
+        ListingDetail reparsed = detail(source, "1").orElseThrow();
+        assertThat(reparsed.getTransactionTypeCode()).isEqualTo(1);
+        assertThat(reparsed.getPropertyCategoryCode()).isEqualTo(1);
+        assertThat(reparsed.getCitypart()).isEqualTo("Plzeň 2-Slovany");
+    }
+
+    @Test
     void aFailingListingIsCountedAndDoesNotStopTheOthers() throws Exception {
         String source = "reparse-failure";
         recordWithoutDetail(source, "1", UNSTORABLE_PAYLOAD);

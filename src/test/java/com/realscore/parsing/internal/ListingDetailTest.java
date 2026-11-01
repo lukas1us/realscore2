@@ -13,7 +13,7 @@ class ListingDetailTest {
 
     private static final ListingDetailsFields FIELDS = new ListingDetailsFields(
             new BigDecimal("3590000"), new BigDecimal("37"), 3, "1+1", 1975, 1, "C", "Cihlová", true, "OV",
-            "Plzeň", "Plzeň-město", "Plzeňský kraj");
+            "Plzeň", "Plzeň-město", "Plzeňský kraj", "Plzeň 2-Slovany", 1, 1);
 
     @Test
     void firstApplyOnANewRowIsAChange() {
@@ -50,6 +50,17 @@ class ListingDetailTest {
         assertThat(detail.applyFields(FIELDS.withOwnership("DV"), SECOND)).isTrue();
         assertThat(detail.getOwnership()).isEqualTo("DV");
         assertThat(detail.getParsedAt()).isEqualTo(SECOND);
+    }
+
+    @Test
+    void aChangedTransactionTypeOrCityPartIsAChange() {
+        ListingDetail detail = new ListingDetail(1L);
+        detail.applyFields(FIELDS, FIRST);
+
+        assertThat(detail.applyFields(FIELDS.withTransactionTypeCode(2), SECOND)).isTrue();
+        assertThat(detail.getTransactionTypeCode()).isEqualTo(2);
+        assertThat(detail.applyFields(FIELDS.withTransactionTypeCode(2).withCitypart("Plzeň 3"), SECOND)).isTrue();
+        assertThat(detail.getCitypart()).isEqualTo("Plzeň 3");
     }
 
     @Test

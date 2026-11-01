@@ -31,6 +31,27 @@ class SrealityListingDetailsExtractorTest {
         assertThat(fields.city()).isEqualTo("Plzeň");
         assertThat(fields.district()).isEqualTo("Plzeň-město");
         assertThat(fields.region()).isEqualTo("Plzeňský kraj");
+        assertThat(fields.citypart()).isEqualTo("Plzeň 2-Slovany");
+        assertThat(fields.transactionTypeCode()).isEqualTo(1);
+        assertThat(fields.propertyCategoryCode()).isEqualTo(1);
+    }
+
+    @Test
+    void extractsTransactionTypeAndCategoryOfARentalCommercialListing() throws Exception {
+        ListingDetailsFields fields = extractor.extract(fixture("detail_price_on_request.json"));
+
+        assertThat(fields.transactionTypeCode()).isEqualTo(2);
+        assertThat(fields.propertyCategoryCode()).isEqualTo(4);
+        assertThat(fields.citypart()).isEqualTo("Staré Město");
+    }
+
+    @Test
+    void missingTransactionTypeCategoryAndCityPartYieldNull() {
+        ListingDetailsFields fields = extractor.extract("{\"result\": {\"locality\": {\"city\": \"Plzeň\"}}}");
+
+        assertThat(fields.transactionTypeCode()).isNull();
+        assertThat(fields.propertyCategoryCode()).isNull();
+        assertThat(fields.citypart()).isNull();
     }
 
     @Test

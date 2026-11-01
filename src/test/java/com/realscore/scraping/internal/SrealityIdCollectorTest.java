@@ -30,6 +30,7 @@ class SrealityIdCollectorTest {
 
     private static final String SEARCH_PATH = SrealityTestSupport.SEARCH_PATH;
     private static final long PRICE_CAP = 5_000_000;
+    private static final long RENT_PRICE_CAP = 25_000;
     private static final int BUCKET_THRESHOLD = 5;
     private static final int PAGE_SIZE = 2;
     private static final String SMALL_REGION = "1";
@@ -101,6 +102,41 @@ class SrealityIdCollectorTest {
                 .withQueryParam("locality_region_id", equalTo(LARGE_REGION))
                 .withQueryParam("category_sub_cb", absent())
                 .withQueryParam("limit", equalTo(String.valueOf(PAGE_SIZE))));
+    }
+
+    @Test
+    void collectsRentalApartmentsTheSameWay() {
+        assertThat(collector.collectRentalApartmentIds(null))
+                .containsExactlyInAnyOrder(101L, 102L, 103L, 201L, 202L, 203L, 204L);
+    }
+
+    @Test
+    void uncappedRentalSearchAsksForRentalApartmentsWithoutPriceTo() {
+        collector.collectRentalApartmentIds(null);
+
+        for (int regionId : SrealityIdCollector.REGION_IDS) {
+            sreality.verify(1, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
+                    .withQueryParam("category_main_cb", equalTo("1"))
+                    .withQueryParam("category_type_cb", equalTo("2"))
+                    .withQueryParam("price_to", absent())
+                    .withQueryParam("locality_region_id", equalTo(String.valueOf(regionId)))
+                    .withQueryParam("category_sub_cb", absent())
+                    .withQueryParam("limit", equalTo("0")));
+        }
+        sreality.verify(0, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
+                .withQueryParam("category_type_cb", matching("^(?!2$).*")));
+        sreality.verify(0, getRequestedFor(urlPathEqualTo(SEARCH_PATH)).withQueryParam("price_to", matching(".*")));
+    }
+
+    @Test
+    void cappedRentalSearchSendsTheRentPriceCap() {
+        collector.collectRentalApartmentIds(RENT_PRICE_CAP);
+
+        sreality.verify(0, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
+                .withQueryParam("price_to", matching("^(?!" + RENT_PRICE_CAP + "$).*")));
+        sreality.verify(0, getRequestedFor(urlPathEqualTo(SEARCH_PATH)).withQueryParam("price_to", absent()));
+        sreality.verify(0, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
+                .withQueryParam("category_type_cb", matching("^(?!2$).*")));
     }
 
     private static MappingBuilder search() {

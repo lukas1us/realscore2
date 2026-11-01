@@ -34,9 +34,11 @@ public class SrealityScrapeJob {
     public void run() {
         Instant startedAt = Instant.now();
         Long runId = scrapeRunService.openRun();
-        log.info("Scrape run {} started, price cap {}", runId, properties.priceCap());
+        log.info("Scrape run {} started, sale price cap {}, rent price cap {}", runId, properties.priceCap(),
+                properties.rentPriceCap());
         try {
-            BulkCollectionResult result = bulkCollector.collect(properties.priceCap(), properties.refetchAfter());
+            BulkCollectionResult result = bulkCollector.collect(properties.priceCap(), properties.rentPriceCap(),
+                    properties.refetchAfter());
             int removed = recordPresence(runId, result, startedAt);
             scrapeRunService.updateCounts(runId, result.found(), result.fetched(), result.changed(), removed,
                     result.failed());

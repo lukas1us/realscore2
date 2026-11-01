@@ -11,8 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * Collects the IDs of all Sreality sale apartments under a price cap by splitting the search into buckets: one per
- * region, and for regions over the bucket threshold, one per (region, disposition). See Backlog doc "Sreality API".
+ * Collects the IDs of all Sreality apartments for sale or for rent, optionally under a price cap, by splitting the
+ * search into buckets: one per region, and for regions over the bucket threshold, one per (region, disposition).
+ * See Backlog doc "Sreality API".
  */
 @Slf4j
 @Component
@@ -21,6 +22,9 @@ public class SrealityIdCollector {
 
     static final List<Integer> REGION_IDS = IntStream.rangeClosed(1, 14).boxed().toList();
     static final List<Integer> DISPOSITION_CODES = IntStream.rangeClosed(2, 12).boxed().toList();
+    private static final String APARTMENTS = "1";
+    private static final String SALE = "1";
+    private static final String RENT = "2";
 
     private final SrealityClient client;
     private final SrealityProperties properties;
@@ -31,13 +35,32 @@ public class SrealityIdCollector {
      * @throws SrealityApiException if any Sreality request fails; no partial result is returned then
      */
     public Set<Long> collectSaleApartmentIds(long priceCap) {
-        Map<String, String> saleApartments = Map.of(
-                "category_main_cb", "1",
-                "category_type_cb", "1",
-                "price_to", String.valueOf(priceCap));
+        return collect(apartments(SALE, priceCap));
+    }
+
+    /**
+     * @param priceCap maximum monthly rent in CZK ({@code price_to}), or {@code null} for no cap
+     * @return the IDs of every matching estate, each once, in the order first seen
+     * @throws SrealityApiException if any Sreality request fails; no partial result is returned then
+     */
+    public Set<Long> collectRentalApartmentIds(Long priceCap) {
+        return collect(apartments(RENT, priceCap));
+    }
+
+    private static Map<String, String> apartments(String categoryType, Long priceCap) {
+        Map<String, String> params = new HashMap<>();
+        params.put("category_main_cb", APARTMENTS);
+        params.put("category_type_cb", categoryType);
+        if (priceCap != null) {
+            params.put("price_to", String.valueOf(priceCap));
+        }
+        return Map.copyOf(params);
+    }
+
+    private Set<Long> collect(Map<String, String> filters) {
         Set<Long> estateIds = new LinkedHashSet<>();
         for (int regionId : REGION_IDS) {
-            Map<String, String> region = with(saleApartments, "locality_region_id", regionId);
+            Map<String, String> region = with(filters, "locality_region_id", regionId);
             long regionCount = client.countEstates(region);
             if (regionCount <= properties.bucketThreshold()) {
                 collectBucket(region, regionCount, estateIds);

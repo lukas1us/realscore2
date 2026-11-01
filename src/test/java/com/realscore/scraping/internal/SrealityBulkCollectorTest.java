@@ -32,13 +32,14 @@ import org.springframework.test.context.DynamicPropertySource;
 
 /**
  * Runs the whole bulk path against WireMock and a real Postgres. Region 1 holds every collected ID; every other
- * region is empty.
+ * region, and the rental search unless a test stubs it, is empty.
  */
 @SpringBootTest
 @Import(PostgresContainerConfig.class)
 class SrealityBulkCollectorTest {
 
     private static final long PRICE_CAP = 5_000_000;
+    private static final Long NO_RENT_PRICE_CAP = null;
     private static final String SMALL_REGION = "1";
     /** 4004 is recorded just before the run, so it is never due. */
     private static final Duration REFETCH_AFTER = Duration.ofDays(7);
@@ -77,7 +78,7 @@ class SrealityBulkCollectorTest {
         sreality.stubFor(get(urlEqualTo(detailPath(4003))).inScenario("throttled")
                 .whenScenarioStateIs("ok").willReturn(okJson(detail)));
 
-        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, REFETCH_AFTER);
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
 
         assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4001L, 4002L, 4003L, 4004L), 1, 2, 0, 0, 1, 0));
         assertThat(snapshotCount(4001)).isEqualTo(1);
@@ -94,17 +95,43 @@ class SrealityBulkCollectorTest {
         stubDetail(4101, aResponse().withStatus(500));
         stubDetail(4102, okJson(fixture("detail_success.json")));
 
-        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, REFETCH_AFTER);
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
 
         assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4101L, 4102L), 0, 1, 0, 0, 0, 1));
         assertThat(listingCount(4101)).isZero();
         assertThat(snapshotCount(4102)).isEqualTo(1);
     }
 
+    @Test
+    void persistsRentalApartmentsAlongsideSaleApartments() {
+        stubSearch("search_page_scrape_job.json");
+        stubRentalSearch("search_page_rentals.json");
+        String detail = fixture("detail_success.json");
+        for (long estateId : new long[] {4201, 4202, 4601, 4602}) {
+            stubDetail(estateId, okJson(detail));
+        }
+
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
+
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4201L, 4202L, 4601L, 4602L), 0, 4, 0, 0, 0, 0));
+        assertThat(snapshotCount(4601)).isEqualTo(1);
+        assertThat(snapshotCount(4602)).isEqualTo(1);
+    }
+
+    /** Region 1 of the sale search answers with {@code pageFixture}; everything else is empty. */
     private static void stubSearch(String pageFixture) {
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH)).atPriority(10)
                 .willReturn(okJson(fixture("search_count_empty.json"))));
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
+                .withQueryParam("category_type_cb", equalTo("1"))
+                .withQueryParam("locality_region_id", equalTo(SMALL_REGION))
+                .willReturn(okJson(fixture(pageFixture))));
+    }
+
+    /** Region 1 of the rental search answers with {@code pageFixture}. */
+    private static void stubRentalSearch(String pageFixture) {
+        sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
+                .withQueryParam("category_type_cb", equalTo("2"))
                 .withQueryParam("locality_region_id", equalTo(SMALL_REGION))
                 .willReturn(okJson(fixture(pageFixture))));
     }

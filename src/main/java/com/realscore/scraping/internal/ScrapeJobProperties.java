@@ -12,11 +12,17 @@ import org.springframework.validation.annotation.Validated;
  *
  * @param cron Spring cron expression for {@link SrealityScrapeJob}, in Europe/Prague time; {@code -} disables it
  * @param priceCap maximum price in CZK of the sale apartments collected
+ * @param rentPriceCap maximum monthly rent in CZK of the rental apartments collected, or {@code null} (the default,
+ *                     an empty {@code SCRAPE_RENT_PRICE_CAP}) for no cap
  * @param refetchAfter refetch strategy for known listings: one that a run collects is fetched again once its last
  *                     fetch is older than this, so a change is captured within roughly this long; {@code 0} refetches
  *                     every known listing on every run, at the cost of one detail request each
  */
 @Validated
 @ConfigurationProperties("realscore.scrape")
-public record ScrapeJobProperties(@NotBlank String cron, @Positive long priceCap, @NotNull Duration refetchAfter) {
+public record ScrapeJobProperties(
+        @NotBlank String cron,
+        @Positive long priceCap,
+        @Positive Long rentPriceCap,
+        @NotNull Duration refetchAfter) {
 }

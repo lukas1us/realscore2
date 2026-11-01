@@ -4,6 +4,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -181,11 +182,48 @@ class SrealityScrapeJobTest {
         assertThat(run.get("updated_count")).isEqualTo(1);
     }
 
-    /** Region 1 answers with {@code region1}; every other region is empty. */
+    @Test
+    void rentalsAreMarkedRemovedAndRefetchedLikeSales() {
+        String detail = fixture("detail_success.json");
+        for (String id : List.of("4301", "4601", "4602")) {
+            sreality.stubFor(get(urlEqualTo("/api/v1/estates/" + id)).willReturn(okJson(detail)));
+        }
+        stubSearch(okJson(fixture("search_page_presence_one.json")));
+        stubRentalSearch(okJson(fixture("search_page_rentals.json")));
+        job.run();
+        assertThat(snapshotCount(4601)).isEqualTo(1);
+        assertThat(snapshotCount(4602)).isEqualTo(1);
+
+        jdbc.update("UPDATE listing SET last_fetched_at = now() - interval '8 days'"
+                + " WHERE source = 'sreality' AND external_id = '4601'");
+        stubRentalSearch(okJson(fixture("search_page_rentals_one.json")));
+        job.run();
+
+        assertThat(removedAt(4301)).isNull();
+        assertThat(removedAt(4601)).isNull();
+        assertThat(removedAt(4602)).isNotNull();
+        assertThat(latestRun().get("removed_count")).isEqualTo(1);
+        sreality.verify(2, getRequestedFor(urlEqualTo("/api/v1/estates/4601")));
+        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4602")));
+        sreality.verify(0, getRequestedFor(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
+                .withQueryParam("category_type_cb", equalTo("2"))
+                .withQueryParam("price_to", matching(".*")));
+    }
+
+    /** Region 1 of the sale search answers with {@code region1}; everything else is empty unless stubbed. */
     private static void stubSearch(ResponseDefinitionBuilder region1) {
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH)).atPriority(10)
                 .willReturn(okJson(fixture("search_count_empty.json"))));
         sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
+                .withQueryParam("category_type_cb", equalTo("1"))
+                .withQueryParam("locality_region_id", equalTo("1"))
+                .willReturn(region1));
+    }
+
+    /** Region 1 of the rental search answers with {@code region1}. */
+    private static void stubRentalSearch(ResponseDefinitionBuilder region1) {
+        sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
+                .withQueryParam("category_type_cb", equalTo("2"))
                 .withQueryParam("locality_region_id", equalTo("1"))
                 .willReturn(region1));
     }

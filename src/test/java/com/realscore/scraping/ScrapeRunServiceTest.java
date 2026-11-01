@@ -29,13 +29,15 @@ class ScrapeRunServiceTest {
         assertThat(opened.getStartedAt()).isNotNull();
         assertThat(opened.getFinishedAt()).isNull();
 
-        scrapeRunService.updateCounts(runId, 10, 3, 2, 1, 0);
+        scrapeRunService.updateCounts(runId, new ScrapeRunCounts(10, 3, 2, 1, 4, 5, 0));
 
         ScrapeRun updated = scrapeRunRepository.findById(runId).orElseThrow();
         assertThat(updated.getFoundCount()).isEqualTo(10);
         assertThat(updated.getNewCount()).isEqualTo(3);
         assertThat(updated.getUpdatedCount()).isEqualTo(2);
         assertThat(updated.getRemovedCount()).isEqualTo(1);
+        assertThat(updated.getSkippedCount()).isEqualTo(4);
+        assertThat(updated.getAlreadyKnownCount()).isEqualTo(5);
         assertThat(updated.getErrorCount()).isEqualTo(0);
 
         scrapeRunService.closeRun(runId, ScrapeRunStatus.SUCCEEDED, null);

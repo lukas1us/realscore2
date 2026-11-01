@@ -1,0 +1,3 @@
+ALTER TABLE scrape_run
+    ADD COLUMN skipped_count INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN already_known_count INTEGER NOT NULL DEFAULT 0;

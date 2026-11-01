@@ -22,13 +22,15 @@ public class ScrapeRunService {
     }
 
     @Transactional
-    public void updateCounts(Long runId, int found, int newCount, int updated, int removed, int errors) {
+    public void updateCounts(Long runId, ScrapeRunCounts counts) {
         ScrapeRun run = getRun(runId);
-        run.setFoundCount(found);
-        run.setNewCount(newCount);
-        run.setUpdatedCount(updated);
-        run.setRemovedCount(removed);
-        run.setErrorCount(errors);
+        run.setFoundCount(counts.found());
+        run.setNewCount(counts.newCount());
+        run.setUpdatedCount(counts.updated());
+        run.setRemovedCount(counts.removed());
+        run.setSkippedCount(counts.skipped());
+        run.setAlreadyKnownCount(counts.alreadyKnown());
+        run.setErrorCount(counts.errors());
     }
 
     @Transactional

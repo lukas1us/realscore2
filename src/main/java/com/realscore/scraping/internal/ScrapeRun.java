@@ -48,6 +48,12 @@ public class ScrapeRun {
     @Column(name = "removed_count", nullable = false)
     private int removedCount;
 
+    @Column(name = "skipped_count", nullable = false)
+    private int skippedCount;
+
+    @Column(name = "already_known_count", nullable = false)
+    private int alreadyKnownCount;
+
     @Column(name = "error_count", nullable = false)
     private int errorCount;
 

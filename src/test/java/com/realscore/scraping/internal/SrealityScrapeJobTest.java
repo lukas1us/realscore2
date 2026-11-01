@@ -98,6 +98,23 @@ class SrealityScrapeJobTest {
     }
 
     @Test
+    void runRecordsSkippedAndAlreadyKnownCounts() {
+        listingSnapshotService.recordFetch("sreality", "4701", fixture("detail_success.json"));
+        stubSearch(okJson(fixture("search_page_skipped_known.json")));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4702")).willReturn(aResponse().withStatus(404)));
+
+        job.run();
+
+        Map<String, Object> run = latestRun();
+        assertThat(run.get("status")).isEqualTo(ScrapeRunStatus.SUCCEEDED.name());
+        assertThat(run.get("found_count")).isEqualTo(2);
+        assertThat(run.get("already_known_count")).isEqualTo(1);
+        assertThat(run.get("skipped_count")).isEqualTo(1);
+        assertThat(run.get("new_count")).isEqualTo(0);
+        sreality.verify(0, getRequestedFor(urlEqualTo("/api/v1/estates/4701")));
+    }
+
+    @Test
     void failedRunIsClosedAsFailedWithTheCause() {
         stubSearch(aResponse().withStatus(500));
 

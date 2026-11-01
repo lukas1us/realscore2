@@ -2,6 +2,7 @@ package com.realscore.scraping.internal;
 
 import com.realscore.listing.ListingSnapshotService;
 import com.realscore.listing.PresenceResult;
+import com.realscore.scraping.ScrapeRunCounts;
 import com.realscore.scraping.ScrapeRunService;
 import com.realscore.scraping.ScrapeRunStatus;
 import java.time.Instant;
@@ -40,8 +41,8 @@ public class SrealityScrapeJob {
             BulkCollectionResult result = bulkCollector.collect(properties.priceCap(), properties.rentPriceCap(),
                     properties.refetchAfter());
             int removed = recordPresence(runId, result, startedAt);
-            scrapeRunService.updateCounts(runId, result.found(), result.fetched(), result.changed(), removed,
-                    result.failed());
+            scrapeRunService.updateCounts(runId, new ScrapeRunCounts(result.found(), result.fetched(),
+                    result.changed(), removed, result.skipped(), result.alreadyKnown(), result.failed()));
             scrapeRunService.closeRun(runId, ScrapeRunStatus.SUCCEEDED, null);
             log.info("Scrape run {} succeeded: {}, {} removed", runId, result, removed);
         } catch (RuntimeException e) {

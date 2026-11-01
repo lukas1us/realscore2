@@ -77,6 +77,60 @@ class SrealityListingDetailsExtractorTest {
         assertThat(extractor.extract(payload).ownership()).isEqualTo(expected);
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "1, Ano, true",
+            "2, Ne, false",
+            "0, - nezadáno, ",
+            "99, x, ",
+    })
+    void mapsElevatorCodesWithNotEnteredAsUnknown(int elevatorValue, String name, Boolean expected) {
+        String payload = """
+                {"result": {"elevator": {"name": "%s", "value": %d}}}
+                """.formatted(name, elevatorValue);
+
+        assertThat(extractor.extract(payload).elevator()).isEqualTo(expected);
+    }
+
+    @Test
+    void missingElevatorYieldsNull() {
+        assertThat(extractor.extract("{\"result\": {}}").elevator()).isNull();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0, - vyber třídu, ",
+            "1, A - Mimořádně úsporná, A",
+            "2, B - Velmi úsporná, B",
+            "3, C - Úsporná, C",
+            "4, D - Méně úsporná, D",
+            "5, E - Nehospodárná, E",
+            "6, F - Velmi nehospodárná, F",
+            "7, G - Mimořádně nehospodárná, G",
+            "99, X - neznámá, ",
+    })
+    void mapsEnergyClassFromCodeWithNoClassChosenAsUnknown(int ratingValue, String name, String expected) {
+        String payload = """
+                {"result": {"energy_efficiency_rating_cb": {"name": "%s", "value": %d}}}
+                """.formatted(name, ratingValue);
+
+        assertThat(extractor.extract(payload).energyClass()).isEqualTo(expected);
+    }
+
+    @Test
+    void energyClassIgnoresTheNameText() {
+        String payload = """
+                {"result": {"energy_efficiency_rating_cb": {"name": "B - Velmi úsporná", "value": 4}}}
+                """;
+
+        assertThat(extractor.extract(payload).energyClass()).isEqualTo("D");
+    }
+
+    @Test
+    void missingEnergyClassYieldsNull() {
+        assertThat(extractor.extract("{\"result\": {}}").energyClass()).isNull();
+    }
+
     @Test
     void missingOwnershipYieldsNull() {
         ListingDetailsFields fields = extractor.extract("{\"result\": {}}");

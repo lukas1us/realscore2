@@ -64,21 +64,32 @@ public class SrealityListingDetailsExtractor {
         return acceptanceYear != null ? acceptanceYear : intOrNull(result, "reconstruction_year");
     }
 
+    /**
+     * Mapped from the code, not the name text: 1..7 are classes A..G. 0 ("- vyber třídu")
+     * means the seller chose no class, so it is unknown, like any other code.
+     */
     private static String energyClass(JsonNode result) {
-        String name = textOrNull(result.path("energy_efficiency_rating_cb"), "name");
-        if (name == null || name.isEmpty()) {
+        Integer value = intOrNull(result.path("energy_efficiency_rating_cb"), "value");
+        if (value == null || value < 1 || value > 7) {
             return null;
         }
-        return name.substring(0, 1);
+        return String.valueOf((char) ('A' + value - 1));
     }
 
+    /**
+     * 1 is "Ano", 2 is "Ne". 0 ("- nezadáno") means the seller left it empty, so it is
+     * unknown, like any other code.
+     */
     private static Boolean elevator(JsonNode result) {
-        JsonNode elevator = result.path("elevator");
-        if (elevator.isMissingNode() || elevator.isNull()) {
+        Integer value = intOrNull(result.path("elevator"), "value");
+        if (value == null) {
             return null;
         }
-        Integer value = intOrNull(elevator, "value");
-        return value != null && value == 1;
+        return switch (value) {
+            case 1 -> true;
+            case 2 -> false;
+            default -> null;
+        };
     }
 
     private static String ownership(JsonNode result) {

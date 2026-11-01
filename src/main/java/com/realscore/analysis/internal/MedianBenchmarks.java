@@ -8,16 +8,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /**
  * Medians of a value per (locality, disposition) with fallback: each sample counts towards its finest locality and
  * every enclosing one, and each finest locality takes the median of the first of those, walking outwards, that has at
  * least {@code minSampleSize} samples. A finest locality with no such group is left out.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MedianBenchmarks {
-
-    private MedianBenchmarks() {
-    }
 
     /** One listing's value, placed at its finest locality. */
     public record Sample(Locality locality, int dispositionCode, String dispositionLabel, BigDecimal value) {

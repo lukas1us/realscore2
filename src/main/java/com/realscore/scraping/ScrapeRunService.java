@@ -3,17 +3,16 @@ package com.realscore.scraping;
 import com.realscore.scraping.internal.ScrapeRun;
 import com.realscore.scraping.internal.ScrapeRunRepository;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class ScrapeRunService {
 
     private final ScrapeRunRepository scrapeRunRepository;
-
-    ScrapeRunService(ScrapeRunRepository scrapeRunRepository) {
-        this.scrapeRunRepository = scrapeRunRepository;
-    }
 
     @Transactional
     public Long openRun() {

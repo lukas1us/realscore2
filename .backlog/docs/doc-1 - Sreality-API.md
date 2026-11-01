@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-10-31T18:33:00Z'
+updated_date: '2026-11-01T20:51:00Z'
 ---
 # Sreality API
 
@@ -127,10 +127,10 @@ Confirmed live — see the scrubbed fixture at `src/test/resources/fixtures/srea
 - `heating_set`, `heating_source_set`, `heating_element_set`, `gas_set`, `gully_set`, `electricity_set` — each a **list** of `{"name", "value"}` objects (a field can carry more than one value).
 - `locality` — a structured object (`city`, `city_seo_name`, `citypart`, `district`, `district_id`, `region`, `region_id`, `street`, `street_id`, `housenumber`, `streetnumber`, `gps_lat`, `gps_lon`, `ward`, `quarter`, `zip`, plus `*_seo_name` variants and a `geometry` block). This completely replaces the old doc's whole "disambiguate a comma-separated string by part count" logic — city/district/region are already separate fields.
 - `price_summary_czk` (or `price_summary`) is the **authoritative total price** — CONFIRMED 2026-10-31 (TASK-20). `price_czk`/`price` can instead be a *per-unit* rate: on a commercial rental, a listing had `price_czk=450` with `price_unit_cb={"name": "za m²/měsíc", ...}` (per m²/month) while `price_summary_czk=433800` with `price_summary_unit_cb={"name": "za měsíc", ...}` (per month) — `450 × usable_area(964) = 433800`, confirming `price_summary_czk` is the one to use regardless of unit, never `price_czk` directly. This supersedes the old doc's "prefer the 'Celková cena' items entry" rule, which doesn't carry over since there's no `items` list at all on v1.
-- **"Price on request" (old doc's "Cena na vyžádání")** — CONFIRMED 2026-10-31 (TASK-20): on such listings (found in the commercial category), `price_czk` **and** `price_summary_czk` are both `0`, together. There's no dedicated flag — `price_flag_negotiation_cb` was `false` on every such listing checked, and `price_note` was empty/null. Treat `price_summary_czk == 0` (or missing) as "no price," not an error.
+- **"Price on request" (old doc's "Cena na vyžádání")** — CONFIRMED 2026-10-31 (TASK-20): on such listings (found in the commercial category), `price_czk` **and** `price_summary_czk` are both `0`, together. There's no dedicated flag — `price_flag_negotiation_cb` was `false` on every such listing checked, and `price_note` was empty/null. Treat `price_summary_czk == 0` (or missing) as "no price," not an error. NEW 2026-11-01 (scrape run 2): a flat for sale switched to price on request showed the same zeros (`price`, `price_czk`, `price_summary`, `price_summary_czk` all `0.0`, `price_czk_m2` `0`), but this time with `price_note` = `"cena u makléře"`, so `price_note` is not always empty on such listings.
 - `advert_description` — free text, same role as the old doc's `text`/`description`. The one sample captured had no embedded contact details (just "contact us"), but **[UNVERIFIED]** whether that generalizes.
-- `user` — the seller/broker contact block (`user_name`, `user_email`, `user_phones`, `image`, `user_id`, `broker_rating`, `broker_review_count`). **Contains PII.** Must be scrubbed from any committed fixture (done in the current one). Whether it should be persisted raw in the DB at all is a privacy/retention question this document doesn't settle.
-- `premise` — the listing agency's info (`name`, `company`, `locality`, `web_url`/`web_visible_url`, `logo`, review data). `web_url`/`web_visible_url` can itself leak the broker's name (observed: a personal-name domain) — treat as PII-adjacent too.
+- `user` — the seller/broker contact block (`user_name`, `user_email`, `user_phones`, `image`, `user_id`, `broker_rating`, `broker_review_count`). **Contains PII.** Must be scrubbed from any committed fixture (done in the current ones). Not stored in the DB either: since TASK-40 (decision-8) the app removes the whole `user` block before hashing and storing a snapshot, and migration V10 scrubbed the existing snapshots.
+- `premise` — the listing agency's info (`name`, `company`, `locality`, `web_url`/`web_visible_url`, `logo`, review data). `web_url`/`web_visible_url` can itself leak the broker's name (observed: a personal-name domain) — treat as PII-adjacent too. Since TASK-40 (decision-8) these two fields are removed before storing, like `user`; the rest of `premise` is kept.
 - `advert_images` — list of image metadata (`id`, `url`, `width`, `height`, `order`, `kind`, `ai_edited`, `alt`). No PII observed.
 - `labels` / `labels_extended` — nearby points of interest (shops, doctors, restaurants, transit), sourced from mapy.cz/firmy.cz. Not personal data, just large.
 - `hash_id` — equals the requested estate ID.
@@ -139,11 +139,11 @@ Confirmed live — see the scrubbed fixture at `src/test/resources/fixtures/srea
 
 ### Per-request volatility — checked, none found
 
-`ListingSnapshotService` (TASK-11) decides whether a listing changed by hashing the entire raw detail response string. If the API returns any field that changes on every request regardless of real listing changes (view counters, request timestamps, token-bearing image URLs, the `labels`/`labels_extended` POI blocks being recomputed, etc.), that dedup would be defeated — every fetch would look "changed."
+`ListingSnapshotService` (TASK-11) decides whether a listing changed by hashing the entire detail payload. Until TASK-40 the hash was SHA-256 of the raw response string; since TASK-40 (decision-8) it is SHA-256 of the payload's jsonb text form, computed by Postgres after the seller's contact data is removed, so whitespace and key order no longer count as a change. Either way, if the API returns any field that changes on every request regardless of real listing changes (view counters, request timestamps, token-bearing image URLs, the `labels`/`labels_extended` POI blocks being recomputed, etc.), that dedup would be defeated — every fetch would look "changed."
 
 Checked 2026-10-31 (TASK-28): fetched estate `2494705740` twice via `GET /api/v1/estates/{id}`, 5 minutes apart, same headers the client uses. The two raw response bodies were **byte-for-byte identical** (same SHA-256 digest). No volatile fields of any kind were observed — not in `labels`/`labels_extended`, not in image URLs, nothing.
 
-**[UNVERIFIED]** This was checked on one estate, over one 5-minute gap. It doesn't rule out volatility over a longer gap (hours/days), under different request conditions (e.g. a different session/cookie state), or on a different estate. If a future capture ever disagrees with this finding, revisit `ListingSnapshotService`'s whole-payload-hash approach then — no change was needed as of this check.
+**[UNVERIFIED]** This was checked on one estate, over one 5-minute gap. It doesn't rule out volatility over a longer gap (hours/days), under different request conditions (e.g. a different session/cookie state), or on a different estate. If a future capture ever disagrees with this finding, revisit `ListingSnapshotService`'s whole-payload-hash approach then — no change was needed as of this check (the TASK-40 change was about contact data, not volatility).
 
 ## The ~1000-result cap and bucketing workaround
 
@@ -161,10 +161,16 @@ The old app's workaround, for a *sale apartments, price-capped* scan:
 
 **Known residual gap, inherited on purpose**: if a single `(region, disposition)` bucket itself still exceeds the threshold, the old app only logged a warning and did not subdivide further (e.g. by price band). Deferred unless it proves necessary.
 
+### Ended listings and detail status codes — CONFIRMED 2026-11-01
+
+- **An ended listing answers the detail request with HTTP 404.** CONFIRMED 2026-11-01 (TASK-38, scrape run 2): of the 55 active listings that dropped out of that run's search results, 54 answered `404` to `GET /api/v1/estates/{id}`. None answered `410` or `403`, and none failed otherwise. The app treats `404` and `410` as gone (marks the listing removed) and `403` as no proof either way (hidden, or the request was refused), leaving the listing active. **[UNVERIFIED]** whether Sreality ever sends `410` or `403` for a single estate at all.
+- **Dropping out of the search results is not proof that a listing is gone.** CONFIRMED 2026-11-01: the 55th listing (`3791487052`, a 3+kk for sale) still answered `200`. Its seller had switched it from 4,295,000 CZK to price on request (all price fields `0`, see above), which took it out of the search filtered by `price_to`. A price rise above the cap or a category change would do the same. Only the detail request tells a removed listing from one the search no longer matches.
+
 ## Rate limiting and retries
 
 - Detail-fetch retries: up to `max_retries` (old default `3`) attempts with exponential backoff (`2^attempt` seconds) on **retriable** failures — HTTP 429 or connection/transient errors.
 - **Non-retriable**: HTTP 403 or 404 → skip immediately, no retry.
+- The new app (TASK-15, TASK-38): HTTP 429 and 5xx are retried with backoff; 403, 404 and 410 are not retried. In the bulk path they are all a skip; for a listing the run did not see, 404 and 410 mark it removed and 403 leaves it active (see "Ended listings and detail status codes").
 - A fixed polite delay (old default `0.5s`) was slept after every request attempt regardless of outcome, to cap the steady-state request rate.
 - This is about client behavior, not the specific endpoint shape, so it's unaffected by the v1 migration. Nothing here implies the new Java app needs the same concurrency shapes as the old Python app, only that *some* shared backoff/skip/delay policy is needed (tracked as its own task in M3).
 

@@ -36,7 +36,14 @@ enforces this. The schema is managed only by Flyway migrations (`src/main/resour
 
 ## Running locally
 
-Build and start the app together with PostgreSQL:
+Compose needs a `.env` file with the Metabase passwords (see [Metabase](#metabase)); without it every
+`docker compose` command fails. Create it once:
+
+```
+cp .env.example .env    # then replace the placeholder passwords
+```
+
+Build and start the app together with PostgreSQL and Metabase:
 
 ```
 docker compose up -d --build
@@ -53,6 +60,54 @@ mvn spring-boot:run
 ```
 
 On the host, scraping is off unless `SCRAPE_CRON` is set.
+
+## Metabase
+
+[Metabase](https://www.metabase.com/) is for exploring the collected data until a custom UI exists. It reads the
+`realscore` database directly, as a read-only role, and is not part of the app.
+
+`docker compose up -d` starts it together with the app on `http://localhost:3000` (bound to localhost only). The first
+start takes a minute or two; it is ready when `docker compose ps` shows `metabase` as healthy.
+
+**Credentials.** Two passwords, both set only in `.env` (git-ignored; `.env.example` has placeholders):
+
+| Variable | Used for |
+|---|---|
+| `METABASE_RO_PASSWORD` | Role `metabase_ro`, Metabase's read-only connection to the `realscore` DB |
+| `METABASE_APP_DB_PASSWORD` | Role `metabase`, owner of Metabase's own application DB `metabase` (dashboards, questions, users) |
+
+Both roles and the `metabase` database are created by the one-shot `metabase-init` service, which runs
+`docker/metabase/init.sql` on every `docker compose up`. The script is idempotent and works on a fresh or an existing
+Postgres volume. It is not a Flyway migration, so no password ends up in a migration. Changing a password in `.env`
+takes effect at the next `docker compose up`. After changing `METABASE_RO_PASSWORD`, also update it in Metabase's
+connection settings.
+
+**First-time setup.** Open `http://localhost:3000`, then:
+
+1. Create the admin account. It is stored in Metabase's own DB, not in `.env`.
+2. When asked to add data (or later under *Admin settings → Databases → Add database*), choose PostgreSQL with:
+   - Host `postgres`, port `5432`, database name `realscore`
+   - Username `metabase_ro`, password the value of `METABASE_RO_PASSWORD` from `.env`
+
+Metabase's state lives in the `metabase` database inside the `postgres-data` volume, so `docker compose down -v`
+deletes it too. The SQL of the exploration dashboards is meant to be kept in `docs/metabase/` (TASK-25.2), so they can be rebuilt.
+
+**Read-only access.** `metabase_ro` can only SELECT, also on tables created by later Flyway migrations, and its
+sessions are read-only by default. To check it:
+
+```
+docker compose exec -e PGPASSWORD="$(grep ^METABASE_RO_PASSWORD= .env | cut -d= -f2-)" postgres \
+  psql -h localhost -U metabase_ro -d realscore \
+  -c 'SELECT count(*) FROM listing' \
+  -c 'INSERT INTO scrape_run DEFAULT VALUES' \
+  -c 'DELETE FROM listing WHERE false' \
+  -c 'CREATE TABLE probe (id int)'
+```
+
+The SELECT returns a count. Every write fails with `cannot execute … in a read-only transaction`. With the read-only
+session default switched off (`PGOPTIONS='-c default_transaction_read_only=off'`), writes still fail, with
+`permission denied` or `must be owner`. Like every Postgres role, `metabase_ro` can create temporary tables. They are
+private to its session and disappear when it ends.
 
 ## Configuration
 

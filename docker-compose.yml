@@ -45,5 +45,45 @@ services:
       retries: 5
       start_period: 60s
 
+  # One-shot job: creates/updates Metabase's DB roles and its app DB on every `up` (idempotent, see the script).
+  metabase-init:
+    image: postgres:16
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGUSER: realscore
+      PGPASSWORD: realscore
+      PGDATABASE: realscore
+      METABASE_RO_PASSWORD: ${METABASE_RO_PASSWORD:?set it in .env, see .env.example}
+      METABASE_APP_DB_PASSWORD: ${METABASE_APP_DB_PASSWORD:?set it in .env, see .env.example}
+    volumes:
+      - ./docker/metabase/init.sql:/init.sql:ro
+    command: ["psql", "--no-psqlrc", "--quiet", "--file", "/init.sql"]
+    restart: "no"
+
+  metabase:
+    image: metabase/metabase:v0.65.2.5
+    depends_on:
+      metabase-init:
+        condition: service_completed_successfully
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: postgres
+      MB_DB_PORT: 5432
+      MB_DB_DBNAME: metabase
+      MB_DB_USER: metabase
+      MB_DB_PASS: ${METABASE_APP_DB_PASSWORD:?set it in .env, see .env.example}
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
+
 volumes:
   postgres-data:

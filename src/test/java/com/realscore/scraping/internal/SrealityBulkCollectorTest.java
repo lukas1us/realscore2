@@ -18,6 +18,7 @@ import com.realscore.listing.ListingSnapshotService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Set;
@@ -80,7 +81,7 @@ class SrealityBulkCollectorTest {
 
         BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4001L, 4002L, 4003L, 4004L), 1, 2, 0, 0, 1, 0));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4001L, 4002L, 4003L, 4004L), 1, 2, 0, 0, 0, 1, 0));
         assertThat(snapshotCount(4001)).isEqualTo(1);
         assertThat(snapshotCount(4003)).isEqualTo(1);
         assertThat(listingCount(4002)).isZero();
@@ -97,7 +98,7 @@ class SrealityBulkCollectorTest {
 
         BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4101L, 4102L), 0, 1, 0, 0, 0, 1));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4101L, 4102L), 0, 1, 0, 0, 0, 0, 1));
         assertThat(listingCount(4101)).isZero();
         assertThat(snapshotCount(4102)).isEqualTo(1);
     }
@@ -113,9 +114,91 @@ class SrealityBulkCollectorTest {
 
         BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
 
-        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4201L, 4202L, 4601L, 4602L), 0, 4, 0, 0, 0, 0));
+        assertThat(result).isEqualTo(new BulkCollectionResult(Set.of(4201L, 4202L, 4601L, 4602L), 0, 4, 0, 0, 0, 0, 0));
         assertThat(snapshotCount(4601)).isEqualTo(1);
         assertThat(snapshotCount(4602)).isEqualTo(1);
+    }
+
+    @Test
+    void aKnownListingWithoutAStoredSearchPriceIsNotRefetchedButGetsOne() {
+        listingSnapshotService.recordFetch("sreality", "4911", fixture("detail_success.json"));
+        stubSearchPage(4911, "3490000.0");
+
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
+
+        assertThat(result.priceChanged()).isZero();
+        sreality.verify(0, getRequestedFor(urlEqualTo(detailPath(4911))));
+        assertThat(searchPrice(4911)).isEqualByComparingTo("3490000");
+    }
+
+    @Test
+    void anUnchangedSearchPriceIsNotRefetched() {
+        listingSnapshotService.recordFetch("sreality", "4912", fixture("detail_success.json"));
+        setSearchPrice(4912, "3590000");
+        stubSearchPage(4912, "3590000.0");
+
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
+
+        assertThat(result.priceChanged()).isZero();
+        sreality.verify(0, getRequestedFor(urlEqualTo(detailPath(4912))));
+    }
+
+    @Test
+    void aSwitchToPriceOnRequestCountsAsAChange() {
+        listingSnapshotService.recordFetch("sreality", "4913", fixture("detail_success.json"));
+        setSearchPrice(4913, "3590000");
+        stubSearchPage(4913, "0.0");
+        stubDetail(4913, okJson(fixture("detail_success.json")));
+
+        BulkCollectionResult result = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
+
+        assertThat(result.priceChanged()).isEqualTo(1);
+        assertThat(result.refetched()).isEqualTo(1);
+        assertThat(searchPrice(4913)).isEqualByComparingTo("0");
+    }
+
+    @Test
+    void aFailedRefetchKeepsTheOldSearchPriceSoTheNextRunRetries() {
+        listingSnapshotService.recordFetch("sreality", "4914", fixture("detail_success.json"));
+        setSearchPrice(4914, "3590000");
+        stubSearchPage(4914, "3490000.0");
+        stubDetail(4914, aResponse().withStatus(500));
+
+        BulkCollectionResult failedRun = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
+
+        assertThat(failedRun.priceChanged()).isEqualTo(1);
+        assertThat(failedRun.failed()).isEqualTo(1);
+        assertThat(searchPrice(4914)).isEqualByComparingTo("3590000");
+
+        stubDetail(4914, okJson(fixture("detail_success.json")));
+        BulkCollectionResult nextRun = bulkCollector.collect(PRICE_CAP, NO_RENT_PRICE_CAP, REFETCH_AFTER);
+
+        assertThat(nextRun.priceChanged()).isEqualTo(1);
+        assertThat(nextRun.refetched()).isEqualTo(1);
+        assertThat(searchPrice(4914)).isEqualByComparingTo("3490000");
+    }
+
+    /** Region 1 of the sale search answers with one estate at the given {@code price_summary_czk}. */
+    private static void stubSearchPage(long estateId, String price) {
+        sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH)).atPriority(10)
+                .willReturn(okJson(fixture("search_count_empty.json"))));
+        sreality.stubFor(get(urlPathEqualTo(SrealityTestSupport.SEARCH_PATH))
+                .withQueryParam("category_type_cb", equalTo("1"))
+                .withQueryParam("locality_region_id", equalTo(SMALL_REGION))
+                .willReturn(okJson("""
+                        {"pagination": {"limit": 100, "offset": 0, "total": 1},
+                         "results": [{"hash_id": %d, "price_summary_czk": %s}]}
+                        """.formatted(estateId, price))));
+    }
+
+    private void setSearchPrice(long estateId, String price) {
+        jdbc.update("UPDATE listing SET search_price_czk = ? WHERE source = 'sreality' AND external_id = ?",
+                new BigDecimal(price), String.valueOf(estateId));
+    }
+
+    private BigDecimal searchPrice(long estateId) {
+        return jdbc.queryForObject("SELECT search_price_czk FROM listing WHERE source = 'sreality' AND external_id = ?",
+                BigDecimal.class, String.valueOf(estateId));
     }
 
     /** Region 1 of the sale search answers with {@code pageFixture}; everything else is empty. */

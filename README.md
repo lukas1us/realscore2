@@ -8,7 +8,8 @@ disposition), and scores flats for sale against them.
 
 1. **Scraping**: a scheduled job searches Sreality for flats for sale (under a price cap) and flats for rent. It
    fetches the detail of every new listing, and refetches known ones once their last fetch is older than a
-   configurable interval. Every run is recorded in `scrape_run`.
+   configurable interval, or in the same run when their price in the search results changed since the last run.
+   Every run is recorded in `scrape_run`.
 2. **Listing**: every detail response is stored raw as JSONB in `listing_snapshot`, minus the seller's contact data
    (the broker's name, email and phones, and the agency's web URLs are removed first). A new snapshot is written only
    when the payload changes; whitespace and key order do not count. Dropping out of the search results alone is no proof a listing is gone (its price
@@ -178,6 +179,12 @@ too.
   the run did not see: one that stays online outside the searches (e.g. above the price cap) is fetched on every run
   until it is gone. In `scrape_run`, changed snapshots from that check count as `updated_count`, and 403s and other
   failures as `error_count`.
+- **A price change is seen in the run that finds it.** Each run keeps every listing's price from the search results
+  (`listing.search_price_czk`, Sreality's raw value, `0` for price on request) and refetches the detail of any listing
+  whose search price differs from the last run's, without waiting for `SCRAPE_REFETCH_AFTER`. The new price point
+  is dated to that run. If that fetch fails, the old search price is kept, so the next run tries again. Such
+  refetches count in `scrape_run` like any other (`updated_count` when the snapshot changed). The first run after
+  upgrading only stores the search prices, since there is nothing to compare them with yet.
 - **Days on market count from the first time realscore saw a listing**, not from when it was published: Sreality's
   detail has no publication date. Listings already online before the first scrape start at 0.
 - **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians

@@ -16,7 +16,9 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -72,13 +74,22 @@ class SrealityIdCollectorTest {
 
     @Test
     void collectsSmallRegionDirectlyAndLargeRegionPerDispositionWithoutDuplicates() {
-        assertThat(collector.collectSaleApartmentIds(PRICE_CAP))
+        assertThat(collector.collectSaleApartments(PRICE_CAP).keySet())
                 .containsExactlyInAnyOrder(101L, 102L, 103L, 201L, 202L, 203L, 204L);
     }
 
     @Test
+    void returnsEachEstatesSearchPriceAsGiven() {
+        Map<Long, BigDecimal> estates = collector.collectSaleApartments(PRICE_CAP);
+
+        assertThat(estates.get(101L)).isEqualByComparingTo("3590000");
+        assertThat(estates.get(102L)).isEqualByComparingTo("0");
+        assertThat(estates).containsEntry(103L, null);
+    }
+
+    @Test
     void probesEveryRegionAndOnlySplitsTheLargeOne() {
-        collector.collectSaleApartmentIds(PRICE_CAP);
+        collector.collectSaleApartments(PRICE_CAP);
 
         for (int regionId : SrealityIdCollector.REGION_IDS) {
             sreality.verify(1, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
@@ -106,13 +117,13 @@ class SrealityIdCollectorTest {
 
     @Test
     void collectsRentalApartmentsTheSameWay() {
-        assertThat(collector.collectRentalApartmentIds(null))
+        assertThat(collector.collectRentalApartments(null).keySet())
                 .containsExactlyInAnyOrder(101L, 102L, 103L, 201L, 202L, 203L, 204L);
     }
 
     @Test
     void uncappedRentalSearchAsksForRentalApartmentsWithoutPriceTo() {
-        collector.collectRentalApartmentIds(null);
+        collector.collectRentalApartments(null);
 
         for (int regionId : SrealityIdCollector.REGION_IDS) {
             sreality.verify(1, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
@@ -130,7 +141,7 @@ class SrealityIdCollectorTest {
 
     @Test
     void cappedRentalSearchSendsTheRentPriceCap() {
-        collector.collectRentalApartmentIds(RENT_PRICE_CAP);
+        collector.collectRentalApartments(RENT_PRICE_CAP);
 
         sreality.verify(0, getRequestedFor(urlPathEqualTo(SEARCH_PATH))
                 .withQueryParam("price_to", matching("^(?!" + RENT_PRICE_CAP + "$).*")));

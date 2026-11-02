@@ -1,5 +1,6 @@
 package com.realscore.listing.internal;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,18 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update Listing l set l.lastSeenAt = :seenAt where l.source = :source and l.externalId in :externalIds")
     int markSeen(String source, Collection<String> externalIds, Instant seenAt);
+
+    /** @return pairs of external ID and search price, for listings that have a search price */
+    @Query("""
+            select l.externalId, l.searchPriceCzk from Listing l
+            where l.source = :source and l.externalId in :externalIds and l.searchPriceCzk is not null""")
+    List<Object[]> findSearchPrices(String source, Collection<String> externalIds);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("""
+            update Listing l set l.searchPriceCzk = :searchPrice
+            where l.source = :source and l.externalId = :externalId""")
+    int updateSearchPrice(String source, String externalId, BigDecimal searchPrice);
 
     @Query("""
             select l.externalId from Listing l

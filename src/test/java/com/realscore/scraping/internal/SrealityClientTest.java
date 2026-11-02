@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -182,7 +183,9 @@ class SrealityClientTest {
         SearchPage page = client.searchEstates(PRAHA_FLATS, 2, 0);
 
         assertThat(page.total()).isEqualTo(3);
-        assertThat(page.estateIds()).containsExactly(101L, 102L);
+        assertThat(page.results()).containsExactly(
+                new SearchPage.Result(101L, new BigDecimal("3590000.0")),
+                new SearchPage.Result(102L, new BigDecimal("0.0")));
         sreality.verify(getRequestedFor(urlPathEqualTo(SEARCH_PATH))
                 .withQueryParam("category_main_cb", equalTo("1"))
                 .withQueryParam("locality_region_id", equalTo("10"))

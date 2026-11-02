@@ -1,6 +1,7 @@
 package com.realscore.scraping.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,7 +89,8 @@ public class SrealityClient {
     }
 
     /**
-     * Returns one page of estate IDs matching the given search params, plus the total match count.
+     * Returns one page of estates (ID and search price) matching the given search params, plus the total match
+     * count.
      *
      * @param searchParams v1 search query params, e.g. {@code locality_region_id -> "10"}
      * @throws SrealityApiException if the response status is not 200
@@ -109,15 +111,18 @@ public class SrealityClient {
         if (response == null || response.pagination() == null || response.pagination().total() == null) {
             throw new IllegalStateException("Sreality search response has no pagination.total");
         }
-        List<Long> estateIds = response.results() == null ? List.of()
-                : response.results().stream().map(SearchResponse.Result::hashId).toList();
-        return new SearchPage(response.pagination().total(), estateIds);
+        List<SearchPage.Result> results = response.results() == null ? List.of()
+                : response.results().stream()
+                        .map(r -> new SearchPage.Result(r.hashId(), r.priceSummaryCzk()))
+                        .toList();
+        return new SearchPage(response.pagination().total(), results);
     }
 
     private record SearchResponse(Pagination pagination, List<Result> results) {
 
         private record Pagination(Long total) {}
 
-        private record Result(@JsonProperty("hash_id") long hashId) {}
+        private record Result(@JsonProperty("hash_id") long hashId,
+                @JsonProperty("price_summary_czk") BigDecimal priceSummaryCzk) {}
     }
 }

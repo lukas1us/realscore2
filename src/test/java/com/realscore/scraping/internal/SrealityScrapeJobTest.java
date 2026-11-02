@@ -245,6 +245,29 @@ class SrealityScrapeJobTest {
     }
 
     @Test
+    void aChangedSearchPriceIsRefetchedInTheSameRunNotAfterTheRefetchInterval() {
+        String detail = fixture("detail_success.json");
+        String repriced = detail.replace("\"price_summary_czk\": 3590000.0", "\"price_summary_czk\": 3490000.0");
+        assertThat(repriced).isNotEqualTo(detail);
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4901")).willReturn(okJson(detail)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4902")).willReturn(okJson(detail)));
+        stubSearch(okJson(searchPage(4901, "3590000.0", 4902, "3590000.0")));
+        job.run();
+
+        Instant beforeSecondRun = Instant.now();
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4901")).willReturn(okJson(repriced)));
+        stubSearch(okJson(searchPage(4901, "3490000.0", 4902, "3590000.0")));
+        job.run();
+
+        assertThat(pricePoints(4901)).usingElementComparator(BigDecimal::compareTo)
+                .containsExactly(new BigDecimal("3590000"), new BigDecimal("3490000"));
+        assertThat(lastPricePointObservedAt(4901)).isAfter(beforeSecondRun);
+        assertThat(latestRun().get("updated_count")).isEqualTo(1);
+        sreality.verify(2, getRequestedFor(urlEqualTo("/api/v1/estates/4901")));
+        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4902")));
+    }
+
+    @Test
     void rentalsAreMarkedRemovedAndRefetchedLikeSales() {
         String detail = fixture("detail_success.json");
         for (String id : List.of("4301", "4601", "4602")) {
@@ -303,6 +326,21 @@ class SrealityScrapeJobTest {
                 SELECT p.price_czk FROM listing_price_point p JOIN listing l ON l.id = p.listing_id
                 WHERE l.source = 'sreality' AND l.external_id = ? ORDER BY p.observed_at
                 """, BigDecimal.class, String.valueOf(estateId));
+    }
+
+    private Instant lastPricePointObservedAt(long estateId) {
+        return jdbc.queryForObject("""
+                SELECT max(p.observed_at) FROM listing_price_point p JOIN listing l ON l.id = p.listing_id
+                WHERE l.source = 'sreality' AND l.external_id = ?
+                """, Timestamp.class, String.valueOf(estateId)).toInstant();
+    }
+
+    /** A one-page search result of two estates with their {@code price_summary_czk}. */
+    private static String searchPage(long firstId, String firstPrice, long secondId, String secondPrice) {
+        return """
+                {"pagination": {"limit": 100, "offset": 0, "total": 2},
+                 "results": [{"hash_id": %d, "price_summary_czk": %s}, {"hash_id": %d, "price_summary_czk": %s}]}
+                """.formatted(firstId, firstPrice, secondId, secondPrice);
     }
 
     private Instant lastFetchedAt(long estateId) {

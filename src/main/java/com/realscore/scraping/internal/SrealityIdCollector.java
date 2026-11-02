@@ -1,17 +1,17 @@
 package com.realscore.scraping.internal;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * Collects the IDs of all Sreality apartments for sale or for rent, optionally under a price cap, by splitting the
+ * Collects the IDs and search prices of all Sreality apartments for sale or for rent, optionally under a price cap, by splitting the
  * search into buckets: one per region, and for regions over the bucket threshold, one per (region, disposition).
  * See Backlog doc "Sreality API".
  */
@@ -31,19 +31,21 @@ public class SrealityIdCollector {
 
     /**
      * @param priceCap maximum price in CZK ({@code price_to})
-     * @return the IDs of every matching estate, each once, in the order first seen
+     * @return every matching estate's ID, each once in the order first seen, with its search price (see
+     *     {@link SearchPage.Result}; the value may be {@code null})
      * @throws SrealityApiException if any Sreality request fails; no partial result is returned then
      */
-    public Set<Long> collectSaleApartmentIds(long priceCap) {
+    public Map<Long, BigDecimal> collectSaleApartments(long priceCap) {
         return collect(apartments(SALE, priceCap));
     }
 
     /**
      * @param priceCap maximum monthly rent in CZK ({@code price_to}), or {@code null} for no cap
-     * @return the IDs of every matching estate, each once, in the order first seen
+     * @return every matching estate's ID, each once in the order first seen, with its search price (see
+     *     {@link SearchPage.Result}; the value may be {@code null})
      * @throws SrealityApiException if any Sreality request fails; no partial result is returned then
      */
-    public Set<Long> collectRentalApartmentIds(Long priceCap) {
+    public Map<Long, BigDecimal> collectRentalApartments(Long priceCap) {
         return collect(apartments(RENT, priceCap));
     }
 
@@ -57,8 +59,8 @@ public class SrealityIdCollector {
         return Map.copyOf(params);
     }
 
-    private Set<Long> collect(Map<String, String> filters) {
-        Set<Long> estateIds = new LinkedHashSet<>();
+    private Map<Long, BigDecimal> collect(Map<String, String> filters) {
+        Map<Long, BigDecimal> estateIds = new LinkedHashMap<>();
         for (int regionId : REGION_IDS) {
             Map<String, String> region = with(filters, "locality_region_id", regionId);
             long regionCount = client.countEstates(region);
@@ -79,17 +81,17 @@ public class SrealityIdCollector {
         return estateIds;
     }
 
-    private void collectBucket(Map<String, String> bucket, long count, Set<Long> estateIds) {
+    private void collectBucket(Map<String, String> bucket, long count, Map<Long, BigDecimal> estateIds) {
         long total = count;
         int offset = 0;
         while (offset < total) {
             SearchPage page = client.searchEstates(bucket, properties.pageSize(), offset);
-            if (page.estateIds().isEmpty()) {
+            if (page.results().isEmpty()) {
                 break;
             }
-            estateIds.addAll(page.estateIds());
+            page.results().forEach(r -> estateIds.putIfAbsent(r.estateId(), r.searchPriceCzk()));
             total = page.total();
-            offset += page.estateIds().size();
+            offset += page.results().size();
         }
     }
 

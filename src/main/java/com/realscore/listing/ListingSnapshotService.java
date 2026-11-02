@@ -4,10 +4,13 @@ import com.realscore.listing.internal.Listing;
 import com.realscore.listing.internal.ListingRepository;
 import com.realscore.listing.internal.ListingSnapshot;
 import com.realscore.listing.internal.ListingSnapshotRepository;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -115,6 +118,27 @@ public class ListingSnapshotService {
         forEachBatch(externalIds, batch -> due.addAll(
                 listingRepository.findExternalIdsFetchedBefore(source, batch, cutoff)));
         return due;
+    }
+
+    /**
+     * Returns the stored search price of those of the given listings from {@code source} that have one; listings
+     * without a stored search price are left out.
+     */
+    @Transactional(readOnly = true)
+    public Map<String, BigDecimal> findSearchPrices(String source, Collection<String> externalIds) {
+        Map<String, BigDecimal> prices = new HashMap<>();
+        forEachBatch(externalIds, batch -> listingRepository.findSearchPrices(source, batch)
+                .forEach(row -> prices.put((String) row[0], (BigDecimal) row[1])));
+        return prices;
+    }
+
+    /**
+     * Stores each listing's price from the search results (raw {@code price_summary_czk}, 0 for price on request),
+     * to be compared with the next run's. Unknown listings are ignored.
+     */
+    @Transactional
+    public void recordSearchPrices(String source, Map<String, BigDecimal> searchPrices) {
+        searchPrices.forEach((externalId, price) -> listingRepository.updateSearchPrice(source, externalId, price));
     }
 
     /**

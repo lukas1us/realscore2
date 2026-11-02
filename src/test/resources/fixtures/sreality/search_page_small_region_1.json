@@ -7,11 +7,13 @@
   "results": [
     {
       "advert_name": "Prodej bytu",
-      "hash_id": 101
+      "hash_id": 101,
+      "price_summary_czk": 3590000.0
     },
     {
       "advert_name": "Prodej bytu",
-      "hash_id": 102
+      "hash_id": 102,
+      "price_summary_czk": 0.0
     }
   ],
   "status_code": 200,

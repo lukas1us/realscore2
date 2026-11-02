@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +41,10 @@ public class Listing {
 
     @Column(name = "removed_at")
     private Instant removedAt;
+
+    /** Raw {@code price_summary_czk} of the last search result taken into account; 0 is price on request. */
+    @Column(name = "search_price_czk")
+    private BigDecimal searchPriceCzk;
 
     public Listing(String source, String externalId, Instant seenAt) {
         this.source = source;

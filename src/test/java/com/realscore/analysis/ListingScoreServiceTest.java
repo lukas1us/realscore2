@@ -72,7 +72,10 @@ class ListingScoreServiceTest {
                 new BenchmarkValue(LocalityLevel.CITY_PART, new BigDecimal("450"), 2));
         assertThat(score.priceDrop().rawPercent()).isEqualByComparingTo("0");
         assertThat(score.priceDrop().benchmark()).isNull();
-        assertThat(score.total()).isEqualByComparingTo("58.7");
+        assertThat(score.quality().score()).isEqualByComparingTo("50.0");
+        assertThat(score.quality().weightPercent()).isEqualByComparingTo("15.0");
+        assertThat(score.quality().factors()).extracting(QualityFactor::points).containsOnly(0);
+        assertThat(score.total()).isEqualByComparingTo("59.5");
         assertThat(score.city()).isEqualTo("Testov");
         assertThat(score.priceCzk()).isEqualByComparingTo("5000000");
     }
@@ -106,6 +109,32 @@ class ListingScoreServiceTest {
     }
 
     @Test
+    void addsTheQualityFactorsOfTheFlatAndShowsEachOne() {
+        String region = "Kraj score-quality";
+        String good = record(region, SALE, FLATS, 6_000_000, 50, """
+                "ownership": {"name": "Osobní", "value": 1},
+                "building_type": {"name": "Cihlová", "value": 2},
+                "energy_efficiency_rating_cb": {"name": "C - Úsporná", "value": 3},
+                "building_condition": {"name": "Po rekonstrukci", "value": 9},
+                "floor_number": 5,
+                "elevator": {"name": "Ne", "value": 2},
+                """);
+        String plain = record(region, SALE, FLATS, 6_000_000, 50);
+
+        ListingScore score = score(region, good);
+
+        assertThat(score.quality().factors()).containsExactly(
+                new QualityFactor("ownership", "OV", 10),
+                new QualityFactor("construction", "Cihlová", 10),
+                new QualityFactor("energyClass", "C", 3),
+                new QualityFactor("buildingCondition", "Po rekonstrukci", 10),
+                new QualityFactor("elevator", "no, floor 5", -10));
+        assertThat(score.quality().points()).isEqualTo(23);
+        assertThat(score.quality().score()).isEqualByComparingTo("73.0");
+        assertThat(scores(region)).extracting(ListingScore::externalId).containsExactly(good, plain);
+    }
+
+    @Test
     void aFlatWithoutAnyBenchmarkIsNotScored() {
         String region = "Kraj score-alone";
         record(region, SALE, FLATS, 5_000_000, 50);
@@ -123,24 +152,36 @@ class ListingScoreServiceTest {
 
     /** Records a 2+kk in Testov's city part Střed (a large city, so grouped by city part); returns its ID. */
     private String record(String region, int transactionType, int category, long price, Integer size) {
+        return record(region, transactionType, category, price, size, "");
+    }
+
+    /** @param extraFields JSON members, each followed by a comma, added to the detail's result */
+    private String record(String region, int transactionType, int category, long price, Integer size,
+            String extraFields) {
         String externalId = String.valueOf(NEXT_ID.incrementAndGet());
-        rerecord(externalId, region, transactionType, category, price, size);
+        rerecord(externalId, region, transactionType, category, price, size, extraFields);
         return externalId;
     }
 
     private void rerecord(String externalId, String region, int transactionType, int category, long price,
             Integer size) {
+        rerecord(externalId, region, transactionType, category, price, size, "");
+    }
+
+    private void rerecord(String externalId, String region, int transactionType, int category, long price,
+            Integer size, String extraFields) {
         String payload = """
                 {"result": {
                   "price_summary_czk": %d,
+                  %s
                   %s
                   "category_sub_cb": {"name": "2+kk", "value": 4},
                   "category_type_cb": {"name": "x", "value": %d},
                   "category_main_cb": {"name": "x", "value": %d},
                   "locality": {"region": "%s", "district": "Testov-okres", "city": "Testov", "citypart": "Střed"}
                 }}
-                """.formatted(price, size == null ? "" : "\"usable_area\": " + size + ",", transactionType, category,
-                region);
+                """.formatted(price, size == null ? "" : "\"usable_area\": " + size + ",", extraFields,
+                transactionType, category, region);
         listingSnapshotService.recordFetch(SOURCE, externalId, payload);
     }
 

@@ -1,6 +1,7 @@
 package com.realscore.analysis;
 
 import com.realscore.analysis.internal.AnalysisProperties;
+import com.realscore.analysis.internal.QualityScorer;
 import com.realscore.analysis.internal.ScoreCalculator;
 import com.realscore.parsing.ActiveListingDetails;
 import com.realscore.parsing.ActivePriceHistory;
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Scores active flats for sale against the market, computed on demand: discount against the local sale median per
- * m², gross rental yield from the local rent medians, and the price drop over the price-drop window. Only flats with
+ * m², gross rental yield from the local rent medians, the price drop over the price-drop window, and the quality of
+ * the flat itself (ownership, construction, energy class, building condition, elevator). Only flats with
  * a price, a positive size, a disposition and a region are scored, and only if a sale or rent benchmark applies.
  */
 @Service
@@ -39,6 +41,7 @@ public class ListingScoreService {
     private final MarketBenchmarkService marketBenchmarkService;
     private final PriceDropService priceDropService;
     private final ScoreCalculator calculator;
+    private final QualityScorer qualityScorer;
     private final AnalysisProperties properties;
 
     private record Key(String source, String externalId) {
@@ -46,17 +49,22 @@ public class ListingScoreService {
 
     /** The fields a score needs, from either a list of active listings or a single listing. */
     private record Candidate(String source, String externalId, Integer dispositionCode, String dispositionLabel,
-            String region, String district, String city, String citypart, BigDecimal priceCzk, BigDecimal sizeM2) {
+            String region, String district, String city, String citypart, BigDecimal priceCzk, BigDecimal sizeM2,
+            QualityScorer.Factors quality) {
 
         static Candidate of(ActiveListingDetails d) {
             return new Candidate(d.source(), d.externalId(), d.dispositionCode(), d.dispositionLabel(), d.region(),
-                    d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2());
+                    d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2(),
+                    new QualityScorer.Factors(d.ownership(), d.constructionType(), d.energyClass(),
+                            d.buildingConditionCode(), d.buildingConditionLabel(), d.floor(), d.elevator()));
         }
 
         static Candidate of(ListingOverview listing) {
             ListingDetails d = listing.details();
             return new Candidate(listing.source(), listing.externalId(), d.dispositionCode(), d.dispositionLabel(),
-                    d.region(), d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2());
+                    d.region(), d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2(),
+                    new QualityScorer.Factors(d.ownership(), d.constructionType(), d.energyClass(),
+                            d.buildingConditionCode(), d.buildingConditionLabel(), d.floor(), d.elevator()));
         }
 
         boolean isScorable() {
@@ -129,11 +137,14 @@ public class ListingScoreService {
         BigDecimal discount = saleBenchmark == null ? null : discountPercent(c, saleBenchmark.median());
         BigDecimal rentalYield = rentBenchmark == null ? null : rentalYieldPercent(c, expectedRent(c, b));
         BigDecimal priceDrop = drop == null ? BigDecimal.ZERO : drop.dropPercent();
+        QualityScorer.Result quality = qualityScorer.score(c.quality());
 
-        return calculator.score(discount, rentalYield, priceDrop).map(r -> new ListingScore(c.source(),
-                c.externalId(), c.dispositionLabel(), c.region(), c.district(), c.city(), c.citypart(), c.priceCzk(),
-                c.sizeM2(), r.total(), part(r.discount(), saleBenchmark), part(r.rentalYield(), rentBenchmark),
-                part(r.priceDrop(), null)));
+        return calculator.score(discount, rentalYield, priceDrop, quality.score()).map(r -> new ListingScore(
+                c.source(), c.externalId(), c.dispositionLabel(), c.region(), c.district(), c.city(), c.citypart(),
+                c.priceCzk(), c.sizeM2(), r.total(), part(r.discount(), saleBenchmark),
+                part(r.rentalYield(), rentBenchmark), part(r.priceDrop(), null),
+                new QualityScorePart(r.quality().score(), r.quality().weightPercent(), quality.points(),
+                        quality.factors())));
     }
 
     /** (median − listing price per m²) / median, in percent: positive when cheaper than the market. */

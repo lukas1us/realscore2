@@ -10,6 +10,7 @@ import java.math.BigDecimal;
  * @param rentalYield gross yearly rent from the local rent medians over the price; {@code null} without a rent
  *                    benchmark
  * @param priceDrop drop over the price-drop window, 0 without one
+ * @param quality the flat's own quality factors (TASK-35), always present; 50 when none is known
  */
 public record ListingScore(
         String source,
@@ -24,5 +25,6 @@ public record ListingScore(
         BigDecimal total,
         ScorePart discount,
         ScorePart rentalYield,
-        ScorePart priceDrop) {
+        ScorePart priceDrop,
+        QualityScorePart quality) {
 }

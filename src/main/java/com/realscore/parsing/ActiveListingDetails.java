@@ -17,5 +17,12 @@ public record ActiveListingDetails(
         String region,
         String district,
         String city,
-        String citypart) {
+        String citypart,
+        Integer floor,
+        String energyClass,
+        String constructionType,
+        Boolean elevator,
+        String ownership,
+        Integer buildingConditionCode,
+        String buildingConditionLabel) {
 }

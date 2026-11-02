@@ -57,7 +57,9 @@ public class ListingDetailsQueryService {
     public List<ActiveListingDetails> findActive(int transactionTypeCode, int propertyCategoryCode) {
         return jdbc.sql("""
                         SELECT d.listing_id, l.source, l.external_id, d.price_czk, d.size_m2, d.disposition_code,
-                               d.disposition_label, d.region, d.district, d.city, d.citypart
+                               d.disposition_label, d.region, d.district, d.city, d.citypart, d.floor,
+                               d.energy_class, d.construction_type, d.elevator, d.ownership,
+                               d.building_condition_code, d.building_condition_label
                         FROM listing_detail d JOIN listing l ON l.id = d.listing_id
                         WHERE l.removed_at IS NULL
                           AND d.transaction_type_code = :transactionType

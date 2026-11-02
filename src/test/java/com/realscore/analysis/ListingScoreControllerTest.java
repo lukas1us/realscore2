@@ -108,6 +108,7 @@ class ListingScoreControllerTest {
         assertThat(score).isNotNull();
         assertThat(score.discount()).isNotNull();
         assertThat(score.rentalYield()).isNotNull();
+        assertThat(score.quality().factors()).hasSize(5);
         assertThat(listing(removed).score()).isNull();
         assertThat(listing(rental).score()).isNull();
     }

@@ -74,13 +74,21 @@ Analysis settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZ
 | `realscore.analysis.min-sample-size` | `5` | Fewest listings a group needs; smaller groups fall back to city, then district, then region |
 | `realscore.analysis.price-drop-days` | `30` | Default window in days of `GET /api/analysis/price-drops` |
 | `realscore.analysis.scores-limit` | `50` | Default number of results of `GET /api/analysis/scores` |
-| `realscore.analysis.scoring.discount.{min,max,weight}` | `-30`, `30`, `50` | Listing score part: % cheaper per m² than the local sale median |
-| `realscore.analysis.scoring.rental-yield.{min,max,weight}` | `2`, `8`, `35` | Listing score part: gross yearly rent (from the local rent medians) over the price, in % |
-| `realscore.analysis.scoring.price-drop.{min,max,weight}` | `0`, `15`, `15` | Listing score part: % price drop over the price-drop window (0 without a drop) |
+| `realscore.analysis.scoring.discount.{min,max,weight}` | `-30`, `30`, `45` | Listing score part: % cheaper per m² than the local sale median |
+| `realscore.analysis.scoring.rental-yield.{min,max,weight}` | `2`, `8`, `30` | Listing score part: gross yearly rent (from the local rent medians) over the price, in % |
+| `realscore.analysis.scoring.price-drop.{min,max,weight}` | `0`, `15`, `10` | Listing score part: % price drop over the price-drop window (0 without a drop) |
+| `realscore.analysis.scoring.quality.weight` | `15` | Listing score part: quality of the flat itself (points below) |
+| `realscore.analysis.scoring.quality.ownership.{personal,cooperative}` | `10`, `-10` | Quality points for OV and DV ownership |
+| `realscore.analysis.scoring.quality.construction.{brick,panel}` | `10`, `-5` | Quality points for Cihlová and Panelová construction |
+| `realscore.analysis.scoring.quality.energy-class.{a,b,c,d,e,f,g}` | `10`, `7`, `3`, `0`, `-3`, `-7`, `0` | Quality points per energy class (G is what sellers without a certificate state) |
+| `realscore.analysis.scoring.quality.building-condition.{new-build,after-reconstruction,very-good,good,before-reconstruction,poor,under-construction,project,in-reconstruction}` | `10`, `10`, `5`, `0`, `-10`, `-20`, `0`, `0`, `0` | Quality points for Novostavba, Po rekonstrukci, Velmi dobrý, Dobrý, Před rekonstrukcí, Špatný, Ve výstavbě, Projekt, V rekonstrukci |
+| `realscore.analysis.scoring.quality.elevator.{from-floor,missing}` | `4`, `-10` | Quality points for no elevator (an explicit "Ne") from this floor up; 0 is the ground floor |
 
 Each listing score part maps linearly to 0–100 between `min` and `max` (clamped), and the total is the weighted
-average of the parts that have data. A flat with neither a sale nor a rent benchmark is not scored. Only active flats
-for sale with a price, size, disposition and region are scored.
+average of the parts that have data. The quality part instead starts at 50 and adds the points of each factor,
+clamped to 0–100; a factor the listing does not state, or a value not listed above (e.g. Smíšená construction or
+K demolici), adds 0, so a missing factor is never penalised. A flat with neither a sale nor a rent benchmark is not
+scored. Only active flats for sale with a price, size, disposition and region are scored.
 
 Sreality client settings (`realscore.sreality.*`: page size, retries, request pacing) are in `application.properties`
 too.
@@ -92,7 +100,7 @@ too.
 | `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
 | `GET /api/analysis/benchmarks/rent` | Median monthly rent and median rent per m² of active flats for rent, per locality and disposition, each with its level and sample size |
 | `GET /api/listings/{source}/{externalId}` | One listing, removed or not: first/last seen and removed time, parsed details (`null` if never parsed), price history oldest first, and stats: days on market, number of price drops, % change from the first to the current price. Also its `score` (as in `/api/analysis/scores`) if it is an active flat for sale that can be scored, else `null`. 404 if unknown |
-| `GET /api/analysis/scores[?limit=50][&region=…][&city=…][&disposition=…]` | Scored active flats for sale, best first, at most `limit` (default `realscore.analysis.scores-limit`). Each with its total, and per part (discount, rental yield, price drop) the raw %, sub-score, weight share and the benchmark used. Filters match exactly, ignoring case; `disposition` is the label such as `2+kk`, with `+` encoded as `%2B` in the URL. `limit` < 1 gives 400 |
+| `GET /api/analysis/scores[?limit=50][&region=…][&city=…][&disposition=…]` | Scored active flats for sale, best first, at most `limit` (default `realscore.analysis.scores-limit`). Each with its total, and per part (discount, rental yield, price drop) the raw %, sub-score, weight share and the benchmark used. The `quality` part has its sub-score, weight share, summed `points` and every factor (`ownership`, `construction`, `energyClass`, `buildingCondition`, `elevator`) with its parsed `value` (`null` if unknown) and `points`. Filters match exactly, ignoring case; `disposition` is the label such as `2+kk`, with `+` encoded as `%2B` in the URL. `limit` < 1 gives 400 |
 | `GET /api/analysis/price-drops[?days=30][&type=sale\|rent]` | Active listings whose current price is below the price they had `days` ago (default `realscore.analysis.price-drop-days`), or below their first price if they appeared later; several drops add up. Each with old and new price, percent drop and when the current price was first seen; largest drop first. Without `type`, sales and rentals both; `days` < 1 or another `type` gives 400 |
 | `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable), and rebuilds their price history. Synchronous; returns the `listing_detail` counts |
 | `GET /actuator/health` | Health check |
@@ -107,7 +115,7 @@ too.
     `NULL` and a not-chosen energy class stays `-` instead of `NULL`;
   - building condition: `building_condition_code` and `building_condition_label` (in the listing endpoint
     `buildingConditionCode` and `buildingConditionLabel`, Sreality's raw code and label, `null` when not entered)
-    stay empty until re-parsed;
+    stay empty until re-parsed, so the score's building condition factor adds 0 until then;
   - the split building years: `year_built` is replaced by `acceptance_year` and `reconstruction_year` (in the
     listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two

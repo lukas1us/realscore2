@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * Turns a listing's raw percentages into sub-scores and a total, as configured by {@link ScoringProperties}. Each
- * part maps linearly to 0-100 between its {@code min} and {@code max}, clamped; the total is the weighted average of
- * the parts that have data, so the weights of the others are shared among them.
+ * part maps linearly to 0-100 between its {@code min} and {@code max}, clamped; the quality part comes already scored
+ * from {@link QualityScorer}. The total is the weighted average of the parts that have data, so the weights of the
+ * others are shared among them.
  */
 @Component
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class ScoreCalculator {
     private final ScoringProperties properties;
 
     /**
-     * @param rawPercent rounded to 2 decimals
+     * @param rawPercent rounded to 2 decimals; {@code null} for the quality part, which has no raw percentage
      * @param score 0-100, rounded to 1 decimal
      * @param weightPercent this part's share of the total in percent after rescaling, rounded to 1 decimal
      */
@@ -31,21 +32,23 @@ public class ScoreCalculator {
     }
 
     /** @param total 0-100, rounded to 1 decimal; a part without data is {@code null} */
-    public record Result(BigDecimal total, Part discount, Part rentalYield, Part priceDrop) {
+    public record Result(BigDecimal total, Part discount, Part rentalYield, Part priceDrop, Part quality) {
     }
 
-    private record Input(BigDecimal raw, ScoringProperties.Part config) {
+    /** @param score 0-100, rounded to 1 decimal */
+    private record Input(BigDecimal raw, BigDecimal score, BigDecimal weight) {
     }
 
     /**
      * @param discountPercent {@code null} without a sale benchmark
      * @param rentalYieldPercent {@code null} without a rent benchmark
      * @param priceDropPercent never {@code null}: no drop is 0
-     * @return empty when neither the discount nor the rental yield is known, since a drop alone says nothing about
-     *     the price, or when the known parts all weigh 0
+     * @param qualityScore never {@code null}: 0-100 from {@link QualityScorer}, 50 when no factor is known
+     * @return empty when neither the discount nor the rental yield is known, since a drop or quality alone says
+     *     nothing about the price, or when the known parts all weigh 0
      */
     public Optional<Result> score(BigDecimal discountPercent, BigDecimal rentalYieldPercent,
-            BigDecimal priceDropPercent) {
+            BigDecimal priceDropPercent, BigDecimal qualityScore) {
         if (discountPercent == null && rentalYieldPercent == null) {
             return Optional.empty();
         }
@@ -53,27 +56,27 @@ public class ScoreCalculator {
         Input discount = input(discountPercent, properties.discount(), known);
         Input rentalYield = input(rentalYieldPercent, properties.rentalYield(), known);
         Input priceDrop = input(priceDropPercent, properties.priceDrop(), known);
-        BigDecimal totalWeight = known.stream().map(i -> i.config().weight()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        Input quality = new Input(null, qualityScore, properties.quality().weight());
+        known.add(quality);
+        BigDecimal totalWeight = known.stream().map(Input::weight).reduce(BigDecimal.ZERO, BigDecimal::add);
         if (totalWeight.signum() == 0) {
             return Optional.empty();
         }
 
-        Part discountPart = part(discount, totalWeight);
-        Part rentalYieldPart = part(rentalYield, totalWeight);
-        Part priceDropPart = part(priceDrop, totalWeight);
         BigDecimal weightedSum = BigDecimal.ZERO;
         for (Input input : known) {
-            weightedSum = weightedSum.add(subScore(input).multiply(input.config().weight()));
+            weightedSum = weightedSum.add(input.score().multiply(input.weight()));
         }
         BigDecimal total = weightedSum.divide(totalWeight, 1, RoundingMode.HALF_UP);
-        return Optional.of(new Result(total, discountPart, rentalYieldPart, priceDropPart));
+        return Optional.of(new Result(total, part(discount, totalWeight), part(rentalYield, totalWeight),
+                part(priceDrop, totalWeight), part(quality, totalWeight)));
     }
 
     private static Input input(BigDecimal raw, ScoringProperties.Part config, List<Input> known) {
         if (raw == null) {
             return null;
         }
-        Input input = new Input(raw, config);
+        Input input = new Input(raw, subScore(raw, config), config.weight());
         known.add(input);
         return input;
     }
@@ -82,15 +85,16 @@ public class ScoreCalculator {
         if (input == null) {
             return null;
         }
-        return new Part(input.raw().setScale(2, RoundingMode.HALF_UP), subScore(input),
-                input.config().weight().multiply(HUNDRED).divide(totalWeight, 1, RoundingMode.HALF_UP));
+        BigDecimal raw = input.raw() == null ? null : input.raw().setScale(2, RoundingMode.HALF_UP);
+        return new Part(raw, input.score(),
+                input.weight().multiply(HUNDRED).divide(totalWeight, 1, RoundingMode.HALF_UP));
     }
 
     /** Rounded to 1 decimal, so the total can be recomputed from the sub-scores shown. */
-    private static BigDecimal subScore(Input input) {
-        BigDecimal min = input.config().min();
-        BigDecimal max = input.config().max();
-        BigDecimal linear = input.raw().subtract(min).multiply(HUNDRED)
+    private static BigDecimal subScore(BigDecimal raw, ScoringProperties.Part config) {
+        BigDecimal min = config.min();
+        BigDecimal max = config.max();
+        BigDecimal linear = raw.subtract(min).multiply(HUNDRED)
                 .divide(max.subtract(min), DIVISION_SCALE, RoundingMode.HALF_UP);
         BigDecimal clamped = linear.max(BigDecimal.ZERO).min(HUNDRED);
         return clamped.setScale(1, RoundingMode.HALF_UP);

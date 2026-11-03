@@ -6,7 +6,7 @@ import java.time.Instant;
 /**
  * Every parsed field of a listing's latest snapshot. Any field may be {@code null} when the snapshot did not carry
  * it. Codes are Sreality's raw values (doc "Sreality API"): transaction type 1 = sale, 2 = rent; property category
- * 1 = flats.
+ * 1 = flats. {@code url} is the public Sreality detail page.
  */
 public record ListingDetails(
         BigDecimal priceCzk,
@@ -28,5 +28,6 @@ public record ListingDetails(
         String citypart,
         Integer transactionTypeCode,
         Integer propertyCategoryCode,
+        String url,
         Instant parsedAt) {
 }

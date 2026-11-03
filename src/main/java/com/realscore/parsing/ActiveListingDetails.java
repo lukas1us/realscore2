@@ -24,5 +24,6 @@ public record ActiveListingDetails(
         Boolean elevator,
         String ownership,
         Integer buildingConditionCode,
-        String buildingConditionLabel) {
+        String buildingConditionLabel,
+        String url) {
 }

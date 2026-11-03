@@ -58,8 +58,10 @@ class ListingScoreControllerTest {
         String second = record(region, "Testov", "2+kk", 4, SALE, 6_000_000);
         record(region, "Testov", "2+kk", 4, SALE, 7_000_000);
 
-        assertThat(scores("/api/analysis/scores?region={region}", region))
-                .extracting(ListingScore::externalId).containsExactly(best, second);
+        List<ListingScore> scores = scores("/api/analysis/scores?region={region}", region);
+
+        assertThat(scores).extracting(ListingScore::externalId).containsExactly(best, second);
+        assertThat(scores.getFirst().url()).isEqualTo("https://www.sreality.cz/detail/prodej/byt/2+kk/testov/" + best);
     }
 
     @Test
@@ -134,9 +136,10 @@ class ListingScoreControllerTest {
                   "category_sub_cb": {"name": "%s", "value": %d},
                   "category_type_cb": {"name": "x", "value": %d},
                   "category_main_cb": {"name": "x", "value": 1},
-                  "locality": {"region": "%s", "district": "Testov-okres", "city": "%s"}
+                  "locality": {"region": "%s", "district": "Testov-okres", "city": "%s", "city_seo_name": "testov"},
+                  "hash_id": %s
                 }}
-                """.formatted(price, disposition, dispositionCode, transactionType, region, city);
+                """.formatted(price, disposition, dispositionCode, transactionType, region, city, externalId);
         listingSnapshotService.recordFetch(SOURCE, externalId, payload);
         return externalId;
     }

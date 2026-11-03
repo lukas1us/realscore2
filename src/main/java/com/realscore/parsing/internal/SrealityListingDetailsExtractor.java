@@ -41,7 +41,8 @@ public class SrealityListingDetailsExtractor {
                 textOrNull(result.path("locality"), "region"),
                 textOrNull(result.path("locality"), "citypart"),
                 intOrNull(result.path("category_type_cb"), "value"),
-                intOrNull(result.path("category_main_cb"), "value"));
+                intOrNull(result.path("category_main_cb"), "value"),
+                SrealityListingUrl.from(result));
     }
 
     private JsonNode parse(String rawPayload) {

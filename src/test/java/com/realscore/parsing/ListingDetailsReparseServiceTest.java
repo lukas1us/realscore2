@@ -117,6 +117,26 @@ class ListingDetailsReparseServiceTest {
     }
 
     @Test
+    void reparseFillsTheUrlOfRowsParsedBeforeIt() throws Exception {
+        String source = "reparse-url";
+        listingSnapshotService.recordFetch(source, "1", fixture("detail_success.json"));
+        listingSnapshotService.recordFetch(source, "2", fixture("detail_no_street_or_citypart.json"));
+        for (String externalId : new String[] {"1", "2"}) {
+            ListingDetail beforeV13 = detail(source, externalId).orElseThrow();
+            beforeV13.setUrl(null);
+            listingDetailRepository.save(beforeV13);
+        }
+
+        ReparseResult result = reparseService.reparseAll(source);
+
+        assertThat(result).isEqualTo(new ReparseResult(0, 2, 0, 0));
+        assertThat(detail(source, "1").orElseThrow().getUrl())
+                .isEqualTo("https://www.sreality.cz/detail/prodej/byt/1+1/plzen-plzen-2-slovany-barakova/2494705740");
+        assertThat(detail(source, "2").orElseThrow().getUrl())
+                .isEqualTo("https://www.sreality.cz/detail/pronajem/byt/1+kk/plzen/2494705740");
+    }
+
+    @Test
     void reparseFillsTheBuildingConditionOfARowParsedBeforeIt() throws Exception {
         String source = "reparse-building-condition";
         listingSnapshotService.recordFetch(source, "1", fixture("detail_success.json"));

@@ -207,6 +207,81 @@ class SrealityListingDetailsExtractorTest {
         assertThat(extractor.extract(payload).sizeM2()).isEqualByComparingTo(new BigDecimal("50"));
     }
 
+    @Test
+    void buildsTheSaleDetailUrl() throws Exception {
+        assertThat(extractor.extract(fixture("detail_success.json")).url())
+                .isEqualTo("https://www.sreality.cz/detail/prodej/byt/1+1/plzen-plzen-2-slovany-barakova/2494705740");
+    }
+
+    @Test
+    void buildsAUrlWithoutStreetOrCitypart() throws Exception {
+        assertThat(extractor.extract(fixture("detail_no_street_or_citypart.json")).url())
+                .isEqualTo("https://www.sreality.cz/detail/pronajem/byt/1+kk/plzen/2494705740");
+    }
+
+    @Test
+    void buildsTheRentalUrlConfirmedOnTheSite() {
+        String payload = urlPayload(2, 1, "1+kk",
+                "\"city_seo_name\": \"plzen\", \"citypart_seo_name\": \"jizni-predmesti\", "
+                        + "\"street_seo_name\": \"magisterska\"", "4088148044");
+
+        assertThat(extractor.extract(payload).url())
+                .isEqualTo("https://www.sreality.cz/detail/pronajem/byt/1+kk/plzen-jizni-predmesti-magisterska/4088148044");
+    }
+
+    @Test
+    void aRepeatedLocalityPartAppearsOnce() {
+        String payload = urlPayload(1, 1, "2+kk",
+                "\"city_seo_name\": \"praha\", \"citypart_seo_name\": \"praha\", \"street_seo_name\": \"vodickova\"",
+                "123");
+
+        assertThat(extractor.extract(payload).url())
+                .isEqualTo("https://www.sreality.cz/detail/prodej/byt/2+kk/praha-vodickova/123");
+    }
+
+    @Test
+    void blankLocalityPartsAreSkipped() {
+        String payload = urlPayload(1, 1, "2+kk",
+                "\"city_seo_name\": \"brno\", \"citypart_seo_name\": \"  \", \"street_seo_name\": \"\"", "123");
+
+        assertThat(extractor.extract(payload).url())
+                .isEqualTo("https://www.sreality.cz/detail/prodej/byt/2+kk/brno/123");
+    }
+
+    @Test
+    void theSubSegmentIsLowercasedWithoutAccents() {
+        String payload = urlPayload(1, 1, "Atypický", "\"city_seo_name\": \"brno\"", "123");
+
+        assertThat(extractor.extract(payload).url())
+                .isEqualTo("https://www.sreality.cz/detail/prodej/byt/atypicky/brno/123");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1, byt", "2, dum", "3, pozemek", "4, komercni", "5, ostatni"})
+    void mapsTheMainCategory(int mainValue, String expected) {
+        String payload = urlPayload(1, mainValue, "x", "\"city_seo_name\": \"brno\"", "123");
+
+        assertThat(extractor.extract(payload).url()).startsWith("https://www.sreality.cz/detail/prodej/" + expected + "/");
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @CsvSource(delimiter = '|', value = {
+            "unknown type | {\"result\": {\"category_type_cb\": {\"value\": 3}, \"category_main_cb\": {\"value\": 1}, \"category_sub_cb\": {\"name\": \"1+1\"}, \"locality\": {\"city_seo_name\": \"brno\"}, \"hash_id\": 1}}",
+            "unknown main | {\"result\": {\"category_type_cb\": {\"value\": 1}, \"category_main_cb\": {\"value\": 9}, \"category_sub_cb\": {\"name\": \"1+1\"}, \"locality\": {\"city_seo_name\": \"brno\"}, \"hash_id\": 1}}",
+            "blank sub | {\"result\": {\"category_type_cb\": {\"value\": 1}, \"category_main_cb\": {\"value\": 1}, \"category_sub_cb\": {\"name\": \" \"}, \"locality\": {\"city_seo_name\": \"brno\"}, \"hash_id\": 1}}",
+            "no locality | {\"result\": {\"category_type_cb\": {\"value\": 1}, \"category_main_cb\": {\"value\": 1}, \"category_sub_cb\": {\"name\": \"1+1\"}, \"locality\": {\"city_seo_name\": \"\"}, \"hash_id\": 1}}",
+            "no hash_id | {\"result\": {\"category_type_cb\": {\"value\": 1}, \"category_main_cb\": {\"value\": 1}, \"category_sub_cb\": {\"name\": \"1+1\"}, \"locality\": {\"city_seo_name\": \"brno\"}}}"})
+    void noUrlWhenARequiredPartIsMissing(String ignored, String payload) {
+        assertThat(extractor.extract(payload).url()).isNull();
+    }
+
+    private static String urlPayload(int type, int main, String sub, String locality, String hashId) {
+        return """
+                {"result": {"category_type_cb": {"value": %d}, "category_main_cb": {"value": %d},
+                 "category_sub_cb": {"name": "%s"}, "locality": {%s}, "hash_id": %s}}
+                """.formatted(type, main, sub, locality, hashId);
+    }
+
     private static String fixture(String name) throws Exception {
         Path path = Path.of("src/test/resources/fixtures/sreality", name);
         return Files.readString(path);

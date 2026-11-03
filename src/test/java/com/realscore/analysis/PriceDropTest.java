@@ -75,7 +75,7 @@ class PriceDropTest {
     }
 
     private static ActivePriceHistory listing(PricePoint... history) {
-        return new ActivePriceHistory("test", "1", 1, "2+kk", new BigDecimal("54"), "Plzeň", null, List.of(history));
+        return new ActivePriceHistory("test", "1", 1, "2+kk", new BigDecimal("54"), "Plzeň", null, null, List.of(history));
     }
 
     private static PricePoint point(int daysFromSince, String price) {

@@ -13,7 +13,8 @@ class ListingDetailTest {
 
     private static final ListingDetailsFields FIELDS = new ListingDetailsFields(
             new BigDecimal("3590000"), new BigDecimal("37"), 3, "1+1", 1975, null, 1, "C", "Cihlová", true,
-            "OV", 1, "Velmi dobrý", "Plzeň", "Plzeň-město", "Plzeňský kraj", "Plzeň 2-Slovany", 1, 1);
+            "OV", 1, "Velmi dobrý", "Plzeň", "Plzeň-město", "Plzeňský kraj", "Plzeň 2-Slovany", 1, 1,
+            "https://www.sreality.cz/detail/prodej/byt/1+1/plzen-plzen-2-slovany-barakova/2494705740");
 
     @Test
     void firstApplyOnANewRowIsAChange() {

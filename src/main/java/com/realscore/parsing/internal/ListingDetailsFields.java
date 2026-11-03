@@ -23,5 +23,6 @@ public record ListingDetailsFields(
         String region,
         String citypart,
         Integer transactionTypeCode,
-        Integer propertyCategoryCode) {
+        Integer propertyCategoryCode,
+        String url) {
 }

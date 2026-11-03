@@ -17,5 +17,6 @@ public record ActivePriceHistory(
         BigDecimal sizeM2,
         String city,
         String citypart,
+        String url,
         List<PricePoint> priceHistory) {
 }

@@ -12,6 +12,7 @@ import java.util.Optional;
  * An active listing whose current price is below the price it had when a time window started; several drops inside
  * the window add up into one.
  *
+ * @param url the public Sreality detail page; {@code null} if the snapshot lacked a part it needs
  * @param oldPriceCzk the price in effect when the window started, or the first price if the listing appeared later
  * @param newPriceCzk the current price
  * @param dropPercent how much lower the new price is than the old one, in percent rounded to one decimal
@@ -25,6 +26,7 @@ public record PriceDrop(
         BigDecimal sizeM2,
         String city,
         String citypart,
+        String url,
         BigDecimal oldPriceCzk,
         BigDecimal newPriceCzk,
         BigDecimal dropPercent,
@@ -52,6 +54,6 @@ public record PriceDrop(
                 .divide(old.priceCzk(), 1, RoundingMode.HALF_UP);
         return Optional.of(new PriceDrop(listing.source(), listing.externalId(),
                 TransactionType.ofCode(listing.transactionTypeCode()), listing.dispositionLabel(), listing.sizeM2(),
-                listing.city(), listing.citypart(), old.priceCzk(), current.priceCzk(), percent, current.observedAt()));
+                listing.city(), listing.citypart(), listing.url(), old.priceCzk(), current.priceCzk(), percent, current.observedAt()));
     }
 }

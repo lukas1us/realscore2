@@ -56,6 +56,8 @@ class ListingControllerTest {
         assertThat(listing.lastSeenAt()).isNotNull();
         assertThat(listing.removedAt()).isNull();
         assertThat(listing.details().ownership()).isEqualTo("OV");
+        assertThat(listing.details().url())
+                .isEqualTo("https://www.sreality.cz/detail/prodej/byt/1+1/plzen-plzen-2-slovany-barakova/2494705740");
         assertThat(listing.details().priceCzk()).isEqualByComparingTo("3390000");
         assertThat(listing.priceHistory()).extracting(point -> point.priceCzk().toBigInteger().toString())
                 .containsExactly("3590000", "3390000");

@@ -49,12 +49,12 @@ public class ListingScoreService {
 
     /** The fields a score needs, from either a list of active listings or a single listing. */
     private record Candidate(String source, String externalId, Integer dispositionCode, String dispositionLabel,
-            String region, String district, String city, String citypart, BigDecimal priceCzk, BigDecimal sizeM2,
-            QualityScorer.Factors quality) {
+            String region, String district, String city, String citypart, String url, BigDecimal priceCzk,
+            BigDecimal sizeM2, QualityScorer.Factors quality) {
 
         static Candidate of(ActiveListingDetails d) {
             return new Candidate(d.source(), d.externalId(), d.dispositionCode(), d.dispositionLabel(), d.region(),
-                    d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2(),
+                    d.district(), d.city(), d.citypart(), d.url(), d.priceCzk(), d.sizeM2(),
                     new QualityScorer.Factors(d.ownership(), d.constructionType(), d.energyClass(),
                             d.buildingConditionCode(), d.buildingConditionLabel(), d.floor(), d.elevator()));
         }
@@ -62,7 +62,7 @@ public class ListingScoreService {
         static Candidate of(ListingOverview listing) {
             ListingDetails d = listing.details();
             return new Candidate(listing.source(), listing.externalId(), d.dispositionCode(), d.dispositionLabel(),
-                    d.region(), d.district(), d.city(), d.citypart(), d.priceCzk(), d.sizeM2(),
+                    d.region(), d.district(), d.city(), d.citypart(), d.url(), d.priceCzk(), d.sizeM2(),
                     new QualityScorer.Factors(d.ownership(), d.constructionType(), d.energyClass(),
                             d.buildingConditionCode(), d.buildingConditionLabel(), d.floor(), d.elevator()));
         }
@@ -118,7 +118,7 @@ public class ListingScoreService {
             return Optional.empty();
         }
         ActivePriceHistory history = new ActivePriceHistory(listing.source(), listing.externalId(),
-                d.transactionTypeCode(), d.dispositionLabel(), d.sizeM2(), d.city(), d.citypart(),
+                d.transactionTypeCode(), d.dispositionLabel(), d.sizeM2(), d.city(), d.citypart(), d.url(),
                 listing.priceHistory());
         PriceDrop drop = PriceDrop.of(history, PriceDropService.windowStart(properties.priceDropDays())).orElse(null);
         return score(candidate, marketBenchmarkService.benchmarks(), drop);
@@ -141,7 +141,7 @@ public class ListingScoreService {
 
         return calculator.score(discount, rentalYield, priceDrop, quality.score()).map(r -> new ListingScore(
                 c.source(), c.externalId(), c.dispositionLabel(), c.region(), c.district(), c.city(), c.citypart(),
-                c.priceCzk(), c.sizeM2(), r.total(), part(r.discount(), saleBenchmark),
+                c.url(), c.priceCzk(), c.sizeM2(), r.total(), part(r.discount(), saleBenchmark),
                 part(r.rentalYield(), rentBenchmark), part(r.priceDrop(), null),
                 new QualityScorePart(r.quality().score(), r.quality().weightPercent(), quality.points(),
                         quality.factors())));

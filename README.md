@@ -151,6 +151,10 @@ too.
 
 ## HTTP API
 
+Listings in the responses below carry `url`, the listing's public Sreality detail page, derived during parsing. It is
+`null` when the snapshot lacks a part the URL needs (transaction type, property category, disposition name, locality
+or ID).
+
 | Endpoint | Description |
 |---|---|
 | `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
@@ -173,7 +177,9 @@ too.
     `buildingConditionCode` and `buildingConditionLabel`, Sreality's raw code and label, `null` when not entered)
     stay empty until re-parsed, so the score's building condition factor adds 0 until then;
   - the split building years: `year_built` is replaced by `acceptance_year` and `reconstruction_year` (in the
-    listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed.
+    listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed;
+  - the listing URL: `listing_detail.url` (`url` in the listing, score and price-drop endpoints) stays empty until
+    re-parsed.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
   requests per second, which can take hours. Later runs only fetch new and due listings, plus every active listing
   the run did not see: one that stays online outside the searches (e.g. above the price cap) is fetched on every run

@@ -84,6 +84,9 @@ public class ListingDetail {
     @Column(name = "property_category_code")
     private Integer propertyCategoryCode;
 
+    @Column(name = "url")
+    private String url;
+
     @Column(name = "parsed_at", nullable = false)
     private Instant parsedAt;
 
@@ -120,6 +123,7 @@ public class ListingDetail {
         this.citypart = fields.citypart();
         this.transactionTypeCode = fields.transactionTypeCode();
         this.propertyCategoryCode = fields.propertyCategoryCode();
+        this.url = fields.url();
         this.parsedAt = parsedAt;
         return true;
     }
@@ -128,7 +132,7 @@ public class ListingDetail {
         return new ListingDetailsFields(priceCzk, sizeM2, dispositionCode, dispositionLabel, acceptanceYear,
                 reconstructionYear, floor, energyClass, constructionType, elevator, ownership,
                 buildingConditionCode, buildingConditionLabel, city, district, region,
-                citypart, transactionTypeCode, propertyCategoryCode);
+                citypart, transactionTypeCode, propertyCategoryCode, url);
     }
 
     /** Like {@code equals}, but compares decimals by value so a NUMERIC scale change from the DB isn't a change. */

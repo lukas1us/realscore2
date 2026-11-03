@@ -59,7 +59,7 @@ public class ListingDetailsQueryService {
                         SELECT d.listing_id, l.source, l.external_id, d.price_czk, d.size_m2, d.disposition_code,
                                d.disposition_label, d.region, d.district, d.city, d.citypart, d.floor,
                                d.energy_class, d.construction_type, d.elevator, d.ownership,
-                               d.building_condition_code, d.building_condition_label
+                               d.building_condition_code, d.building_condition_label, d.url
                         FROM listing_detail d JOIN listing l ON l.id = d.listing_id
                         WHERE l.removed_at IS NULL
                           AND d.transaction_type_code = :transactionType
@@ -81,7 +81,7 @@ public class ListingDetailsQueryService {
         Map<Long, ActivePriceHistory> histories = new LinkedHashMap<>();
         jdbc.sql("""
                         SELECT l.id, l.source, l.external_id, d.transaction_type_code, d.disposition_label, d.size_m2,
-                               d.city, d.citypart, p.observed_at, p.price_czk
+                               d.city, d.citypart, d.url, p.observed_at, p.price_czk
                         FROM listing l
                         JOIN listing_detail d ON d.listing_id = l.id
                         JOIN listing_price_point p ON p.listing_id = l.id
@@ -100,6 +100,7 @@ public class ListingDetailsQueryService {
                         history = new ActivePriceHistory(rs.getString("source"), rs.getString("external_id"),
                                 rs.getObject("transaction_type_code", Integer.class), rs.getString("disposition_label"),
                                 rs.getBigDecimal("size_m2"), rs.getString("city"), rs.getString("citypart"),
+                                rs.getString("url"),
                                 new ArrayList<>());
                         histories.put(listingId, history);
                     }
@@ -114,6 +115,6 @@ public class ListingDetailsQueryService {
         return new ListingDetails(d.getPriceCzk(), d.getSizeM2(), d.getDispositionCode(), d.getDispositionLabel(),
                 d.getAcceptanceYear(), d.getReconstructionYear(), d.getFloor(), d.getEnergyClass(), d.getConstructionType(), d.getElevator(),
                 d.getOwnership(), d.getBuildingConditionCode(), d.getBuildingConditionLabel(), d.getCity(), d.getDistrict(), d.getRegion(), d.getCitypart(),
-                d.getTransactionTypeCode(), d.getPropertyCategoryCode(), d.getParsedAt());
+                d.getTransactionTypeCode(), d.getPropertyCategoryCode(), d.getUrl(), d.getParsedAt());
     }
 }

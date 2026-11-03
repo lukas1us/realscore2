@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-11-01T20:51:00Z'
+updated_date: '2026-11-03T21:00:00Z'
 ---
 # Sreality API
 
@@ -144,6 +144,23 @@ Confirmed live — see the scrubbed fixture at `src/test/resources/fixtures/srea
 Checked 2026-10-31 (TASK-28): fetched estate `2494705740` twice via `GET /api/v1/estates/{id}`, 5 minutes apart, same headers the client uses. The two raw response bodies were **byte-for-byte identical** (same SHA-256 digest). No volatile fields of any kind were observed — not in `labels`/`labels_extended`, not in image URLs, nothing.
 
 **[UNVERIFIED]** This was checked on one estate, over one 5-minute gap. It doesn't rule out volatility over a longer gap (hours/days), under different request conditions (e.g. a different session/cookie state), or on a different estate. If a future capture ever disagrees with this finding, revisit `ListingSnapshotService`'s whole-payload-hash approach then — no change was needed as of this check (the TASK-40 change was about contact data, not volatility).
+
+## Public detail page URL — CONFIRMED 2026-11-03 (TASK-43)
+
+`https://www.sreality.cz/detail/{type}/{main}/{sub}/{locality}/{hash_id}`, built from the detail response's `result`:
+
+- `type` — `category_type_cb.value`: `1` → `prodej`, `2` → `pronajem`.
+- `main` — `category_main_cb.value`: `1` → `byt`, `2` → `dum`, `3` → `pozemek`, `4` → `komercni`, `5` → `ostatni`.
+- `sub` — `category_sub_cb.name`, lowercased with accents stripped and spaces turned into `-`. `1+1` and `1+kk` are kept as they are (CONFIRMED). The slugs of other names (`Atypický`, `6 pokojů a více`, house and land subtypes) are **[UNVERIFIED]**: the site may use shorter slugs than this normalisation gives.
+- `locality` — `locality.city_seo_name`, `citypart_seo_name` and `street_seo_name` joined with `-`, missing or blank ones skipped and exact repeats dropped. Only exact repeats count: `plzen` and `plzen-2-slovany` are both kept.
+- `hash_id` — the estate ID.
+
+Checked in a browser against live listings:
+
+- `https://www.sreality.cz/detail/prodej/byt/1+1/plzen-plzen-2-slovany-barakova/2494705740` (sale)
+- `https://www.sreality.cz/detail/pronajem/byt/1+kk/plzen-jizni-predmesti-magisterska/4088148044` (rental)
+
+**The slug is not cosmetic.** Sreality does not resolve a detail page by ID alone: `https://www.sreality.cz/detail/-/-/-/-/2494705740` returns 404 (checked 2026-11-03). So realscore builds no URL (`listing_detail.url` is `NULL`) when any segment is unknown rather than guessing one.
 
 ## The ~1000-result cap and bucketing workaround
 

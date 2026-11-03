@@ -57,6 +57,21 @@ class PriceDropControllerTest {
     }
 
     @Test
+    void includesTheListingUrl() {
+        String source = "drops-url";
+        for (String price : new String[] {"3590000", "3390000"}) {
+            listingSnapshotService.recordFetch(source, "77", """
+                    {"result": {"price_summary_czk": %s, "category_type_cb": {"value": 2},
+                     "category_main_cb": {"value": 1}, "category_sub_cb": {"name": "1+kk"},
+                     "locality": {"city_seo_name": "plzen", "citypart_seo_name": "jizni-predmesti"}, "hash_id": 77}}
+                    """.formatted(price));
+        }
+
+        assertThat(drops("/api/analysis/price-drops", source)).extracting(PriceDrop::url)
+                .containsExactly("https://www.sreality.cz/detail/pronajem/byt/1+kk/plzen-jizni-predmesti/77");
+    }
+
+    @Test
     void filtersBySaleOrRent() {
         String source = "drops-type";
         record(source, "sale", SALE, "3590000", "3390000");

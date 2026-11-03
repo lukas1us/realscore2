@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-11-03T21:00:00Z'
+updated_date: '2026-11-03T21:17:00Z'
 ---
 # Sreality API
 
@@ -151,7 +151,7 @@ Checked 2026-10-31 (TASK-28): fetched estate `2494705740` twice via `GET /api/v1
 
 - `type` — `category_type_cb.value`: `1` → `prodej`, `2` → `pronajem`.
 - `main` — `category_main_cb.value`: `1` → `byt`, `2` → `dum`, `3` → `pozemek`, `4` → `komercni`, `5` → `ostatni`.
-- `sub` — `category_sub_cb.name`, lowercased with accents stripped and spaces turned into `-`. `1+1` and `1+kk` are kept as they are (CONFIRMED). The slugs of other names (`Atypický`, `6 pokojů a více`, house and land subtypes) are **[UNVERIFIED]**: the site may use shorter slugs than this normalisation gives.
+- `sub` — `category_sub_cb.name`, lowercased with accents stripped and spaces turned into `-`. CONFIRMED in a browser on 2026-11-03 for every flat layout in the data: `1+1` and `1+kk` stay as they are, `6 a více` → `6-a-vice`, `Atypický` → `atypicky`, `Pokoj` → `pokoj`, and for houses `Rodinný` → `rodinny`. Other house and land subtypes are **[UNVERIFIED]**. realscore only collects flats, so they only show up in stray listings.
 - `locality` — `locality.city_seo_name`, `citypart_seo_name` and `street_seo_name` joined with `-`, missing or blank ones skipped and exact repeats dropped. Only exact repeats count: `plzen` and `plzen-2-slovany` are both kept.
 - `hash_id` — the estate ID.
 
@@ -159,6 +159,10 @@ Checked in a browser against live listings:
 
 - `https://www.sreality.cz/detail/prodej/byt/1+1/plzen-plzen-2-slovany-barakova/2494705740` (sale)
 - `https://www.sreality.cz/detail/pronajem/byt/1+kk/plzen-jizni-predmesti-magisterska/4088148044` (rental)
+- `https://www.sreality.cz/detail/pronajem/byt/6-a-vice/blansko-zdikova/494010444`
+- `https://www.sreality.cz/detail/pronajem/byt/atypicky/litomysl-litomysl-mesto-smilovskeho/2400268364`
+- `https://www.sreality.cz/detail/pronajem/byt/pokoj/plzen-vychodni-predmesti-zahradni/2232090700`
+- `https://www.sreality.cz/detail/pronajem/dum/rodinny/horousany-jizni/2923561036`
 
 **The slug is not cosmetic.** Sreality does not resolve a detail page by ID alone: `https://www.sreality.cz/detail/-/-/-/-/2494705740` returns 404 (checked 2026-11-03). So realscore builds no URL (`listing_detail.url` is `NULL`) when any segment is unknown rather than guessing one.
 

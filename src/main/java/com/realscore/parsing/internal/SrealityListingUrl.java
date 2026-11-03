@@ -51,8 +51,9 @@ final class SrealityListingUrl {
     }
 
     /**
-     * Lowercase, accents stripped, whitespace runs turned into one "-". "1+1" and "1+kk" stay as they are; slugs of
-     * other layouts are unverified against the site (doc "Sreality API").
+     * Lowercase, accents stripped, whitespace runs turned into one "-". Confirmed on the site for every flat layout
+     * (e.g. "1+kk", "6 a více" → "6-a-vice", "Atypický" → "atypicky"); other house and land subtypes are unverified
+     * (doc "Sreality API").
      */
     private static String slug(String name) {
         String withoutAccents = Normalizer.normalize(name.strip(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");

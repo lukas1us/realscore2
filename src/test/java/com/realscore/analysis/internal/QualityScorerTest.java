@@ -82,15 +82,20 @@ class QualityScorerTest {
                 .isEqualTo(points);
     }
 
+    /** Floors are Sreality podlaží (NP): 1 is the ground floor, 5 (the default threshold) is the 4th floor above it. */
     @ParameterizedTest
     @CsvSource({
-            "false, 4, -10",
-            "false, 3, 0",
+            "false, 5, -10",
+            "false, 6, -10",
+            "false, 4, 0",
+            "false, 1, 0",
+            "false, 0, 0",
+            "false, -1, 0",
             "true, 8, 0",
             ", 8, 0",
             "false, , 0",
     })
-    void onlyAnExplicitlyMissingElevatorHighUpCosts(Boolean elevator, Integer floor, int points) {
+    void onlyAnExplicitlyMissingElevatorFromTheFourthFloorAboveGroundCosts(Boolean elevator, Integer floor, int points) {
         assertThat(points(new Factors(null, null, null, null, null, floor, elevator), "elevator")).isEqualTo(points);
     }
 

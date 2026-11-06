@@ -29,6 +29,7 @@ public class QualityScorer {
      * @param constructionType Sreality building type label, e.g. {@code Cihlová}
      * @param energyClass {@code A} to {@code G}
      * @param buildingConditionCode Sreality {@code building_condition} value
+     * @param floor Sreality {@code floor_number}: podlaží (NP), 1 is the ground floor, below 1 underground or unclear
      * @param elevator {@code false} only for an explicit "Ne"
      */
     public record Factors(String ownership, String constructionType, String energyClass,

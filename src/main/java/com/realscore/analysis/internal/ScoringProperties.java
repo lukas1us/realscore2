@@ -66,7 +66,8 @@ public record ScoringProperties(@NotNull @Valid Part discount, @NotNull @Valid P
     }
 
     /**
-     * @param fromFloor lowest floor (0 is the ground floor) at which a missing elevator counts
+     * @param fromFloor lowest floor at which a missing elevator counts, as Sreality's {@code floor_number}: the Czech
+     *                  podlaží (NP) number, where 1 is the ground floor and the usual "patro" is one less
      * @param missing points for an elevator explicitly marked as missing at or above {@code fromFloor}
      */
     public record Elevator(@NotNull Integer fromFloor, @NotNull Integer missing) {

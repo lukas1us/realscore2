@@ -142,7 +142,7 @@ Analysis settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZ
 | `realscore.analysis.scoring.quality.construction.{brick,panel}` | `10`, `-5` | Quality points for Cihlová and Panelová construction |
 | `realscore.analysis.scoring.quality.energy-class.{a,b,c,d,e,f,g}` | `10`, `7`, `3`, `0`, `-3`, `-7`, `0` | Quality points per energy class (G is what sellers without a certificate state) |
 | `realscore.analysis.scoring.quality.building-condition.{new-build,after-reconstruction,very-good,good,before-reconstruction,poor,under-construction,project,in-reconstruction}` | `10`, `10`, `5`, `0`, `-10`, `-20`, `0`, `0`, `0` | Quality points for Novostavba, Po rekonstrukci, Velmi dobrý, Dobrý, Před rekonstrukcí, Špatný, Ve výstavbě, Projekt, V rekonstrukci |
-| `realscore.analysis.scoring.quality.elevator.{from-floor,missing}` | `4`, `-10` | Quality points for no elevator (an explicit "Ne") from this floor up; 0 is the ground floor |
+| `realscore.analysis.scoring.quality.elevator.{from-floor,missing}` | `5`, `-10` | Quality points for no elevator (an explicit "Ne") from this floor up. Floors are Sreality's `floor_number`, the Czech podlaží (NP) number: 1 is the ground floor, so `5` is the 4th floor above it (4. patro) |
 
 Each listing score part maps linearly to 0–100 between `min` and `max` (clamped), and the total is the weighted
 average of the parts that have data. The quality part instead starts at 50 and adds the points of each factor,
@@ -202,6 +202,10 @@ or ID).
   is dated to that run. If that fetch fails, the old search price is kept, so the next run tries again. Such
   refetches count in `scrape_run` like any other (`updated_count` when the snapshot changed). The first run after
   upgrading only stores the search prices, since there is nothing to compare them with yet.
+- **Floors are Sreality's podlaží (NP) numbers**, stored unchanged as `listing_detail.floor` (`floor` in the listing
+  endpoint, `floor N` in the score's `elevator` factor): 1 is the ground floor (přízemí), 2 the first floor above it
+  (1. patro), so the usual Czech "patro" is one less. 0 is ground or raised ground as some sellers enter it, and
+  negative values are underground (-1 is 1. PP / suterén). `elevator.from-floor` uses the same numbers.
 - **Days on market count from the first time realscore saw a listing**, not from when it was published: Sreality's
   detail has no publication date. Listings already online before the first scrape start at 0.
 - **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians

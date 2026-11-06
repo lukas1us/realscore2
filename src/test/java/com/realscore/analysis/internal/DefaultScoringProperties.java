@@ -22,7 +22,7 @@ final class DefaultScoringProperties {
                 new ScoringProperties.Construction(10, -5),
                 new ScoringProperties.EnergyClass(10, 7, 3, 0, -3, -7, 0),
                 new ScoringProperties.BuildingCondition(10, 10, 5, 0, -10, -20, 0, 0, 0),
-                new ScoringProperties.Elevator(4, -10));
+                new ScoringProperties.Elevator(5, -10));
     }
 
     static ScoringProperties.Part part(String min, String max, String weight) {

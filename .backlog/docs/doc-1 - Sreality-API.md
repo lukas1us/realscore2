@@ -3,7 +3,7 @@ id: doc-1
 title: Sreality API
 type: specification
 created_date: '2026-10-30T23:36:00Z'
-updated_date: '2026-11-03T21:17:00Z'
+updated_date: '2026-11-06T21:09:00Z'
 ---
 # Sreality API
 
@@ -123,6 +123,7 @@ Confirmed live — see the scrubbed fixture at `src/test/resources/fixtures/srea
 **The biggest change from the old doc: there is no `items` list at all.** Every fact the old doc extracted from `items` via multi-name fallback priority is now a direct, named field:
 
 - `usable_area`, `floor_area`, `floor_number`, `floors` — plain numbers.
+- `floor_number` is the Czech **podlaží (NP) number, 1-based: 1 = 1. NP = ground floor (přízemí), 2 = 2. NP = 1. patro**, so the usual Czech "patro" is `floor_number − 1` — CONFIRMED 2026-11-06 (TASK-46) against the latest snapshot of every listing (~20,000 flats), counting wording in `advert_description`. With 1 (4,726 listings): "přízemí" 985 and "1. NP" 1,002, against "1. patře/patro" 400. With 2 (5,617): "2. NP" 1,745 and "1. patře" 782, against "2. patře" 553. With 3 (4,206): "2. patře" 673 and "3. patře" 492. Sellers mix "patro" and "NP" in the text, but the field follows NP. **0** is rare (196) and means ground or raised ground as some sellers enter it ("přízemí" 65, "suterén/snížené přízemí" 26). **Negative values are underground podlaží**: -1 (87) = 1. PP / suterén ("suterén" 43, "1. PP" 15), -2…-4 a handful. A few values are implausible (single listings at 23–368). `floors` is the building's number of above-ground storeys in the same numbering (a few listings have `floor_number > floors`). realscore stores `floor_number` unchanged as `listing_detail.floor`.
 - `category_main_cb`, `category_sub_cb`, `category_type_cb`, `building_type`, `ownership`, `elevator`, `building_condition`, `energy_efficiency_rating_cb`, `flat_class`, `furnished`, `easy_access` — each a self-describing `{"name": "<human Czech label>", "value": <code>}` object. Only `value` matters for comparison/storage; `name` is a ready-made display label.
 - `heating_set`, `heating_source_set`, `heating_element_set`, `gas_set`, `gully_set`, `electricity_set` — each a **list** of `{"name", "value"}` objects (a field can carry more than one value).
 - `locality` — a structured object (`city`, `city_seo_name`, `citypart`, `district`, `district_id`, `region`, `region_id`, `street`, `street_id`, `housenumber`, `streetnumber`, `gps_lat`, `gps_lon`, `ward`, `quarter`, `zip`, plus `*_seo_name` variants and a `geometry` block). This completely replaces the old doc's whole "disambiguate a comma-separated string by part count" logic — city/district/region are already separate fields.

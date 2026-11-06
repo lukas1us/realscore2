@@ -22,6 +22,7 @@ import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.config.CronTask;
+import org.springframework.scheduling.config.FixedDelayTask;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskHolder;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -39,13 +40,14 @@ import org.springframework.test.context.DynamicPropertySource;
 
 /**
  * Calls {@link SrealityScrapeJob#run()} directly against WireMock and a real Postgres. The configured cron fires only
- * at midnight on January 1st, so the scheduler never starts a run during the test.
+ * at midnight on January 1st and the due check runs hourly, so the scheduler never starts a run during the test.
  */
 @SpringBootTest
 @Import(PostgresContainerConfig.class)
 class SrealityScrapeJobTest {
 
     private static final String TEST_CRON = "0 0 0 1 1 *";
+    private static final String CHECK_INTERVAL = "1h";
 
     @RegisterExtension
     static WireMockExtension sreality = WireMockExtension.newInstance()
@@ -58,6 +60,7 @@ class SrealityScrapeJobTest {
         registry.add("realscore.sreality.request-delay", () -> "0ms");
         registry.add("realscore.sreality.initial-backoff", () -> "1ms");
         registry.add("realscore.scrape.cron", () -> TEST_CRON);
+        registry.add("realscore.scrape.check-interval", () -> CHECK_INTERVAL);
     }
 
     @Autowired
@@ -73,12 +76,12 @@ class SrealityScrapeJobTest {
     private JdbcTemplate jdbc;
 
     @Test
-    void jobIsScheduledOnTheConfiguredCron() {
+    void dueCheckIsScheduledAtTheConfiguredInterval() {
         assertThat(scheduledTaskHolders.stream().flatMap(holder -> holder.getScheduledTasks().stream()))
                 .map(ScheduledTask::getTask)
-                .filteredOn(CronTask.class::isInstance)
-                .map(task -> ((CronTask) task).getExpression())
-                .containsExactly(TEST_CRON);
+                .filteredOn(FixedDelayTask.class::isInstance)
+                .map(task -> ((FixedDelayTask) task).getIntervalDuration())
+                .containsExactly(Duration.ofHours(1));
     }
 
     @Test

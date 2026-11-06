@@ -121,6 +121,7 @@ Set through environment variables; defaults are in `src/main/resources/applicati
 |---|---|---|
 | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | `localhost`, `5432`, `realscore`, `realscore`, `realscore` | PostgreSQL connection |
 | `SCRAPE_CRON` | `-` (disabled) | Spring cron expression (6 fields, Europe/Prague time) for the scrape job |
+| `SCRAPE_CHECK_INTERVAL` | `1m` | How often the app checks the wall clock for a due scrape run; a run starts up to this long after its slot |
 | `SCRAPE_PRICE_CAP` | `5000000` | Maximum price in CZK of flats for sale |
 | `SCRAPE_RENT_PRICE_CAP` | empty (no cap) | Maximum monthly rent in CZK of flats for rent |
 | `SCRAPE_REFETCH_AFTER` | `7d` | A known listing is fetched again once its last fetch is older than this; `0` refetches on every run |
@@ -183,6 +184,13 @@ or ID).
     listing endpoint `acceptanceYear` and `reconstructionYear`), and both stay empty until re-parsed;
   - the listing URL: `listing_detail.url` (`url` in the listing, score and price-drop endpoints) stays empty until
     re-parsed.
+- **Scheduled runs and missed slots.** Every `SCRAPE_CHECK_INTERVAL` the app compares the wall clock with
+  `SCRAPE_CRON`: a run is due once the first cron slot after the start of the latest run has passed, so it starts
+  within `SCRAPE_CHECK_INTERVAL` of its slot. A slot missed while the host slept (Docker Desktop on a sleeping Mac)
+  or the app was down is run at the first check after the app is running again, and only once however many slots
+  were missed; the next run then waits for the next slot. Runs closed as `ABORTED` don't count, so an interrupted
+  run is caught up after the restart. Before the first run ever, slots count from the app's start, so a fresh
+  install waits for the next slot. A run is never started while another is in progress.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
   requests per second, which can take hours. Later runs only fetch new and due listings, plus every active listing
   the run did not see: one that stays online outside the searches (e.g. above the price cap) is fetched on every run

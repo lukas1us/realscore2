@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.realscore.PostgresContainerConfig;
 import com.realscore.scraping.internal.ScrapeRun;
 import com.realscore.scraping.internal.ScrapeRunRepository;
+import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,5 +58,21 @@ class ScrapeRunServiceTest {
         ScrapeRun closed = scrapeRunRepository.findById(runId).orElseThrow();
         assertThat(closed.getStatus()).isEqualTo(ScrapeRunStatus.FAILED);
         assertThat(closed.getErrorDetails()).isEqualTo("connection timed out");
+    }
+
+    @Test
+    void latestStartLeavesOutAbortedRuns() {
+        ScrapeRun succeeded = new ScrapeRun(Instant.parse("2099-01-01T12:00:00Z"));
+        succeeded.setStatus(ScrapeRunStatus.SUCCEEDED);
+        ScrapeRun aborted = new ScrapeRun(Instant.parse("2099-01-02T12:00:00Z"));
+        aborted.setStatus(ScrapeRunStatus.ABORTED);
+        scrapeRunRepository.save(succeeded);
+        scrapeRunRepository.save(aborted);
+        try {
+            assertThat(scrapeRunService.findLatestStartNotAborted()).contains(Instant.parse("2099-01-01T12:00:00Z"));
+        } finally {
+            scrapeRunRepository.delete(succeeded);
+            scrapeRunRepository.delete(aborted);
+        }
     }
 }

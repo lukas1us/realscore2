@@ -10,7 +10,10 @@ import org.springframework.validation.annotation.Validated;
 /**
  * Settings of the scheduled scrape; values live in {@code application.properties} under {@code realscore.scrape}.
  *
- * @param cron Spring cron expression for {@link SrealityScrapeJob}, in Europe/Prague time; {@code -} disables it
+ * @param cron Spring cron expression for {@link SrealityScrapeJob}, in Europe/Prague time; {@code -} disables it.
+ *             A slot that passed without a run (host asleep, app down) is caught up, see {@link ScrapeScheduler}
+ * @param checkInterval how often {@link ScrapeScheduler} checks whether a run is due, so runs start up to this long
+ *                      after their slot
  * @param priceCap maximum price in CZK of the sale apartments collected
  * @param rentPriceCap maximum monthly rent in CZK of the rental apartments collected, or {@code null} (the default,
  *                     an empty {@code SCRAPE_RENT_PRICE_CAP}) for no cap
@@ -22,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("realscore.scrape")
 public record ScrapeJobProperties(
         @NotBlank String cron,
+        @NotNull Duration checkInterval,
         @Positive long priceCap,
         @Positive Long rentPriceCap,
         @NotNull Duration refetchAfter) {

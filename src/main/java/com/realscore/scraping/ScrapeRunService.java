@@ -3,6 +3,7 @@ package com.realscore.scraping;
 import com.realscore.scraping.internal.ScrapeRun;
 import com.realscore.scraping.internal.ScrapeRunRepository;
 import java.time.Instant;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,12 @@ public class ScrapeRunService {
     public int abortInterruptedRuns(Instant startedBefore) {
         return scrapeRunRepository.closeRunsStartedBefore(ScrapeRunStatus.RUNNING, startedBefore,
                 ScrapeRunStatus.ABORTED, Instant.now(), ABORTED_REASON);
+    }
+
+    /** @return when the latest run that was not {@link ScrapeRunStatus#ABORTED} started, or empty if none */
+    @Transactional(readOnly = true)
+    public Optional<Instant> findLatestStartNotAborted() {
+        return scrapeRunRepository.findLatestStartedAtExcluding(ScrapeRunStatus.ABORTED);
     }
 
     private ScrapeRun getRun(Long runId) {

@@ -5,6 +5,7 @@ import com.realscore.analysis.internal.Locality;
 import com.realscore.analysis.internal.MedianBenchmarks;
 import com.realscore.analysis.internal.MedianBenchmarks.Benchmark;
 import com.realscore.analysis.internal.MedianBenchmarks.Sample;
+import com.realscore.analysis.internal.PlausibilityProperties;
 import com.realscore.parsing.ActiveListingDetails;
 import com.realscore.parsing.ListingDetailsQueryService;
 import java.math.BigDecimal;
@@ -18,7 +19,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Market benchmarks per locality and disposition, computed on demand from the parsed details of active listings.
- * Locality grouping and fallback follow {@link MedianBenchmarks}, configured by {@link AnalysisProperties}.
+ * Locality grouping and fallback follow {@link MedianBenchmarks}, configured by {@link AnalysisProperties}. Listings
+ * whose price or size is implausible ({@link PlausibilityProperties}) are left out.
  */
 @Service
 @RequiredArgsConstructor
@@ -30,13 +32,14 @@ public class MarketBenchmarkService {
 
     private final ListingDetailsQueryService listingDetails;
     private final AnalysisProperties properties;
+    private final PlausibilityProperties plausibility;
 
     /**
      * Over active flats for sale that have a price, a positive size, a disposition and at least a region. Sales are
      * only scraped below the configured sale price cap, so in expensive areas this is the median of the cheaper end.
      */
     public List<SalePriceBenchmark> salePricePerM2() {
-        List<Sample> samples = perM2Samples(listingDetails.findActive(SALE, FLATS));
+        List<Sample> samples = perM2Samples(activeSales());
         return MedianBenchmarks.compute(samples, properties.minSampleSize()).stream()
                 .map(MarketBenchmarkService::toSalePriceBenchmark)
                 .toList();
@@ -47,7 +50,7 @@ public class MarketBenchmarkService {
      * those of them that also have a positive size.
      */
     public List<RentBenchmark> rent() {
-        List<ActiveListingDetails> rentals = listingDetails.findActive(RENT, FLATS);
+        List<ActiveListingDetails> rentals = activeRentals();
         Map<BenchmarkKey, Benchmark> perM2 = MedianBenchmarks.compute(perM2Samples(rentals), properties.minSampleSize())
                 .stream()
                 .collect(Collectors.toMap(BenchmarkKey::of, b -> b));
@@ -61,13 +64,26 @@ public class MarketBenchmarkService {
      * {@link #salePricePerM2()} and {@link #rent()}, for looking up the ones that apply to individual flats.
      */
     public MarketBenchmarks benchmarks() {
-        List<ActiveListingDetails> rentals = listingDetails.findActive(RENT, FLATS);
+        List<ActiveListingDetails> rentals = activeRentals();
         int min = properties.minSampleSize();
         return new MarketBenchmarks(
-                MedianBenchmarks.index(perM2Samples(listingDetails.findActive(SALE, FLATS)), min),
+                MedianBenchmarks.index(perM2Samples(activeSales()), min),
                 MedianBenchmarks.index(rentSamples(rentals), min),
                 MedianBenchmarks.index(perM2Samples(rentals), min),
                 properties.largeCities());
+    }
+
+    private List<ActiveListingDetails> activeSales() {
+        return plausible(listingDetails.findActive(SALE, FLATS), plausibility.sale());
+    }
+
+    private List<ActiveListingDetails> activeRentals() {
+        return plausible(listingDetails.findActive(RENT, FLATS), plausibility.rent());
+    }
+
+    private static List<ActiveListingDetails> plausible(List<ActiveListingDetails> listings,
+            PlausibilityProperties.Bounds bounds) {
+        return listings.stream().filter(d -> bounds.isPlausible(d.priceCzk(), d.sizeM2())).toList();
     }
 
     /** Price per m² of those listings with a price and a positive size. */

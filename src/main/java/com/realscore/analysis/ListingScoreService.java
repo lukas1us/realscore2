@@ -1,6 +1,7 @@
 package com.realscore.analysis;
 
 import com.realscore.analysis.internal.AnalysisProperties;
+import com.realscore.analysis.internal.PlausibilityProperties;
 import com.realscore.analysis.internal.QualityScorer;
 import com.realscore.analysis.internal.ScoreCalculator;
 import com.realscore.parsing.ActiveListingDetails;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
  * m², gross rental yield from the local rent medians, the price drop over the price-drop window, and the quality of
  * the flat itself (ownership, construction, energy class, building condition, elevator). Only flats with
  * a price, a positive size, a disposition and a region are scored, and only if a sale or rent benchmark applies.
+ * Flats whose price or size is implausible ({@link PlausibilityProperties}) are not scored: their discount and yield
+ * would be meaningless and push them to the top.
  */
 @Service
 @RequiredArgsConstructor
@@ -43,6 +46,7 @@ public class ListingScoreService {
     private final ScoreCalculator calculator;
     private final QualityScorer qualityScorer;
     private final AnalysisProperties properties;
+    private final PlausibilityProperties plausibility;
 
     private record Key(String source, String externalId) {
     }
@@ -80,7 +84,7 @@ public class ListingScoreService {
                 .collect(Collectors.toMap(d -> new Key(d.source(), d.externalId()), Function.identity()));
         return listingDetails.findActive(TransactionType.SALE.code(), MarketBenchmarkService.FLATS).stream()
                 .map(Candidate::of)
-                .filter(Candidate::isScorable)
+                .filter(this::isScorable)
                 .map(c -> score(c, benchmarks, drops.get(new Key(c.source(), c.externalId()))))
                 .flatMap(Optional::stream)
                 .sorted(BEST_FIRST)
@@ -114,7 +118,7 @@ public class ListingScoreService {
             return Optional.empty();
         }
         Candidate candidate = Candidate.of(listing);
-        if (!candidate.isScorable()) {
+        if (!isScorable(candidate)) {
             return Optional.empty();
         }
         ActivePriceHistory history = new ActivePriceHistory(listing.source(), listing.externalId(),
@@ -122,6 +126,10 @@ public class ListingScoreService {
                 listing.priceHistory());
         PriceDrop drop = PriceDrop.of(history, PriceDropService.windowStart(properties.priceDropDays())).orElse(null);
         return score(candidate, marketBenchmarkService.benchmarks(), drop);
+    }
+
+    private boolean isScorable(Candidate c) {
+        return c.isScorable() && plausibility.sale().isPlausible(c.priceCzk(), c.sizeM2());
     }
 
     private static boolean matches(String filter, String value) {

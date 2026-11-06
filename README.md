@@ -134,6 +134,8 @@ Analysis settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZ
 | `realscore.analysis.min-sample-size` | `5` | Fewest listings a group needs; smaller groups fall back to city, then district, then region |
 | `realscore.analysis.price-drop-days` | `30` | Default window in days of `GET /api/analysis/price-drops` |
 | `realscore.analysis.scores-limit` | `50` | Default number of results of `GET /api/analysis/scores` |
+| `realscore.analysis.plausibility.sale.{min-price,max-price,min-price-per-m2,max-price-per-m2,min-size,max-size}` | `200000`, empty, `5000`, `400000`, `12`, `400` | Bounds (inclusive; empty = none) of a plausible flat for sale, in CZK and m²; see below |
+| `realscore.analysis.plausibility.rent.{min-price,max-price,min-price-per-m2,max-price-per-m2,min-size,max-size}` | `1000`, `300000`, `50`, `2000`, `12`, `400` | Bounds of a plausible flat for rent, in CZK/month and m² |
 | `realscore.analysis.scoring.discount.{min,max,weight}` | `-30`, `30`, `45` | Listing score part: % cheaper per m² than the local sale median |
 | `realscore.analysis.scoring.rental-yield.{min,max,weight}` | `2`, `8`, `30` | Listing score part: gross yearly rent (from the local rent medians) over the price, in % |
 | `realscore.analysis.scoring.price-drop.{min,max,weight}` | `0`, `15`, `10` | Listing score part: % price drop over the price-drop window (0 without a drop) |
@@ -208,6 +210,12 @@ or ID).
   negative values are underground (-1 is 1. PP / suterén). `elevator.from-floor` uses the same numbers.
 - **Days on market count from the first time realscore saw a listing**, not from when it was published: Sreality's
   detail has no publication date. Listings already online before the first scrape start at 0.
+- **Implausible listings are ignored by the analysis.** Sellers miscategorise listings or use placeholder prices: a
+  rent listed as a sale (12,500 CZK), 1 CZK or 300 CZK rents, a sale price listed as a rent (6.9M CZK a month), 9 m²
+  flats or 5,000 m² rentals. A flat whose price, price per m² or size is outside the `realscore.analysis.plausibility`
+  bounds is left out of the sale and rent benchmarks and gets no score (`score` is `null` in the listing endpoint);
+  a bound only applies to a value the listing has. Snapshots and `listing_detail` are untouched and the bounds are
+  applied on every request, so changing them takes effect without a reparse.
 - **Sale benchmarks are capped**: sales are only collected below `SCRAPE_PRICE_CAP`, so in expensive areas the medians
   describe the cheaper end of the market. Check the sample sizes.
 - The Sreality API is undocumented and has changed shape before. What is known about it is in the Backlog document

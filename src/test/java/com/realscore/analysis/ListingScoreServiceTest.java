@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.realscore.PostgresContainerConfig;
 import com.realscore.listing.ListingSnapshotService;
+import com.realscore.parsing.ListingDetailsQueryService;
+import com.realscore.parsing.ListingOverview;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,6 +38,9 @@ class ListingScoreServiceTest {
 
     @Autowired
     private ListingScoreService listingScoreService;
+
+    @Autowired
+    private ListingDetailsQueryService listingDetailsQueryService;
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -132,6 +137,20 @@ class ListingScoreServiceTest {
         assertThat(score.quality().points()).isEqualTo(23);
         assertThat(score.quality().score()).isEqualByComparingTo("73.0");
         assertThat(scores(region)).extracting(ListingScore::externalId).containsExactly(good, plain);
+    }
+
+    @Test
+    void anImplausibleSaleIsNotScored() {
+        String region = "Kraj score-implausible";
+        record(region, SALE, FLATS, 5_000_000, 50);
+        record(region, SALE, FLATS, 7_000_000, 50);
+        record(region, RENT, FLATS, 20_000, 50);
+        record(region, RENT, FLATS, 30_000, 60);
+        String rentAsSale = record(region, SALE, FLATS, 12_500, 56);
+
+        assertThat(scores(region)).extracting(ListingScore::externalId).hasSize(2).doesNotContain(rentAsSale);
+        ListingOverview listing = listingDetailsQueryService.findListing(SOURCE, rentAsSale).orElseThrow();
+        assertThat(listingScoreService.score(listing)).isEmpty();
     }
 
     @Test

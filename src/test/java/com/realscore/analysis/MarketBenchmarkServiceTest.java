@@ -140,6 +140,30 @@ class MarketBenchmarkServiceTest {
     }
 
     @Test
+    void implausibleSalesAndRentalsAreLeftOut() {
+        String region = "Kraj implausible";
+        record(region, "Střed", SALE, FLATS, 5_000_000, 50);
+        record(region, "Střed", SALE, FLATS, 7_000_000, 50);
+        record(region, "Střed", SALE, FLATS, 12_500, 56);
+        record(region, "Střed", SALE, FLATS, 2_500_000, 9);
+        record(region, "Střed", RENT, FLATS, 20_000, 50);
+        record(region, "Střed", RENT, FLATS, 30_000, 60);
+        record(region, "Střed", RENT, FLATS, 1, 53);
+        record(region, "Střed", RENT, FLATS, 300, 48);
+        record(region, "Střed", RENT, FLATS, 6_893_000, 57);
+
+        assertThat(salePriceBenchmarks(region)).singleElement().satisfies(b -> {
+            assertThat(b.medianPricePerM2Czk()).isEqualByComparingTo("120000");
+            assertThat(b.sampleSize()).isEqualTo(2);
+        });
+        assertThat(rentBenchmarks(region)).singleElement().satisfies(b -> {
+            assertThat(b.monthlyRentCzk()).isEqualTo(
+                    new BenchmarkValue(LocalityLevel.CITY_PART, new BigDecimal("25000"), 2));
+            assertThat(b.rentPerM2Czk().sampleSize()).isEqualTo(2);
+        });
+    }
+
+    @Test
     void endpointReturnsTheRentBenchmarks() {
         String region = "Kraj rent-endpoint";
         record(region, "Střed", RENT, FLATS, 20_000, 50);

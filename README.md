@@ -9,7 +9,10 @@ disposition), and scores flats for sale against them.
 1. **Scraping**: a scheduled job searches Sreality for flats for sale (under a price cap) and flats for rent. It
    fetches the detail of every new listing, and refetches known ones once their last fetch is older than a
    configurable interval, or in the same run when their price in the search results changed since the last run.
-   Every run is recorded in `scrape_run`.
+   Every run is recorded in `scrape_run` with a status: `RUNNING` while it is in progress, then `SUCCEEDED` or
+   `FAILED` (cause in `error_details`). A run still `RUNNING` when the app stopped is closed as `ABORTED` once the
+   app is running again, with that time as `finished_at` and the reason in `error_details`; its counts stay partial
+   and, since the removal check is the last step of a run, it marks no listing removed.
 2. **Listing**: every detail response is stored raw as JSONB in `listing_snapshot`, minus the seller's contact data
    (the broker's name, email and phones, and the agency's web URLs are removed first). A new snapshot is written only
    when the payload changes; whitespace and key order do not count. Dropping out of the search results alone is no proof a listing is gone (its price

@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class ScrapeRunService {
 
+    public static final String ABORTED_REASON = "Interrupted: the app stopped while the run was in progress";
+
     private final ScrapeRunRepository scrapeRunRepository;
 
     @Transactional
@@ -38,6 +40,19 @@ public class ScrapeRunService {
         run.setStatus(status);
         run.setFinishedAt(Instant.now());
         run.setErrorDetails(errorDetails);
+    }
+
+    /**
+     * Closes every run still {@link ScrapeRunStatus#RUNNING} that started before {@code startedBefore} as
+     * {@link ScrapeRunStatus#ABORTED}, with a finished time of now and {@link #ABORTED_REASON} as error details. Its
+     * counts stay as they were, and since the removal check comes last in a run, nothing was marked removed for it.
+     *
+     * @return how many runs were aborted
+     */
+    @Transactional
+    public int abortInterruptedRuns(Instant startedBefore) {
+        return scrapeRunRepository.closeRunsStartedBefore(ScrapeRunStatus.RUNNING, startedBefore,
+                ScrapeRunStatus.ABORTED, Instant.now(), ABORTED_REASON);
     }
 
     private ScrapeRun getRun(Long runId) {

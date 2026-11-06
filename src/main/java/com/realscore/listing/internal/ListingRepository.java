@@ -31,6 +31,19 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     int clearRemovedAt(String source, Collection<String> externalIds);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("""
+            update Listing l set l.outOfScopeSince = null
+            where l.source = :source and l.externalId in :externalIds and l.outOfScopeSince is not null""")
+    int clearOutOfScope(String source, Collection<String> externalIds);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("""
+            update Listing l set l.outOfScopeSince = :since
+            where l.source = :source and l.externalId in :externalIds and l.removedAt is null
+              and l.outOfScopeSince is null""")
+    int markOutOfScope(String source, Collection<String> externalIds, Instant since);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update Listing l set l.lastSeenAt = :seenAt where l.source = :source and l.externalId in :externalIds")
     int markSeen(String source, Collection<String> externalIds, Instant seenAt);
 
@@ -49,12 +62,14 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     @Query("""
             select l.externalId from Listing l
             where l.source = :source and l.removedAt is null and l.lastSeenAt < :notSeenSince
+              and (l.outOfScopeSince is null or l.lastFetchedAt < :outOfScopeFetchedBefore)
             order by l.id""")
-    List<String> findActiveExternalIdsNotSeenSince(String source, Instant notSeenSince);
+    List<String> findActiveExternalIdsNotSeenSince(String source, Instant notSeenSince,
+            Instant outOfScopeFetchedBefore);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("""
-            update Listing l set l.removedAt = :removedAt
+            update Listing l set l.removedAt = :removedAt, l.outOfScopeSince = null
             where l.source = :source and l.externalId in :externalIds and l.removedAt is null""")
     int markRemoved(String source, Collection<String> externalIds, Instant removedAt);
 }

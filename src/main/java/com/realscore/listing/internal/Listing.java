@@ -46,6 +46,13 @@ public class Listing {
     @Column(name = "search_price_czk")
     private BigDecimal searchPriceCzk;
 
+    /**
+     * When the removal check first found the listing still online although the search no longer returned it (e.g.
+     * above the price cap); {@code null} while in scope. Cleared when the search returns it again.
+     */
+    @Column(name = "out_of_scope_since")
+    private Instant outOfScopeSince;
+
     public Listing(String source, String externalId, Instant seenAt) {
         this.source = source;
         this.externalId = externalId;

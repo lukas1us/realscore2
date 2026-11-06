@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import com.realscore.PostgresContainerConfig;
 import com.realscore.listing.ListingSnapshotService;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
@@ -160,6 +161,20 @@ class MarketBenchmarkServiceTest {
             assertThat(b.monthlyRentCzk()).isEqualTo(
                     new BenchmarkValue(LocalityLevel.CITY_PART, new BigDecimal("25000"), 2));
             assertThat(b.rentPerM2Czk().sampleSize()).isEqualTo(2);
+        });
+    }
+
+    @Test
+    void salesOutOfScopeAreLeftOut() {
+        String region = "Kraj out-of-scope";
+        record(region, "Střed", SALE, FLATS, 5_000_000, 50);
+        record(region, "Střed", SALE, FLATS, 7_000_000, 50);
+        listingSnapshotService.markOutOfScope(SOURCE, List.of(record(region, "Střed", SALE, FLATS, 5_210_000, 20)),
+                Instant.now());
+
+        assertThat(salePriceBenchmarks(region)).singleElement().satisfies(b -> {
+            assertThat(b.medianPricePerM2Czk()).isEqualByComparingTo("120000");
+            assertThat(b.sampleSize()).isEqualTo(2);
         });
     }
 

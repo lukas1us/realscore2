@@ -17,8 +17,9 @@ disposition), and scores flats for sale against them.
    (the broker's name, email and phones, and the agency's web URLs are removed first). A new snapshot is written only
    when the payload changes; whitespace and key order do not count. Dropping out of the search results alone is no proof a listing is gone (its price
    may have risen above the cap), so after each successful run the detail of every active listing the run did not
-   see is fetched: 404 or 410 marks it removed, 200 records its snapshot and keeps it active, and 403 or any other
-   failure leaves it active to be checked again next run. The removed mark is cleared if the listing shows up again.
+   see is fetched: 404 or 410 marks it removed, 200 records its snapshot and keeps it active but marks it out of
+   scope (see Operations notes), and 403 or any other failure leaves it as it is, to be checked again next run. The
+   removed and out-of-scope marks are cleared if the search returns the listing again.
 3. **Parsing**: each new or changed snapshot is parsed into a normalised `listing_detail` row: price, size,
    disposition, locality, sale or rent, and so on. Each parse also rebuilds the listing's price history
    (`listing_price_point`) from all its snapshots: one point per asking-price change, skipping snapshots without a
@@ -125,6 +126,7 @@ Set through environment variables; defaults are in `src/main/resources/applicati
 | `SCRAPE_PRICE_CAP` | `5000000` | Maximum price in CZK of flats for sale |
 | `SCRAPE_RENT_PRICE_CAP` | empty (no cap) | Maximum monthly rent in CZK of flats for rent |
 | `SCRAPE_REFETCH_AFTER` | `7d` | A known listing is fetched again once its last fetch is older than this; `0` refetches on every run |
+| `SCRAPE_OUT_OF_SCOPE_RECHECK_AFTER` | `7d` | A listing out of scope (online, but not returned by the searches) has its detail checked again once its last fetch is older than this; `0` checks it on every run |
 
 Analysis settings (Spring properties, e.g. as `REALSCORE_ANALYSIS_MIN_SAMPLE_SIZE`):
 
@@ -165,7 +167,7 @@ or ID).
 |---|---|
 | `GET /api/analysis/benchmarks/sale-price-per-m2` | Median asking price per m² of active flats for sale, per locality and disposition, with the locality level used and the sample size |
 | `GET /api/analysis/benchmarks/rent` | Median monthly rent and median rent per m² of active flats for rent, per locality and disposition, each with its level and sample size |
-| `GET /api/listings/{source}/{externalId}` | One listing, removed or not: first/last seen and removed time, parsed details (`null` if never parsed), price history oldest first, and stats: days on market, number of price drops, % change from the first to the current price. Also its `score` (as in `/api/analysis/scores`) if it is an active flat for sale that can be scored, else `null`. 404 if unknown |
+| `GET /api/listings/{source}/{externalId}` | One listing, removed or not: first/last seen and removed time, `outOfScopeSince` (see Operations notes; `null` while in scope), parsed details (`null` if never parsed), price history oldest first, and stats: days on market, number of price drops, % change from the first to the current price. Also its `score` (as in `/api/analysis/scores`) if it is an active flat for sale that can be scored, else `null`. 404 if unknown |
 | `GET /api/analysis/scores[?limit=50][&region=…][&city=…][&disposition=…]` | Scored active flats for sale, best first, at most `limit` (default `realscore.analysis.scores-limit`). Each with its total, and per part (discount, rental yield, price drop) the raw %, sub-score, weight share and the benchmark used. The `quality` part has its sub-score, weight share, summed `points` and every factor (`ownership`, `construction`, `energyClass`, `buildingCondition`, `elevator`) with its parsed `value` (`null` if unknown) and `points`. Filters match exactly, ignoring case; `disposition` is the label such as `2+kk`, with `+` encoded as `%2B` in the URL. `limit` < 1 gives 400 |
 | `GET /api/analysis/price-drops[?days=30][&type=sale\|rent]` | Active listings whose current price is below the price they had `days` ago (default `realscore.analysis.price-drop-days`), or below their first price if they appeared later; several drops add up. Each with old and new price, percent drop and when the current price was first seen; largest drop first. Without `type`, sales and rentals both; `days` < 1 or another `type` gives 400 |
 | `POST /api/parsing/reparse?source=sreality[&externalId=…]` | Re-parses stored snapshots: all listings of the source, or only the given external IDs (repeatable), and rebuilds their price history. Synchronous; returns the `listing_detail` counts |
@@ -195,9 +197,16 @@ or ID).
   install waits for the next slot. A run is never started while another is in progress.
 - **The first run after a new search is added** (e.g. rentals) fetches every matching listing's detail at about two
   requests per second, which can take hours. Later runs only fetch new and due listings, plus every active listing
-  the run did not see: one that stays online outside the searches (e.g. above the price cap) is fetched on every run
-  until it is gone. In `scrape_run`, changed snapshots from that check count as `updated_count`, and 403s and other
-  failures as `error_count`.
+  the run did not see and that is not already known to be out of scope. In `scrape_run`, changed snapshots from that
+  check count as `updated_count`, and 403s and other failures as `error_count`.
+- **Listings out of scope.** A listing the searches stop returning but whose detail still answers 200 (its price
+  rose above `SCRAPE_PRICE_CAP`, it switched to price on request, its category changed) is still online, but outside
+  the collected sample. It gets `listing.out_of_scope_since` (when this was first found; `outOfScopeSince` in the
+  listing endpoint) and stays active, but is left out of the benchmarks and scores, so sales above the cap don't
+  count. Its detail is checked again only once its last fetch is older than `SCRAPE_OUT_OF_SCOPE_RECHECK_AFTER`
+  (7 days), not on every run; a 404 or 410 then marks it removed. When a run's search returns it again, the mark is
+  cleared and it counts as in scope again. Listings already out of scope before this was added are marked by the
+  next run.
 - **A price change is seen in the run that finds it.** Each run keeps every listing's price from the search results
   (`listing.search_price_czk`, Sreality's raw value, `0` for price on request) and refetches the detail of any listing
   whose search price differs from the last run's, without waiting for `SCRAPE_REFETCH_AFTER`. The new price point

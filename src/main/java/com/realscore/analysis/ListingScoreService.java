@@ -108,11 +108,11 @@ public class ListingScoreService {
     /**
      * Scores one listing like {@link #scoreAll()} would, with its drop taken from its own price history.
      *
-     * @return empty unless the listing is an active, scorable flat for sale
+     * @return empty unless the listing is an active, in-scope, scorable flat for sale
      */
     public Optional<ListingScore> score(ListingOverview listing) {
         ListingDetails d = listing.details();
-        if (listing.removedAt() != null || d == null
+        if (listing.removedAt() != null || listing.outOfScopeSince() != null || d == null
                 || !Integer.valueOf(TransactionType.SALE.code()).equals(d.transactionTypeCode())
                 || !Integer.valueOf(MarketBenchmarkService.FLATS).equals(d.propertyCategoryCode())) {
             return Optional.empty();

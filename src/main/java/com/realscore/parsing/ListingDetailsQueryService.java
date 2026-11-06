@@ -39,6 +39,7 @@ public class ListingDetailsQueryService {
                 listing.firstSeenAt(),
                 listing.lastSeenAt(),
                 listing.removedAt(),
+                listing.outOfScopeSince(),
                 listingDetailRepository.findByListingId(listing.listingId())
                         .map(ListingDetailsQueryService::toDetails)
                         .orElse(null),
@@ -48,11 +49,13 @@ public class ListingDetailsQueryService {
     }
 
     /**
-     * Joins listing_detail with its listing to leave out listings marked removed.
+     * Joins listing_detail with its listing to leave out listings marked removed or out of scope (still online but
+     * no longer returned by the searches, e.g. above the sale price cap), so they match the collected sample.
      *
      * @param transactionTypeCode Sreality {@code category_type_cb} value (1 = sale, 2 = rent)
      * @param propertyCategoryCode Sreality {@code category_main_cb} value (1 = flats)
-     * @return the details of every active listing of that transaction type and property category, in no order
+     * @return the details of every active, in-scope listing of that transaction type and property category, in no
+     *         order
      */
     public List<ActiveListingDetails> findActive(int transactionTypeCode, int propertyCategoryCode) {
         return jdbc.sql("""
@@ -61,7 +64,7 @@ public class ListingDetailsQueryService {
                                d.energy_class, d.construction_type, d.elevator, d.ownership,
                                d.building_condition_code, d.building_condition_label, d.url
                         FROM listing_detail d JOIN listing l ON l.id = d.listing_id
-                        WHERE l.removed_at IS NULL
+                        WHERE l.removed_at IS NULL AND l.out_of_scope_since IS NULL
                           AND d.transaction_type_code = :transactionType
                           AND d.property_category_code = :propertyCategory
                         """)

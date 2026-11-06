@@ -16,6 +16,7 @@ public record ListingResponse(
         Instant firstSeenAt,
         Instant lastSeenAt,
         Instant removedAt,
+        Instant outOfScopeSince,
         ListingDetails details,
         List<PricePoint> priceHistory,
         ListingStats stats,
@@ -23,6 +24,6 @@ public record ListingResponse(
 
     static ListingResponse of(ListingOverview listing, ListingStats stats, ListingScore score) {
         return new ListingResponse(listing.source(), listing.externalId(), listing.firstSeenAt(),
-                listing.lastSeenAt(), listing.removedAt(), listing.details(), listing.priceHistory(), stats, score);
+                listing.lastSeenAt(), listing.removedAt(), listing.outOfScopeSince(), listing.details(), listing.priceHistory(), stats, score);
     }
 }

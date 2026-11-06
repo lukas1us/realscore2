@@ -22,7 +22,8 @@ class SrealityScrapeJobOverlapTest {
         ScrapeRunService scrapeRunService = mock(ScrapeRunService.class);
         when(scrapeRunService.openRun()).thenReturn(1L);
         SrealityScrapeJob job = new SrealityScrapeJob(bulkCollector, scrapeRunService,
-                new ScrapeJobProperties("-", Duration.ofMinutes(1), 5_000_000, null, Duration.ofDays(7)),
+                new ScrapeJobProperties("-", Duration.ofMinutes(1), 5_000_000, null, Duration.ofDays(7),
+                        Duration.ofDays(7)),
                 mock(ListingSnapshotService.class), mock(SrealityRemovalCheck.class));
         AtomicInteger collections = new AtomicInteger();
         when(bulkCollector.collect(anyLong(), any(), any())).thenAnswer(_ -> {

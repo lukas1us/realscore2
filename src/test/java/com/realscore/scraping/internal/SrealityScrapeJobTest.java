@@ -176,6 +176,54 @@ class SrealityScrapeJobTest {
     }
 
     @Test
+    void unseenListingStillOnlineGoesOutOfScopeIsRecheckedOnlyAfterTheIntervalAndReturnsWhenSeenAgain() {
+        String detail = fixture("detail_success.json");
+        listingSnapshotService.recordFetch("sreality", "4851", SrealityPayloadScrubber.scrub(detail));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4301")).willReturn(okJson(detail)));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4851")).willReturn(okJson(detail)));
+        stubSearch(okJson(fixture("search_page_presence_one.json")));
+
+        job.run();
+        Instant outOfScopeSince = outOfScopeSince(4851);
+        assertThat(outOfScopeSince).isNotNull();
+        assertThat(outOfScopeSince(4301)).isNull();
+        assertThat(removedAt(4851)).isNull();
+        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4851")));
+
+        job.run();
+        sreality.verify(1, getRequestedFor(urlEqualTo("/api/v1/estates/4851")));
+        assertThat(outOfScopeSince(4851)).isEqualTo(outOfScopeSince);
+
+        jdbc.update("UPDATE listing SET last_fetched_at = now() - interval '8 days'"
+                + " WHERE source = 'sreality' AND external_id = '4851'");
+        job.run();
+        sreality.verify(2, getRequestedFor(urlEqualTo("/api/v1/estates/4851")));
+        assertThat(outOfScopeSince(4851)).isEqualTo(outOfScopeSince);
+        assertThat(removedAt(4851)).isNull();
+
+        stubSearch(okJson(searchPage(4301, "3590000.0", 4851, "3590000.0")));
+        job.run();
+        assertThat(outOfScopeSince(4851)).isNull();
+        assertThat(removedAt(4851)).isNull();
+    }
+
+    @Test
+    void outOfScopeListingWhoseDetailIsGoneIsMarkedRemovedAtItsRecheck() {
+        listingSnapshotService.recordFetch("sreality", "4852", "{}");
+        listingSnapshotService.markOutOfScope("sreality", List.of("4852"), Instant.now());
+        jdbc.update("UPDATE listing SET last_fetched_at = now() - interval '8 days'"
+                + " WHERE source = 'sreality' AND external_id = '4852'");
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4301")).willReturn(okJson(fixture("detail_success.json"))));
+        sreality.stubFor(get(urlEqualTo("/api/v1/estates/4852")).willReturn(aResponse().withStatus(410)));
+        stubSearch(okJson(fixture("search_page_presence_one.json")));
+
+        job.run();
+
+        assertThat(removedAt(4852)).isNotNull();
+        assertThat(outOfScopeSince(4852)).isNull();
+    }
+
+    @Test
     void unseenListingIsMarkedRemovedOnlyWhenItsDetailIsGone() {
         for (String id : List.of("4811", "4812", "4813", "4814")) {
             listingSnapshotService.recordFetch("sreality", id, "{}");
@@ -349,6 +397,13 @@ class SrealityScrapeJobTest {
     private Instant lastFetchedAt(long estateId) {
         return jdbc.queryForObject("SELECT last_fetched_at FROM listing WHERE source = 'sreality' AND external_id = ?",
                 Timestamp.class, String.valueOf(estateId)).toInstant();
+    }
+
+    private Instant outOfScopeSince(long estateId) {
+        Timestamp since = jdbc.queryForObject(
+                "SELECT out_of_scope_since FROM listing WHERE source = 'sreality' AND external_id = ?",
+                Timestamp.class, String.valueOf(estateId));
+        return since == null ? null : since.toInstant();
     }
 
     private Object removedAt(long estateId) {

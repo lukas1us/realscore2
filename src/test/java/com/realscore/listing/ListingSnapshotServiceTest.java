@@ -96,8 +96,43 @@ class ListingSnapshotServiceTest {
         listingSnapshotService.recordFetch(source, "seen", "{}");
         listingSnapshotService.recordPresence(source, List.of("seen"));
 
-        assertThat(listingSnapshotService.findActiveExternalIdsNotSeenSince(source, runStartedAt))
+        assertThat(listingSnapshotService.findActiveExternalIdsNotSeenSince(source, runStartedAt, runStartedAt))
                 .containsExactly("old");
+    }
+
+    @Test
+    void outOfScopeListingsAreLeftOutOfTheUnseenOnesUntilTheirLastFetchIsOldEnough() {
+        String source = "out-of-scope-unseen-test";
+        listingSnapshotService.recordFetch(source, "in-scope", "{}");
+        listingSnapshotService.recordFetch(source, "out-of-scope", "{}");
+        listingSnapshotService.markOutOfScope(source, List.of("out-of-scope"), Instant.now());
+        Instant runStartedAt = Instant.now().plusMillis(1);
+
+        assertThat(listingSnapshotService.findActiveExternalIdsNotSeenSince(source, runStartedAt,
+                runStartedAt.minusSeconds(3600))).containsExactly("in-scope");
+        assertThat(listingSnapshotService.findActiveExternalIdsNotSeenSince(source, runStartedAt, runStartedAt))
+                .containsExactly("in-scope", "out-of-scope");
+    }
+
+    @Test
+    void outOfScopeKeepsItsFirstTimeAndIsClearedWhenSeenAgainOrRemoved() {
+        String source = "out-of-scope-test";
+        listingSnapshotService.recordFetch(source, "a", "{}");
+        listingSnapshotService.recordFetch(source, "b", "{}");
+        listingSnapshotService.recordFetch(source, "removed", "{}");
+        listingSnapshotService.markRemoved(source, List.of("removed"), Instant.now());
+        Instant first = Instant.parse("2026-11-01T12:00:00Z");
+
+        assertThat(listingSnapshotService.markOutOfScope(source, List.of("a", "b", "removed"), first)).isEqualTo(2);
+        assertThat(listingSnapshotService.markOutOfScope(source, List.of("a"), first.plusSeconds(60))).isZero();
+        assertThat(view(source, "a").outOfScopeSince()).isEqualTo(first);
+        assertThat(view(source, "removed").outOfScopeSince()).isNull();
+
+        listingSnapshotService.recordPresence(source, List.of("a"));
+        listingSnapshotService.markRemoved(source, List.of("b"), Instant.now());
+        assertThat(view(source, "a").outOfScopeSince()).isNull();
+        assertThat(view(source, "b").outOfScopeSince()).isNull();
+        assertThat(view(source, "b").removedAt()).isNotNull();
     }
 
     @Test
@@ -205,6 +240,10 @@ class ListingSnapshotServiceTest {
         assertThat(listing.firstSeenAt()).isNotNull().isEqualTo(listing.lastSeenAt());
         assertThat(listing.removedAt()).isNull();
         assertThat(listingSnapshotService.findListing(source, "unknown")).isEmpty();
+    }
+
+    private ListingView view(String source, String externalId) {
+        return listingSnapshotService.findListing(source, externalId).orElseThrow();
     }
 
     private Instant removedAt(String source, String externalId) {

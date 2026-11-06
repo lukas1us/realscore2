@@ -20,6 +20,9 @@ import org.springframework.validation.annotation.Validated;
  * @param refetchAfter refetch strategy for known listings: one that a run collects is fetched again once its last
  *                     fetch is older than this, so a change is captured within roughly this long; {@code 0} refetches
  *                     every known listing on every run, at the cost of one detail request each
+ * @param outOfScopeRecheckAfter a listing marked out of scope (online, but no longer returned by the searches) has
+ *                               its detail checked again by {@link SrealityRemovalCheck} only once its last fetch is
+ *                               older than this; {@code 0} checks it on every run
  */
 @Validated
 @ConfigurationProperties("realscore.scrape")
@@ -28,5 +31,6 @@ public record ScrapeJobProperties(
         @NotNull Duration checkInterval,
         @Positive long priceCap,
         @Positive Long rentPriceCap,
-        @NotNull Duration refetchAfter) {
+        @NotNull Duration refetchAfter,
+        @NotNull Duration outOfScopeRecheckAfter) {
 }

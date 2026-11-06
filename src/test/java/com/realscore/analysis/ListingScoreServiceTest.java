@@ -7,6 +7,7 @@ import com.realscore.listing.ListingSnapshotService;
 import com.realscore.parsing.ListingDetailsQueryService;
 import com.realscore.parsing.ListingOverview;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
@@ -150,6 +151,20 @@ class ListingScoreServiceTest {
 
         assertThat(scores(region)).extracting(ListingScore::externalId).hasSize(2).doesNotContain(rentAsSale);
         ListingOverview listing = listingDetailsQueryService.findListing(SOURCE, rentAsSale).orElseThrow();
+        assertThat(listingScoreService.score(listing)).isEmpty();
+    }
+
+    @Test
+    void aSaleOutOfScopeIsNotScored() {
+        String region = "Kraj score-out-of-scope";
+        record(region, SALE, FLATS, 5_000_000, 50);
+        record(region, SALE, FLATS, 7_000_000, 50);
+        String aboveCap = record(region, SALE, FLATS, 5_210_000, 50);
+        listingSnapshotService.markOutOfScope(SOURCE, List.of(aboveCap), Instant.now());
+
+        assertThat(scores(region)).extracting(ListingScore::externalId).hasSize(2).doesNotContain(aboveCap);
+        ListingOverview listing = listingDetailsQueryService.findListing(SOURCE, aboveCap).orElseThrow();
+        assertThat(listing.outOfScopeSince()).isNotNull();
         assertThat(listingScoreService.score(listing)).isEmpty();
     }
 

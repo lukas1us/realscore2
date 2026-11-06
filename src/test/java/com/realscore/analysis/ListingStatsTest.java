@@ -61,7 +61,7 @@ class ListingStatsTest {
     }
 
     private static ListingOverview listing(Instant removedAt, List<PricePoint> history) {
-        return new ListingOverview("test", "1", FIRST_SEEN, NOW, removedAt, null, history);
+        return new ListingOverview("test", "1", FIRST_SEEN, NOW, removedAt, null, null, history);
     }
 
     private static List<PricePoint> prices(String... prices) {

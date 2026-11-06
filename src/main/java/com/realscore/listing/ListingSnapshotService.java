@@ -72,7 +72,7 @@ public class ListingSnapshotService {
     public Optional<ListingView> findListing(String source, String externalId) {
         return listingRepository.findBySourceAndExternalId(source, externalId)
                 .map(listing -> new ListingView(listing.getId(), source, externalId, listing.getFirstSeenAt(),
-                        listing.getLastSeenAt(), listing.getRemovedAt()));
+                        listing.getLastSeenAt(), listing.getRemovedAt(), listing.getOutOfScopeSince()));
     }
 
     /**
@@ -143,7 +143,7 @@ public class ListingSnapshotService {
 
     /**
      * Records which listings from {@code source} a run saw: each gets {@code last_seen_at = now} and, if it was marked
-     * removed, has {@code removed_at} cleared. Listings the run did not see are left as they are; see
+     * removed or out of scope, has {@code removed_at} or {@code out_of_scope_since} cleared. Listings the run did not see are left as they are; see
      * {@link #findActiveExternalIdsNotSeenSince} and {@link #markRemoved}.
      *
      * @param seenExternalIds every ID the run found, already known or not
@@ -155,6 +155,7 @@ public class ListingSnapshotService {
         int[] reappeared = {0};
         forEachBatch(seenExternalIds, batch -> {
             reappeared[0] += listingRepository.clearRemovedAt(source, batch);
+            listingRepository.clearOutOfScope(source, batch);
             listingRepository.markSeen(source, batch, now);
         });
         return reappeared[0];
@@ -162,16 +163,31 @@ public class ListingSnapshotService {
 
     /**
      * Returns the external ID of every listing from {@code source} that is not marked removed and was last seen
-     * before {@code notSeenSince}, oldest listing first.
+     * before {@code notSeenSince}, oldest listing first. Listings marked out of scope are included only once their
+     * detail was last fetched before {@code outOfScopeFetchedBefore}.
      */
     @Transactional(readOnly = true)
-    public List<String> findActiveExternalIdsNotSeenSince(String source, Instant notSeenSince) {
-        return listingRepository.findActiveExternalIdsNotSeenSince(source, notSeenSince);
+    public List<String> findActiveExternalIdsNotSeenSince(String source, Instant notSeenSince,
+            Instant outOfScopeFetchedBefore) {
+        return listingRepository.findActiveExternalIdsNotSeenSince(source, notSeenSince, outOfScopeFetchedBefore);
+    }
+
+    /**
+     * Sets {@code out_of_scope_since = since} on those of the given active listings from {@code source} that are not
+     * marked out of scope yet, so it keeps the time they first left the scope.
+     *
+     * @return how many listings were newly marked out of scope
+     */
+    @Transactional
+    public int markOutOfScope(String source, Collection<String> externalIds, Instant since) {
+        int[] marked = {0};
+        forEachBatch(externalIds, batch -> marked[0] += listingRepository.markOutOfScope(source, batch, since));
+        return marked[0];
     }
 
     /**
      * Sets {@code removed_at = removedAt} on those of the given listings from {@code source} that are not marked
-     * removed yet.
+     * removed yet, and clears their {@code out_of_scope_since}.
      *
      * @return how many listings were marked removed
      */

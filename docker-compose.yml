@@ -26,7 +26,7 @@ services:
       DB_NAME: realscore
       DB_USER: realscore
       DB_PASSWORD: realscore
-      SCRAPE_CRON: "0 0 3 * * *"
+      SCRAPE_CRON: "0 0 13,21 * * *"
     ports:
       - "8080:8080"
     restart: unless-stopped

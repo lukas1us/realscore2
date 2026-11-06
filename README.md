@@ -50,7 +50,7 @@ Build and start the app together with PostgreSQL and Metabase:
 docker compose up -d --build
 ```
 
-The app is available on `http://localhost:8080`. Compose runs the scrape job daily at 03:00 Europe/Prague
+The app is available on `http://localhost:8080`. Compose runs the scrape job twice a day, at 13:00 and 21:00 Europe/Prague
 (`SCRAPE_CRON`) and health-checks the app via `/actuator/health`.
 
 To run the app on the host instead, start only PostgreSQL and then the app:
